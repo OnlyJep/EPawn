@@ -128,7 +128,7 @@ class AuthController extends Controller
         return Socialite::driver('google')->redirect();
     }
 
-    public function googleCallback()
+    public function googleCallback(Request $request)
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
@@ -188,7 +188,8 @@ class AuthController extends Controller
 
             ActivityLog::log($user->id, 'login', ['method' => 'google'], $request);
 
-            Auth::login($user);
+            Auth::login($user, true);
+            $request->session()->regenerate();
 
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
