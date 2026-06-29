@@ -98,29 +98,7 @@ class AuthController extends Controller
             $errors[] = "$fieldLabel contains too many consecutive consonants.";
         }
 
-        if (strlen($name) >= 6) {
-            for ($len = 3; $len <= 4; $len++) {
-                $seen = [];
-                for ($i = 0; $i <= strlen($name) - $len; $i++) {
-                    $sub = substr($name, $i, $len);
-                    if (isset($seen[$sub])) {
-                        $errors[] = "$fieldLabel contains a repetitive pattern.";
-                        break 2;
-                    }
-                    $seen[$sub] = true;
-                }
-            }
-        }
-
-        if (strlen($name) >= 6) {
-            $pattern = '';
-            for ($i = 0; $i < strlen($name); $i++) {
-                $pattern .= preg_match('/[aeiouAEIOU]/', $name[$i]) ? 'v' : 'c';
-            }
-            if (preg_match('/(?:cv){3,}|(?:vc){3,}/', $pattern)) {
-                $errors[] = "$fieldLabel looks like a keyboard pattern.";
-            }
-        }
+        // Removed keyboard pattern validation to avoid false positives
 
         return $errors;
     }
