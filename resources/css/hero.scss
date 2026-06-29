@@ -1,0 +1,105 @@
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 7rem 1.5rem 4rem;
+    background: linear-gradient(135deg, var(--white) 0%, var(--red-light) 50%, var(--white) 100%);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -200px;
+        right: -200px;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, var(--red-glow) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -150px;
+        left: -150px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, var(--red-glow) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    h1 {
+        font-size: clamp(2.5rem, 5vw, 3.75rem);
+        font-weight: 800;
+        line-height: 1.15;
+        color: var(--gray-900);
+        margin-bottom: 1rem;
+
+        span {
+            color: var(--red);
+        }
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: var(--gray-700);
+        margin-bottom: 2rem;
+        max-width: 480px;
+    }
+}
+
+.hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--red);
+    margin-bottom: 1.5rem;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+.hero-tagline {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--red);
+    margin-bottom: 1.25rem;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.hero-visual {
+    display: flex;
+    justify-content: center;
+
+    svg {
+        width: 100%;
+        max-width: 480px;
+        height: auto;
+    }
+}

@@ -1,0 +1,171 @@
+import React, { useState } from 'react';
+
+function NavIcon({ type }) {
+    const icons = {
+        dashboard: <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6" />,
+        budget: <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />,
+        sheet: <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />,
+        accounts: <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />,
+        categories: <path d="M7 7h.01M6 20v-3a1 1 0 00-1-1H2m13-8h6m-6 4h6m-6 4h6M9 3H4a1 1 0 00-1 1v5a1 1 0 001 1h5a1 1 0 001-1V4a1 1 0 00-1-1zm0 10H4a1 1 0 00-1 1v5a1 1 0 001 1h5a1 1 0 001-1v-5a1 1 0 00-1-1z" />,
+        planning: <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />,
+    };
+
+    return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {icons[type] || icons.sheet}
+        </svg>
+    );
+}
+
+function HamburgerIcon({ isOpen }) {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {isOpen ? (
+                <path d="M18 6L6 18M6 6l12 12" />
+            ) : (
+                <path d="M3 12h18M3 6h18M3 18h18" />
+            )}
+        </svg>
+    );
+}
+
+export default function Sidebar({
+    logo,
+    activeNav,
+    onNavChange,
+    routes,
+    isMobile,
+    isOpen,
+    onToggle,
+}) {
+    const handleNavClick = (nav) => {
+        onNavChange(nav);
+        if (isMobile) {
+            onToggle(); // Close sidebar on mobile after navigation
+        }
+    };
+
+    const handleOverlayClick = () => {
+        if (isMobile && isOpen) {
+            onToggle();
+        }
+    };
+
+    return (
+        <>
+            {isMobile && (
+                <button
+                    type="button"
+                    className="sidebar-toggle outside"
+                    onClick={onToggle}
+                    style={{
+                        position: 'fixed',
+                        top: '10px',
+                        left: '20px',
+                        zIndex: 1002,
+                        padding: '10px',
+                        borderRadius: '5px',
+                        border: 'none',
+                        background: '#DC143C',
+                        color: 'white',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <HamburgerIcon isOpen={isOpen} />
+                </button>
+            )}
+            {isMobile && isOpen && (
+                <div
+                    onClick={handleOverlayClick}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        zIndex: 999
+                    }}
+                />
+            )}
+            <aside className={`sidebar ${isMobile ? 'sidebar--mobile' : ''} ${isMobile && isOpen ? 'sidebar--open' : ''}`}>
+            <div className="sidebar__brand">
+                <a href={routes.home}>
+                    <img src={logo} alt="E-PAWN" />
+                </a>
+            </div>
+            <div className="sidebar__separator"></div>
+            <div className="sidebar__content">
+                <nav className="sidebar__nav">
+                    <p className="sidebar__label">Menu</p>
+                    <ul>
+                        <li>
+                            <button
+                                type="button"
+                                className={`sidebar__link${activeNav === 'dashboard' ? ' sidebar__link--active' : ''}`}
+                                onClick={() => handleNavClick('dashboard')}
+                            >
+                                <NavIcon type="dashboard" />
+                                <span>Dashboard</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                className={`sidebar__link${activeNav === 'records' ? ' sidebar__link--active' : ''}`}
+                                onClick={() => handleNavClick('records')}
+                            >
+                                <NavIcon type="sheet" />
+                                <span>Records</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                className={`sidebar__link${activeNav === 'budget_planning' ? ' sidebar__link--active' : ''}`}
+                                onClick={() => handleNavClick('budget_planning')}
+                            >
+                                <NavIcon type="planning" />
+                                <span>Budget Planning</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                className={`sidebar__link${activeNav === 'budget' ? ' sidebar__link--active' : ''}`}
+                                onClick={() => handleNavClick('budget')}
+                            >
+                                <NavIcon type="budget" />
+                                <span>Budget</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                className={`sidebar__link${activeNav === 'accounts' ? ' sidebar__link--active' : ''}`}
+                                onClick={() => handleNavClick('accounts')}
+                            >
+                                <NavIcon type="accounts" />
+                                <span>Accounts</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                type="button"
+                                className={`sidebar__link${activeNav === 'categories' ? ' sidebar__link--active' : ''}`}
+                                onClick={() => handleNavClick('categories')}
+                            >
+                                <NavIcon type="categories" />
+                                <span>Categories</span>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        </>
+    );
+}

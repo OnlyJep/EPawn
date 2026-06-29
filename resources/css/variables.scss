@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --red: #C62828;
+    --red-dark: #9B1B1B;
+    --red-light: #FFEBEE;
+    --red-glow: rgba(198, 40, 40, 0.15);
+    --white: #FFFFFF;
+    --off-white: #FAFAFA;
+    --gray-100: #F5F5F5;
+    --gray-300: #E0E0E0;
+    --gray-500: #9E9E9E;
+    --gray-700: #424242;
+    --gray-900: #212121;
+    --shadow: 0 4px 24px rgba(198, 40, 40, 0.12);
+    --shadow-lg: 0 12px 48px rgba(198, 40, 40, 0.18);
+    --radius: 16px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #FAFAFA;
+    --text-primary: #212121;
+    --text-secondary: #424242;
+    --text-muted: #9E9E9E;
+    --border-color: #E0E0E0;
+    --sidebar-gradient: linear-gradient(to bottom, #ffffff, #ffe6e6);
+    --footer-bg: var(--gray-900);
+    --footer-text: var(--gray-300);
+    --sheet-header-bg: #dbeafe;
+    --sheet-header-color: #1e3a8a;
+    --sheet-estimated-bg: #fff8e1;
+    --warning-bg: #fff3cd;
+    --error-bg: #FFEBEE;
+    --success-color: #2E7D32;
+    --success-bg: #E8F5E9;
+    --success-border: #43A047;
+}
+
+[data-theme="dark"] {
+    --red: #ff6b6b;
+    --red-dark: #e04848;
+    --red-light: #2d1010;
+    --red-glow: rgba(255, 107, 107, 0.15);
+    --white: #151525;
+    --off-white: #111122;
+    --gray-100: #181830;
+    --gray-300: #2a2a48;
+    --gray-500: #58587a;
+    --gray-700: #c0c0d8;
+    --gray-900: #eeeeff;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.5);
+    --bg-primary: #151525;
+    --bg-secondary: #0f0f1f;
+    --text-primary: #f0f0ff;
+    --text-secondary: #d0d0e8;
+    --text-muted: #8080a0;
+    --border-color: #2a2a48;
+    --sidebar-gradient: linear-gradient(to bottom, #181830, #2a1020);
+    --footer-bg: #0a0a15;
+    --footer-text: #8080a0;
+    --sheet-header-bg: #181830;
+    --sheet-header-color: #7ab8f0;
+    --sheet-estimated-bg: #2a2810;
+    --warning-bg: #2a2810;
+    --error-bg: #2d1010;
+    --success-color: #7ddb7d;
+    --success-bg: #102010;
+    --success-border: #5aae5a;
+}

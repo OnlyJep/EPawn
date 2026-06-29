@@ -1,0 +1,387 @@
+// ─── Features Section ────────────────────────────────────────────────────────
+.hp-features {
+    background: var(--off-white);
+    padding: 6rem 1.5rem;
+}
+
+.hp-features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+
+    @media (max-width: 1023px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hp-feature-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem 1.75rem;
+    border: 1px solid var(--gray-300);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(198, 40, 40, 0.1);
+        border-color: var(--red);
+    }
+
+    h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        font-size: 0.88rem;
+        color: var(--gray-700);
+        line-height: 1.65;
+        margin: 0;
+    }
+}
+
+.hp-feature-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--red-light);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    color: var(--red);
+
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+// ─── How It Works ─────────────────────────────────────────────────────────────
+.hp-how {
+    background: var(--white);
+    padding: 6rem 1.5rem;
+}
+
+.hp-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    position: relative;
+
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 540px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hp-step {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.75rem 1.5rem;
+    border-radius: 16px;
+    background: var(--off-white);
+    border: 1px solid var(--gray-300);
+    position: relative;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+        border-color: var(--red);
+        box-shadow: 0 8px 24px rgba(198, 40, 40, 0.08);
+    }
+}
+
+.hp-step-number {
+    font-size: 2.25rem;
+    font-weight: 900;
+    color: var(--red);
+    opacity: 0.18;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.03em;
+}
+
+.hp-step-content {
+    h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        font-size: 0.86rem;
+        color: var(--gray-700);
+        line-height: 1.6;
+        margin: 0;
+    }
+}
+
+// ─── Benefits ─────────────────────────────────────────────────────────────────
+.hp-benefits {
+    background: linear-gradient(135deg, var(--red-light) 0%, var(--white) 60%, var(--off-white) 100%);
+    padding: 6rem 1.5rem;
+}
+
+.hp-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hp-benefit-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border: 1px solid var(--gray-300);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(198, 40, 40, 0.1);
+    }
+
+    h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        font-size: 0.86rem;
+        color: var(--gray-700);
+        line-height: 1.65;
+        margin: 0;
+    }
+}
+
+.hp-benefit-emoji {
+    font-size: 2.25rem;
+    line-height: 1;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+// ─── Dashboard Preview ────────────────────────────────────────────────────────
+.hp-preview {
+    background: var(--gray-900);
+    padding: 6rem 1.5rem;
+    color: var(--white);
+}
+
+.hp-preview-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
+
+.hp-preview-content {
+    .section-label {
+        color: #FFCDD2;
+    }
+
+    h2 {
+        font-size: clamp(1.75rem, 3vw, 2.25rem);
+        font-weight: 800;
+        color: var(--white);
+        margin-bottom: 1rem;
+    }
+
+    p {
+        color: #9E9E9E;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 0;
+    }
+}
+
+.hp-preview-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.9rem;
+        color: #E0E0E0;
+        font-weight: 500;
+
+        svg {
+            flex-shrink: 0;
+        }
+    }
+}
+
+// Dashboard mockup
+.hp-preview-visual {
+    display: flex;
+    justify-content: center;
+}
+
+.hp-dashboard-mockup {
+    width: 100%;
+    max-width: 420px;
+    background: #1a1a2e;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    border: 1px solid #333;
+}
+
+.hp-mockup-bar {
+    background: #111;
+    padding: 10px 14px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+
+    span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: block;
+
+        &:nth-child(1) { background: #ff5f57; }
+        &:nth-child(2) { background: #febc2e; }
+        &:nth-child(3) { background: #28c840; }
+    }
+}
+
+.hp-mockup-body {
+    display: flex;
+    height: 220px;
+}
+
+.hp-mockup-sidebar {
+    width: 80px;
+    background: #16213e;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.hp-mockup-nav-item {
+    font-size: 0.52rem;
+    color: #9E9E9E;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: default;
+    font-weight: 600;
+
+    &:first-child {
+        background: rgba(198, 40, 40, 0.2);
+        color: #FFCDD2;
+    }
+}
+
+.hp-mockup-content {
+    flex: 1;
+    padding: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hp-mockup-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.hp-mockup-card {
+    background: #1f1f3a;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid #2a2a4a;
+}
+
+.hp-mockup-chart {
+    flex: 1;
+    background: #1f1f3a;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    min-height: 60px;
+}
+
+.hp-mockup-bar-item {
+    flex: 1;
+    background: linear-gradient(to top, #C62828, rgba(198, 40, 40, 0.3));
+    border-radius: 3px 3px 0 0;
+    min-height: 4px;
+}
+
+.hp-mockup-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hp-mockup-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #1f1f3a;
+    border-radius: 6px;
+    padding: 6px 8px;
+}
+
+.hp-mockup-row-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+}
+
+.hp-mockup-row-line {
+    height: 6px;
+    background: #2a2a4a;
+    border-radius: 3px;
+    flex: 1;
+    max-width: 70%;
+}
+
+.hp-mockup-row-amount {
+    width: 30px;
+    height: 6px;
+    background: rgba(198, 40, 40, 0.3);
+    border-radius: 3px;
+    margin-left: auto;
+}

@@ -1,0 +1,27 @@
+.stats {
+    background: var(--red);
+    color: var(--white);
+    padding: 4rem 1.5rem;
+}
+
+.stats-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    font-weight: 500;
+}

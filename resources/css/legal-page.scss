@@ -1,0 +1,18 @@
+.legal-page__inner {
+    max-width: 800px;
+}
+
+.legal-page__content {
+    h2 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin: 2rem 0 0.75rem;
+    }
+
+    p {
+        color: var(--gray-700);
+        margin-bottom: 1rem;
+        line-height: 1.8;
+    }
+}

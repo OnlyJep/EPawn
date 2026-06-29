@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Force HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Route all requests to Laravel's public/ directory
+    RewriteCond %{REQUEST_URI} !^/public
+    RewriteRule ^(.*)$ /public/$1 [L,QSA]
+</IfModule>

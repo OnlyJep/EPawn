@@ -1,0 +1,122 @@
+@import '../variables';
+
+.topbar {
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.topbar__title {
+    h1 {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--gray-900);
+    }
+
+    p {
+        font-size: 0.85rem;
+        color: var(--gray-700);
+    }
+}
+
+.topbar__profile {
+    position: relative;
+}
+
+.topbar__profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    padding: 0.35rem 0.85rem 0.35rem 0.35rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color var(--transition);
+
+    &:hover {
+        border-color: var(--red);
+    }
+}
+
+.topbar__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.topbar__username {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.topbar__dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 240px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    z-index: 50;
+}
+
+.topbar__dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+
+    img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    strong {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--gray-900);
+    }
+
+    span {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+}
+
+.topbar__dropdown button,
+.topbar__dropdown form button {
+    width: 100%;
+    text-align: left;
+    padding: 0.85rem 1rem;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: background var(--transition);
+
+    &:hover {
+        background: var(--red-light);
+        color: var(--red);
+    }
+}
+
+.topbar__dropdown form {
+    border-top: 1px solid var(--border-color);
+}
