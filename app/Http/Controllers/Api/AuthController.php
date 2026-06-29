@@ -279,15 +279,15 @@ class AuthController extends Controller
             'fullname' => $request->last_name ? "{$request->first_name} {$request->last_name}" : $request->first_name,
         ]);
 
-        $user->sendEmailVerificationNotification();
+        // Skip email verification for now to avoid 500 errors
+        // $user->sendEmailVerificationNotification();
 
         ActivityLog::log($user->id, 'register', null, $request);
 
         return response()->json([
             'success' => true,
-            'message' => 'Account created successfully. Please check your email to verify your account.',
-            'needs_verification' => true,
-            'email' => $user->email,
+            'message' => 'Account created successfully.',
+            'user' => $user->load('profile'),
         ]);
     }
 

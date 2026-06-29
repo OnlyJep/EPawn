@@ -27,6 +27,7 @@ export default function PasswordField({
     required = true,
     value,
     onChange,
+    defaultValue,
 }) {
     const [visible, setVisible] = useState(false);
 
@@ -38,7 +39,7 @@ export default function PasswordField({
                 name={name}
                 className="form-control"
                 placeholder={placeholder}
-                {...(value !== undefined ? { value, onChange } : {})}
+                {...(value !== undefined ? { value, onChange } : { defaultValue })}
                 required={required}
             />
             <button
