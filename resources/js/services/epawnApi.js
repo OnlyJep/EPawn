@@ -9,6 +9,14 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 let csrfReady = false;
 
+axios.interceptors.request.use(function (config) {
+    const token = getEpawn().token;
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
 function getCookie(name) {
     const match = document.cookie.match(new RegExp('(?:^|;\\s*)' + encodeURIComponent(name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)'));
     return match ? decodeURIComponent(match[1]) : null;
@@ -56,7 +64,7 @@ export async function login(payload) {
     await ensureCsrf();
     const { data } = await axios.post(`${API_BASE}/login`, payload);
 
-    setEpawn({ user: data.user });
+    setEpawn({ user: data.user, token: data.token });
 
     return data;
 }
@@ -65,7 +73,7 @@ export async function register(payload) {
     await ensureCsrf();
     const { data } = await axios.post(`${API_BASE}/register`, payload);
 
-    setEpawn({ user: data.user });
+    setEpawn({ user: data.user, token: data.token });
 
     return data;
 }
@@ -93,6 +101,16 @@ export async function logout() {
     clearEpawn();
 
     return data;
+}
+
+export function clearToken() {
+    const current = getEpawn();
+    if (current.token) {
+        delete current.token;
+        try {
+            localStorage.setItem('Epawn', JSON.stringify(current));
+        } catch {}
+    }
 }
 
 export async function updateProfile(payload) {

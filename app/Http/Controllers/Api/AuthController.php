@@ -164,10 +164,14 @@ class AuthController extends Controller
             Auth::login($admin);
             ActivityLog::log($admin->id, 'login', ['method' => 'api'], $request);
 
+            $admin->tokens()->delete();
+            $token = $admin->createToken('api-token')->plainTextToken;
+
             return response()->json([
                 'success' => true,
                 'message' => 'Logged in successfully.',
                 'user' => $admin->fresh(),
+                'token' => $token,
                 'redirect' => url('/dashboard'),
             ]);
         }
@@ -185,10 +189,14 @@ class AuthController extends Controller
         Auth::login($user);
         ActivityLog::log($user->id, 'login', ['method' => 'api'], $request);
 
+        $user->tokens()->delete();
+        $token = $user->createToken('api-token')->plainTextToken;
+
         return response()->json([
             'success' => true,
             'message' => 'Logged in successfully.',
             'user' => $user,
+            'token' => $token,
             'redirect' => url('/dashboard'),
         ]);
     }
@@ -250,10 +258,13 @@ class AuthController extends Controller
 
         ActivityLog::log($user->id, 'register', null, $request);
 
+        $token = $user->createToken('api-token')->plainTextToken;
+
         return response()->json([
             'success' => true,
             'message' => 'Account created successfully.',
             'user' => $user->load('profile'),
+            'token' => $token,
         ]);
     }
 

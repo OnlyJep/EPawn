@@ -1,6 +1,14 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import EpawnApp from './EpawnApp';
+import { setEpawn } from './services/epawnStorage';
+
+const urlParams = new URLSearchParams(window.location.search);
+const loginToken = urlParams.get('login_token');
+if (loginToken) {
+    setEpawn({ token: loginToken });
+    window.location.href = '/dashboard';
+}
 
 const rootEl = document.getElementById('root');
 

@@ -107,7 +107,10 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $user = Auth::user();
-        ActivityLog::log($user->id, 'logout', null, $request);
+        if ($user) {
+            $user->tokens()->delete();
+            ActivityLog::log($user->id, 'logout', null, $request);
+        }
 
         Auth::logout();
         $request->session()->invalidate();
@@ -199,10 +202,13 @@ class AuthController extends Controller
 
             ActivityLog::log($user->id, 'login', ['method' => 'google'], $request);
 
+            $user->tokens()->delete();
+            $token = $user->createToken('api-token')->plainTextToken;
+
             Auth::login($user, true);
             $request->session()->regenerate();
 
-            return redirect()->route('dashboard');
+            return redirect('/?login_token=' . $token);
         } catch (\Exception $e) {
             return redirect('/')->withErrors([
                 'login' => 'Google sign-in failed: ' . $e->getMessage(),
