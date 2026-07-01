@@ -280,7 +280,7 @@ export default function RecordsPage({
             return;
         }
 
-        const combinedDate = `${date} ${time}`;
+        const combinedDate = time ? `${date} ${time}` : date;
 
         const payload = {
             account_id: accountNameToId[account] || null,

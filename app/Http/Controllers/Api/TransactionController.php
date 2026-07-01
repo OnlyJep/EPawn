@@ -34,6 +34,8 @@ class TransactionController extends Controller
             'date' => 'required|date',
         ]);
 
+        $dateOnly = explode(' ', $request->date)[0];
+
         $transaction = Transaction::create([
             'user_id' => $request->user()->id,
             'account_id' => $request->account_id,
@@ -41,12 +43,16 @@ class TransactionController extends Controller
             'type' => $request->type,
             'amount' => $request->amount,
             'description' => $request->description,
-            'date' => $request->date,
+            'date' => $dateOnly,
         ]);
 
         ActivityLog::log($request->user()->id, 'create_transaction', ['transaction_id' => $transaction->id, 'amount' => $transaction->amount, 'type' => $transaction->type], $request);
 
-        $this->recalculateBalance($request->user()->id);
+        try {
+            $this->recalculateBalance($request->user()->id);
+        } catch (\Exception $e) {
+            \Log::error('recalculateBalance failed: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true, 'transaction' => $transaction->load('account:id,name', 'category:id,name')]);
     }
@@ -66,11 +72,17 @@ class TransactionController extends Controller
             'date' => 'required|date',
         ]);
 
-        $transaction->update($request->only('account_id', 'category_id', 'type', 'amount', 'description', 'date'));
+        $data = $request->only('account_id', 'category_id', 'type', 'amount', 'description');
+        $data['date'] = explode(' ', $request->date)[0];
+        $transaction->update($data);
 
         ActivityLog::log($request->user()->id, 'update_transaction', ['transaction_id' => $transaction->id], $request);
 
-        $this->recalculateBalance($request->user()->id);
+        try {
+            $this->recalculateBalance($request->user()->id);
+        } catch (\Exception $e) {
+            \Log::error('recalculateBalance failed: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true, 'transaction' => $transaction->fresh()->load('account:id,name', 'category:id,name')]);
     }
@@ -85,7 +97,11 @@ class TransactionController extends Controller
 
         $transaction->delete();
 
-        $this->recalculateBalance($request->user()->id);
+        try {
+            $this->recalculateBalance($request->user()->id);
+        } catch (\Exception $e) {
+            \Log::error('recalculateBalance failed: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true, 'message' => 'Transaction deleted.']);
     }

@@ -341,7 +341,7 @@ export default function BudgetPage({
             }
         }
 
-        const combinedDate = `${txDate} ${txTime}`;
+        const combinedDate = txTime ? `${txDate} ${txTime}` : txDate;
 
         const payload = {
             account_id: accountNameToId[txAccount] || null,
