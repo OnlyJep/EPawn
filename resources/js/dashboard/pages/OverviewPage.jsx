@@ -47,6 +47,9 @@ export default function OverviewPage({
     const [hoveredPoint, setHoveredPoint] = useState(null);
     const [loading, setLoading] = useState(false);
     const [calculatedTotals, setCalculatedTotals] = useState({ netBalance: 0, totalIncome: 0, totalExpenses: 0 });
+    const [accPage, setAccPage] = useState(1);
+    const [txPage, setTxPage] = useState(1);
+    const rowsPerPage = 5;
     const displayName = user?.fullname || user?.display_name || user?.username;
 
     const curMonthName = new Date().toLocaleString('default', { month: 'long' });
@@ -84,7 +87,7 @@ export default function OverviewPage({
                     const dateB = b.date ? new Date(b.date.replace(/-/g, '/')) : new Date(0);
                     return dateB - dateA;
                 });
-                setRecentTransactions(sorted.slice(0, 5));
+                setRecentTransactions(sorted);
 
                 const now = new Date();
                 const curMonth = now.getMonth();
@@ -360,8 +363,20 @@ export default function OverviewPage({
                     ) : accounts.length === 0 ? (
                         <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem' }}>No accounts created yet. Go to the Accounts section to add one.</p>
                     ) : (
+                        <>
+                        {Math.ceil(accounts.length / rowsPerPage) > 1 && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Page {accPage} of {Math.ceil(accounts.length / rowsPerPage)}</span>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <button onClick={() => setAccPage(p => Math.max(1, p - 1))} disabled={accPage === 1}
+                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: accPage === 1 ? 'var(--gray-100)' : 'var(--white)', color: accPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: accPage === 1 ? 'not-allowed' : 'pointer' }}>Previous</button>
+                                    <button onClick={() => setAccPage(p => Math.min(Math.ceil(accounts.length / rowsPerPage), p + 1))} disabled={accPage === Math.ceil(accounts.length / rowsPerPage)}
+                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'var(--gray-100)' : 'var(--white)', color: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'not-allowed' : 'pointer' }}>Next</button>
+                                </div>
+                            </div>
+                        )}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            {accounts.map((row) => (
+                            {accounts.slice((accPage - 1) * rowsPerPage, accPage * rowsPerPage).map((row) => (
                                 <div key={row.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--gray-200)', background: 'var(--gray-50)' }}>
                                     <div>
                                         <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--gray-900)' }}>{row.name || 'Unnamed Account'}</div>
@@ -373,6 +388,7 @@ export default function OverviewPage({
                                 </div>
                             ))}
                         </div>
+                        </>
                     )}
                 </div>
 
@@ -383,8 +399,20 @@ export default function OverviewPage({
                     ) : recentTransactions.length === 0 ? (
                         <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem' }}>No transactions recorded yet. Go to the Records section to add one.</p>
                     ) : (
+                        <>
+                        {Math.ceil(recentTransactions.length / rowsPerPage) > 1 && (
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Page {txPage} of {Math.ceil(recentTransactions.length / rowsPerPage)}</span>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <button onClick={() => setTxPage(p => Math.max(1, p - 1))} disabled={txPage === 1}
+                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: txPage === 1 ? 'var(--gray-100)' : 'var(--white)', color: txPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: txPage === 1 ? 'not-allowed' : 'pointer' }}>Previous</button>
+                                    <button onClick={() => setTxPage(p => Math.min(Math.ceil(recentTransactions.length / rowsPerPage), p + 1))} disabled={txPage === Math.ceil(recentTransactions.length / rowsPerPage)}
+                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'var(--gray-100)' : 'var(--white)', color: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'not-allowed' : 'pointer' }}>Next</button>
+                                </div>
+                            </div>
+                        )}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                            {recentTransactions.map((row) => {
+                            {recentTransactions.slice((txPage - 1) * rowsPerPage, txPage * rowsPerPage).map((row) => {
                                 const isExpense = (row.type || '').toLowerCase().includes('expense');
                                 return (
                                     <div key={row.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--gray-200)' }}>
@@ -401,6 +429,7 @@ export default function OverviewPage({
                                 );
                             })}
                         </div>
+                        </>
                     )}
                 </div>
             </div>

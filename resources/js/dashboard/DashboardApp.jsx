@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { App } from 'antd';
 import Sidebar from './components/Sidebar';
+import BottomNav from './components/BottomNav';
 import Topbar from './components/Topbar';
 import OverviewPage from './pages/OverviewPage';
 import RecordsPage from './pages/RecordsPage';
@@ -19,7 +20,6 @@ export default function DashboardApp(props) {
     const [settingsOpen, setSettingsOpen] = useState(props.flash?.openSettings || false);
     const [user, setUser] = useState(props.user);
     const [stats, setStats] = useState(props.stats);
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -29,9 +29,6 @@ export default function DashboardApp(props) {
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth < 768);
-            if (window.innerWidth >= 768) {
-                setSidebarOpen(false);
-            }
         };
 
         handleResize();
@@ -42,15 +39,14 @@ export default function DashboardApp(props) {
     return (
         <App>
             <div className="dashboard">
-                <Sidebar
-                    logo={props.logo}
-                    activeNav={activeNav}
-                    onNavChange={setActiveNav}
-                    routes={props.routes}
-                    isMobile={isMobile}
-                    isOpen={sidebarOpen}
-                    onToggle={() => setSidebarOpen(!sidebarOpen)}
-                />
+                {!isMobile && (
+                    <Sidebar
+                        logo={props.logo}
+                        activeNav={activeNav}
+                        onNavChange={setActiveNav}
+                        routes={props.routes}
+                    />
+                )}
                 <div className="dashboard-main">
                     <Topbar
                         user={user}
@@ -105,6 +101,12 @@ export default function DashboardApp(props) {
                     old={props.old}
                     onUserUpdated={setUser}
                 />
+                {isMobile && (
+                    <BottomNav
+                        activeNav={activeNav}
+                        onNavChange={setActiveNav}
+                    />
+                )}
             </div>
         </App>
     );

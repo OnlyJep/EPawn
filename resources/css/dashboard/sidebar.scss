@@ -163,14 +163,7 @@
 
 @media (max-width: 767px) {
     .sidebar {
-        position: fixed;
-        left: -250px;
-        top: 0;
-        z-index: 1000;
-    }
-
-    .sidebar--open {
-        transform: translateX(250px);
+        display: none;
     }
 }
 

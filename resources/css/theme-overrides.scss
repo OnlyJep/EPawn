@@ -174,6 +174,18 @@
     color: #d0d0e8;
 }
 
+[data-theme="dark"] .ant-modal-content,
+[data-theme="dark"] .ant-modal-container,
+[data-theme="dark"] .ant-modal-wrap {
+    background: #111122 !important;
+    border-color: #2a2a48 !important;
+}
+
+[data-theme="dark"] .ant-modal-header {
+    background: #111122 !important;
+    border-bottom-color: #2a2a48 !important;
+}
+
 [data-theme="dark"] .ant-modal-header,
 [data-theme="dark"] .ant-modal-title,
 [data-theme="dark"] .ant-modal-close {
@@ -186,10 +198,66 @@
     color: #d0d0e8;
 }
 
+[data-theme="dark"] .ant-modal-body input,
+[data-theme="dark"] .ant-modal-body input[type="text"],
+[data-theme="dark"] .ant-modal-body input[type="number"],
+[data-theme="dark"] .ant-modal-body input[type="email"],
+[data-theme="dark"] .ant-modal-body input[type="password"],
+[data-theme="dark"] .ant-modal-body input[type="search"],
+[data-theme="dark"] .ant-modal-body textarea,
+[data-theme="dark"] .ant-modal-body select {
+    background: #ffffff !important;
+    color: #222222 !important;
+    -webkit-text-fill-color: #222222 !important;
+    border-color: #d0d0d0 !important;
+}
+
+[data-theme="dark"] .ant-modal-body input::placeholder,
+[data-theme="dark"] .ant-modal-body textarea::placeholder {
+    color: #999999 !important;
+    -webkit-text-fill-color: #999999 !important;
+}
+
+[data-theme="dark"] .ant-modal-body select option {
+    background: #ffffff !important;
+    color: #222222 !important;
+}
+
+[data-theme="dark"] .ant-modal-close-x {
+    color: #f0f0ff !important;
+}
+
+[data-theme="dark"] .ant-modal-footer {
+    border-top-color: #2a2a48 !important;
+}
+
+[data-theme="dark"] .ant-btn-default {
+    background: #2a2a48 !important;
+    border-color: #404060 !important;
+    color: #d0d0e8 !important;
+}
+
 [data-theme="dark"] .overview-card--welcome h2 {
     color: #ffffff;
 }
 
 [data-theme="dark"] .overview-card h3 {
     color: #f0f0ff;
+}
+
+[data-theme="dark"] .bottom-nav {
+    background: #111122;
+    border-top-color: #2a2a48;
+}
+
+[data-theme="dark"] .bottom-nav__item {
+    color: #58587a;
+}
+
+[data-theme="dark"] .bottom-nav__item:hover {
+    color: #ff6b6b;
+}
+
+[data-theme="dark"] .bottom-nav__item--active {
+    color: #ff6b6b;
 }

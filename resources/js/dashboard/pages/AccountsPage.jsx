@@ -207,7 +207,7 @@ export default function AccountsPage({
                     height: '56px',
                     borderRadius: '50%',
                     background: 'var(--red)',
-                    color: 'var(--white)',
+                    color: '#ffffff',
                     border: 'none',
                     fontSize: '2rem',
                     fontWeight: 'bold',
@@ -250,14 +250,14 @@ export default function AccountsPage({
                     </div>
                     <div style={{ textAlign: 'center' }}>
                         <div style={{ textTransform: 'uppercase', fontSize: '0.75rem', color: 'var(--red)', fontWeight: 700, letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Income So Far</div>
-                        <div style={{ color: 'var(--gray-900)', fontSize: '1.25rem', fontWeight: 800 }}>
-                            {formatCurrency(incomeSoFar)}
+                        <div style={{ color: '#10b981', fontSize: '1.25rem', fontWeight: 800 }}>
+                            +{formatCurrency(incomeSoFar)}
                         </div>
                     </div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
                     <div style={{ textTransform: 'uppercase', fontSize: '0.75rem', color: 'var(--red)', fontWeight: 700, letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Total Balance</div>
-                    <div style={{ color: 'var(--red-dark)', fontSize: '1.65rem', fontWeight: 900 }}>
+                    <div style={{ color: 'var(--gray-900)', fontSize: '1.65rem', fontWeight: 900 }}>
                         {formatCurrency(totalBalance)}
                     </div>
                 </div>
@@ -272,7 +272,7 @@ export default function AccountsPage({
                         style={{
                             borderRadius: '12px',
                             border: '2px solid var(--red)',
-                            color: btnHover ? 'var(--white)' : 'var(--red)',
+                            color: btnHover ? '#ffffff' : 'var(--red)',
                             background: btnHover ? 'var(--red)' : 'transparent',
                             fontWeight: 700,
                             padding: '0.5rem 1.5rem',
@@ -703,7 +703,7 @@ export default function AccountsPage({
                                                 bottom: '-2px',
                                                 right: '-2px',
                                                 background: 'var(--red)',
-                                                color: 'var(--white)',
+                                                color: '#ffffff',
                                                 borderRadius: '50%',
                                                 width: '18px',
                                                 height: '18px',

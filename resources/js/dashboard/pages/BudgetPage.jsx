@@ -75,6 +75,9 @@ export default function BudgetPage({
 
     const [txBtnHover, setTxBtnHover] = useState(false);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 5;
+
     // Build lookup maps
     const categoryNameToId = {};
     (categories || []).forEach(c => { categoryNameToId[c.name] = c.id; });
@@ -446,7 +449,7 @@ export default function BudgetPage({
                     height: '56px',
                     borderRadius: '50%',
                     background: 'var(--red)',
-                    color: 'var(--white)',
+                    color: '#ffffff',
                     border: 'none',
                     fontSize: '2rem',
                     fontWeight: 'bold',
@@ -481,7 +484,7 @@ export default function BudgetPage({
                         style={{
                             borderRadius: '12px',
                             border: '2px solid var(--red)',
-                            color: txBtnHover ? 'var(--white)' : 'var(--red)',
+                            color: txBtnHover ? '#ffffff' : 'var(--red)',
                             background: txBtnHover ? 'var(--red)' : 'transparent',
                             fontWeight: 700,
                             padding: '0.5rem 1.5rem',
@@ -501,8 +504,20 @@ export default function BudgetPage({
             {loading ? (
                 <p>Loading budget limits...</p>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-                    {rows.map((row) => {
+                <>
+                    {Math.ceil(rows.length / rowsPerPage) > 1 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--gray-500)' }}>Page {currentPage} of {Math.ceil(rows.length / rowsPerPage)} ({rows.length} total)</span>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}
+                                    style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', border: '1.5px solid var(--gray-300)', background: currentPage === 1 ? 'var(--gray-100)' : 'var(--white)', color: currentPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.8rem', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}>Previous</button>
+                                <button onClick={() => setCurrentPage(p => Math.min(Math.ceil(rows.length / rowsPerPage), p + 1))} disabled={currentPage === Math.ceil(rows.length / rowsPerPage)}
+                                    style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', border: '1.5px solid var(--gray-300)', background: currentPage === Math.ceil(rows.length / rowsPerPage) ? 'var(--gray-100)' : 'var(--white)', color: currentPage === Math.ceil(rows.length / rowsPerPage) ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.8rem', cursor: currentPage === Math.ceil(rows.length / rowsPerPage) ? 'not-allowed' : 'pointer' }}>Next</button>
+                            </div>
+                        </div>
+                    )}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+                    {rows.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).map((row) => {
                         const cat = row.category?.name || 'General';
                         const lim = parseFloat(row.limit_amount) || 0;
                         const spent = spendingMap[cat] || 0;
@@ -588,6 +603,7 @@ export default function BudgetPage({
                         );
                     })}
                 </div>
+                </>
             )}
 
             <div style={{ marginBottom: '2rem' }}>
@@ -627,7 +643,7 @@ export default function BudgetPage({
                                         borderRadius: '8px',
                                         border: '1.5px solid var(--red)',
                                         background: 'var(--red)',
-                                        color: 'var(--white)',
+                                        color: '#ffffff',
                                         fontWeight: 700,
                                         fontSize: '0.8rem',
                                         cursor: 'pointer'
@@ -681,7 +697,7 @@ export default function BudgetPage({
                                         borderRadius: '8px',
                                         border: '1.5px solid var(--red)',
                                         background: 'var(--red)',
-                                        color: 'var(--white)',
+                                        color: '#ffffff',
                                         fontWeight: 700,
                                         fontSize: '0.8rem',
                                         cursor: 'pointer'
@@ -812,7 +828,7 @@ export default function BudgetPage({
                                             height: '18px',
                                             borderRadius: '50%',
                                             background: 'var(--red)',
-                                            color: 'var(--white)',
+                                            color: '#ffffff',
                                             display: 'inline-flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 function NavIcon({ type }) {
     const icons = {
@@ -17,81 +17,14 @@ function NavIcon({ type }) {
     );
 }
 
-function HamburgerIcon({ isOpen }) {
-    return (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            {isOpen ? (
-                <path d="M18 6L6 18M6 6l12 12" />
-            ) : (
-                <path d="M3 12h18M3 6h18M3 18h18" />
-            )}
-        </svg>
-    );
-}
-
 export default function Sidebar({
     logo,
     activeNav,
     onNavChange,
     routes,
-    isMobile,
-    isOpen,
-    onToggle,
 }) {
-    const handleNavClick = (nav) => {
-        onNavChange(nav);
-        if (isMobile) {
-            onToggle(); // Close sidebar on mobile after navigation
-        }
-    };
-
-    const handleOverlayClick = () => {
-        if (isMobile && isOpen) {
-            onToggle();
-        }
-    };
-
     return (
-        <>
-            {isMobile && (
-                <button
-                    type="button"
-                    className="sidebar-toggle outside"
-                    onClick={onToggle}
-                    style={{
-                        position: 'fixed',
-                        top: '10px',
-                        left: '20px',
-                        zIndex: 1002,
-                        padding: '10px',
-                        borderRadius: '5px',
-                        border: 'none',
-                        background: '#DC143C',
-                        color: 'white',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <HamburgerIcon isOpen={isOpen} />
-                </button>
-            )}
-            {isMobile && isOpen && (
-                <div
-                    onClick={handleOverlayClick}
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: 'rgba(0, 0, 0, 0.5)',
-                        zIndex: 999
-                    }}
-                />
-            )}
-            <aside className={`sidebar ${isMobile ? 'sidebar--mobile' : ''} ${isMobile && isOpen ? 'sidebar--open' : ''}`}>
+        <aside className="sidebar">
             <div className="sidebar__brand">
                 <a href={routes.home}>
                     <img src={logo} alt="E-PAWN" />
@@ -106,7 +39,7 @@ export default function Sidebar({
                             <button
                                 type="button"
                                 className={`sidebar__link${activeNav === 'dashboard' ? ' sidebar__link--active' : ''}`}
-                                onClick={() => handleNavClick('dashboard')}
+                                onClick={() => onNavChange('dashboard')}
                             >
                                 <NavIcon type="dashboard" />
                                 <span>Dashboard</span>
@@ -116,7 +49,7 @@ export default function Sidebar({
                             <button
                                 type="button"
                                 className={`sidebar__link${activeNav === 'records' ? ' sidebar__link--active' : ''}`}
-                                onClick={() => handleNavClick('records')}
+                                onClick={() => onNavChange('records')}
                             >
                                 <NavIcon type="sheet" />
                                 <span>Records</span>
@@ -126,7 +59,7 @@ export default function Sidebar({
                             <button
                                 type="button"
                                 className={`sidebar__link${activeNav === 'budget_planning' ? ' sidebar__link--active' : ''}`}
-                                onClick={() => handleNavClick('budget_planning')}
+                                onClick={() => onNavChange('budget_planning')}
                             >
                                 <NavIcon type="planning" />
                                 <span>Budget Planning</span>
@@ -136,7 +69,7 @@ export default function Sidebar({
                             <button
                                 type="button"
                                 className={`sidebar__link${activeNav === 'budget' ? ' sidebar__link--active' : ''}`}
-                                onClick={() => handleNavClick('budget')}
+                                onClick={() => onNavChange('budget')}
                             >
                                 <NavIcon type="budget" />
                                 <span>Budget</span>
@@ -146,7 +79,7 @@ export default function Sidebar({
                             <button
                                 type="button"
                                 className={`sidebar__link${activeNav === 'accounts' ? ' sidebar__link--active' : ''}`}
-                                onClick={() => handleNavClick('accounts')}
+                                onClick={() => onNavChange('accounts')}
                             >
                                 <NavIcon type="accounts" />
                                 <span>Accounts</span>
@@ -156,7 +89,7 @@ export default function Sidebar({
                             <button
                                 type="button"
                                 className={`sidebar__link${activeNav === 'categories' ? ' sidebar__link--active' : ''}`}
-                                onClick={() => handleNavClick('categories')}
+                                onClick={() => onNavChange('categories')}
                             >
                                 <NavIcon type="categories" />
                                 <span>Categories</span>
@@ -166,6 +99,5 @@ export default function Sidebar({
                 </nav>
             </div>
         </aside>
-        </>
     );
 }

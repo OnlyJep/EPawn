@@ -44,6 +44,8 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
     const [selectedItemIds, setSelectedItemIds] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 5;
+    const [itemsCurrentPage, setItemsCurrentPage] = useState(1);
+    const itemsRowsPerPage = 5;
     const [btnHover, setBtnHover] = useState(false);
 
     const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -354,6 +356,8 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
         });
     };
 
+    useEffect(() => { setItemsCurrentPage(1); }, [activeMonth, activeYear, activePeriod, showArchived, selectedPlanId]);
+
     const filteredPlanItems = getFilteredItems(currentPlan);
 
     const calcKeyStyle = (type) => ({
@@ -361,7 +365,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
         borderRadius: '8px', border: '1px solid var(--gray-300)', cursor: 'pointer',
         transition: 'all 0.1s ease',
         background: type === 'op' ? 'var(--red-light)' : type === 'equals' ? 'var(--red)' : '#f3f4f6',
-        color: type === 'op' ? 'var(--red)' : type === 'equals' ? 'var(--white)' : '#1f2937',
+        color: type === 'op' ? 'var(--red)' : type === 'equals' ? '#ffffff' : '#1f2937',
         display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none',
         boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
     });
@@ -371,7 +375,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
     return (
         <div className="budget-planning-page" style={{ padding: '2rem', background: 'var(--white)', borderRadius: '12px', border: '1px solid var(--gray-300)', position: 'relative', width: '100%', boxSizing: 'border-box' }}>
             <button type="button" onClick={selectedPlanId ? openAddItemModal : () => { setNewPlanName(''); setNewPlanBudget(stats?.totalSaved || '0'); setNewPlanDay(new Date().getDate()); setCreateModalOpen(true); }}
-                className="mobile-fab" style={{ position: 'fixed', bottom: '2rem', right: '2rem', width: '56px', height: '56px', borderRadius: '50%', background: 'var(--red)', color: 'var(--white)', border: 'none', fontSize: '2rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', display: 'none', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>+</button>
+                className="mobile-fab" style={{ position: 'fixed', bottom: '2rem', right: '2rem', width: '56px', height: '56px', borderRadius: '50%', background: 'var(--red)', color: '#ffffff', border: 'none', fontSize: '2rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', display: 'none', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>+</button>
 
             {!selectedPlanId ? (
                 <>
@@ -381,7 +385,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                             <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', margin: '0.25rem 0 0' }}>Create and manage financial planning sheets for trips, events, or specific savings targets.</p>
                         </div>
                         <button type="button" className="desktop-create-btn" onMouseEnter={() => setBtnHover(true)} onMouseLeave={() => setBtnHover(false)} onClick={() => { setNewPlanName(''); setNewPlanBudget(stats?.totalSaved || '0'); setNewPlanDay(new Date().getDate()); setCreateModalOpen(true); }}
-                            style={{ borderRadius: '12px', border: '2px solid var(--red)', color: btnHover ? 'var(--white)' : 'var(--red)', background: btnHover ? 'var(--red)' : 'transparent', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s' }}>+ CREATE PLAN</button>
+                            style={{ borderRadius: '12px', border: '2px solid var(--red)', color: btnHover ? '#ffffff' : 'var(--red)', background: btnHover ? 'var(--red)' : 'transparent', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s' }}>+ CREATE PLAN</button>
                     </div>
                     {plans.length === 0 ? (
                         <p style={{ color: 'var(--gray-500)', textAlign: 'center', padding: '2rem 0' }}>No budget plans yet. Create one to get started.</p>
@@ -425,7 +429,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                             </button>
                         </div>
                         <div className="desktop-create-btn">
-                            <button type="button" onClick={openAddItemModal} style={{ borderRadius: '12px', border: '2px solid var(--red)', color: 'var(--white)', background: 'var(--red)', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.85rem', cursor: 'pointer' }}>+ ADD TRANSACTION / ITEM</button>
+                            <button type="button" onClick={openAddItemModal} style={{ borderRadius: '12px', border: '2px solid var(--red)', color: '#ffffff', background: 'var(--red)', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.85rem', cursor: 'pointer' }}>+ ADD TRANSACTION / ITEM</button>
                         </div>
                     </div>
 
@@ -477,7 +481,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--gray-500)' }}>View Block:</span>
                             {['Daily', '1st-15th', '16th-End', 'Weekly'].map(p => (
                                 <button key={p} type="button" onClick={() => setActivePeriod(p)}
-                                    style={{ padding: '0.35rem 1rem', borderRadius: '20px', border: activePeriod === p ? '1.5px solid var(--red)' : '1.5px solid var(--gray-300)', background: activePeriod === p ? 'var(--red)' : 'transparent', color: activePeriod === p ? 'var(--white)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer', textTransform: 'uppercase' }}>{p}</button>
+                                    style={{ padding: '0.35rem 1rem', borderRadius: '20px', border: activePeriod === p ? '1.5px solid var(--red)' : '1.5px solid var(--gray-300)', background: activePeriod === p ? 'var(--red)' : 'transparent', color: activePeriod === p ? '#ffffff' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer', textTransform: 'uppercase' }}>{p}</button>
                             ))}
                             <button type="button" onClick={() => setShowArchived(!showArchived)} style={{ marginLeft: '0.5rem', padding: '0.35rem 1rem', borderRadius: '20px', border: '1.5px solid var(--gray-300)', background: 'transparent', color: 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: 'pointer' }}>{showArchived ? 'View Active' : 'View Archived'}</button>
                         </div>
@@ -487,10 +491,21 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--red-light)', border: '1.5px solid var(--red)', borderRadius: '12px', padding: '0.75rem 1.25rem', marginBottom: '1rem' }}>
                             <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--red)' }}>{selectedItemIds.length} selected</span>
                             <button type="button" onClick={handleBulkArchive} style={{ background: 'var(--white)', border: '1.5px solid var(--red)', color: 'var(--red)', padding: '0.35rem 1rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}>Archive Selected</button>
-                            <button type="button" onClick={handleBulkDelete} style={{ background: 'var(--red)', border: 'none', color: 'var(--white)', padding: '0.35rem 1rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}>Delete Selected</button>
+                            <button type="button" onClick={handleBulkDelete} style={{ background: 'var(--red)', border: 'none', color: '#ffffff', padding: '0.35rem 1rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer' }}>Delete Selected</button>
                         </div>
                     )}
 
+                    {Math.ceil(filteredPlanItems.length / itemsRowsPerPage) > 1 && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--gray-500)' }}>Page {itemsCurrentPage} of {Math.ceil(filteredPlanItems.length / itemsRowsPerPage)} ({filteredPlanItems.length} total)</span>
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <button onClick={() => setItemsCurrentPage(p => Math.max(1, p - 1))} disabled={itemsCurrentPage === 1}
+                                    style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', border: '1.5px solid var(--gray-300)', background: itemsCurrentPage === 1 ? 'var(--gray-100)' : 'var(--white)', color: itemsCurrentPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.8rem', cursor: itemsCurrentPage === 1 ? 'not-allowed' : 'pointer' }}>Previous</button>
+                                <button onClick={() => setItemsCurrentPage(p => Math.min(Math.ceil(filteredPlanItems.length / itemsRowsPerPage), p + 1))} disabled={itemsCurrentPage === Math.ceil(filteredPlanItems.length / itemsRowsPerPage)}
+                                    style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', border: '1.5px solid var(--gray-300)', background: itemsCurrentPage === Math.ceil(filteredPlanItems.length / itemsRowsPerPage) ? 'var(--gray-100)' : 'var(--white)', color: itemsCurrentPage === Math.ceil(filteredPlanItems.length / itemsRowsPerPage) ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.8rem', cursor: itemsCurrentPage === Math.ceil(filteredPlanItems.length / itemsRowsPerPage) ? 'not-allowed' : 'pointer' }}>Next</button>
+                            </div>
+                        </div>
+                    )}
                     <div style={{ overflowX: 'auto', width: '100%' }}>
                         <table className="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead>
@@ -506,7 +521,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredPlanItems.map(item => (
+                                {filteredPlanItems.slice((itemsCurrentPage - 1) * itemsRowsPerPage, itemsCurrentPage * itemsRowsPerPage).map(item => (
                                     <tr key={item.id} style={{ borderBottom: '1px solid var(--gray-200)', background: selectedItemIds.includes(item.id) ? 'var(--red-light)' : 'transparent', opacity: item.archived ? 0.6 : 1 }}>
                                         <td style={{ padding: '0.75rem 1rem', textAlign: 'right', whiteSpace: 'nowrap' }}>
                                             <button type="button" onClick={() => openEditItemModal(item)} style={{ background: 'none', border: 'none', fontSize: '1rem', cursor: 'pointer', padding: '0.25rem', color: 'var(--gray-600)', marginRight: '0.25rem' }}><EditOutlined /></button>
@@ -533,13 +548,15 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
 
             <Modal title="Create Budget Plan" open={createModalOpen} onCancel={() => setCreateModalOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
                 <form onSubmit={handleCreatePlan} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                    <div>
-                        <label style={{ fontWeight: 700, color: 'var(--gray-700)', marginBottom: '0.35rem', display: 'block' }}>Plan Name :</label>
-                        <input type="text" value={newPlanName} onChange={e => setNewPlanName(e.target.value)} className="form-control" placeholder="e.g. Cebu Trip, Tokyo Vacation" required />
-                    </div>
-                    <div>
-                        <label style={{ fontWeight: 700, color: 'var(--gray-700)', marginBottom: '0.35rem', display: 'block' }}>Estimated Starting Budget :</label>
-                        <input type="number" step="0.01" value={newPlanBudget} onChange={e => setNewPlanBudget(e.target.value)} className="form-control" placeholder="P 0.00" required />
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div>
+                            <label style={{ fontWeight: 700, color: 'var(--gray-700)', marginBottom: '0.35rem', display: 'block' }}>Plan Name :</label>
+                            <input type="text" value={newPlanName} onChange={e => setNewPlanName(e.target.value)} className="form-control" placeholder="e.g. Cebu Trip" required />
+                        </div>
+                        <div>
+                            <label style={{ fontWeight: 700, color: 'var(--gray-700)', marginBottom: '0.35rem', display: 'block' }}>Starting Budget :</label>
+                            <input type="number" step="0.01" value={newPlanBudget} onChange={e => setNewPlanBudget(e.target.value)} className="form-control" placeholder="₱ 0.00" required />
+                        </div>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
                         <button type="button" className="btn btn-outline" onClick={() => setCreateModalOpen(false)}>Cancel</button>
@@ -580,7 +597,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                         {['Income', 'Expense'].map(t => (
                             <div key={t} onClick={() => { setItemType(t); const m = categories.filter(c => (c.type || '').toLowerCase().includes(t.toLowerCase())); setItemCategory(m[0]?.name || 'General'); }}
                                 style={{ flex: 1, padding: '0.75rem', textAlign: 'center', cursor: 'pointer', background: itemType === t ? 'var(--red-light)' : 'transparent', color: itemType === t ? 'var(--red)' : 'var(--gray-500)', fontWeight: 700, fontSize: '0.9rem', borderRight: t !== 'Expense' ? '1.5px solid var(--gray-300)' : 'none', userSelect: 'none' }}>
-                                <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: itemType === t ? 'var(--red)' : 'transparent', color: 'var(--white)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', marginRight: '0.25rem' }}>{itemType === t ? 'V' : ''}</span>
+                                <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: itemType === t ? 'var(--red)' : 'transparent', color: '#ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', marginRight: '0.25rem' }}>{itemType === t ? 'V' : ''}</span>
                                 {t.toUpperCase()}
                             </div>
                         ))}
