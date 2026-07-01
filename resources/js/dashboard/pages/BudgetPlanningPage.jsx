@@ -370,7 +370,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
 
     return (
         <div className="budget-planning-page" style={{ padding: '2rem', background: 'var(--white)', borderRadius: '12px', border: '1px solid var(--gray-300)', position: 'relative', width: '100%', boxSizing: 'border-box' }}>
-            <button type="button" onClick={() => { setNewPlanName(''); setNewPlanBudget(stats?.totalSaved || '0'); setNewPlanDay(new Date().getDate()); setCreateModalOpen(true); }}
+            <button type="button" onClick={selectedPlanId ? openAddItemModal : () => { setNewPlanName(''); setNewPlanBudget(stats?.totalSaved || '0'); setNewPlanDay(new Date().getDate()); setCreateModalOpen(true); }}
                 className="mobile-fab" style={{ position: 'fixed', bottom: '2rem', right: '2rem', width: '56px', height: '56px', borderRadius: '50%', background: 'var(--red)', color: 'var(--white)', border: 'none', fontSize: '2rem', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', display: 'none', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>+</button>
 
             {!selectedPlanId ? (
@@ -424,7 +424,9 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-500)" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
                         </div>
-                        <button type="button" onClick={openAddItemModal} style={{ borderRadius: '12px', border: '2px solid var(--red)', color: 'var(--white)', background: 'var(--red)', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.85rem', cursor: 'pointer' }}>+ ADD TRANSACTION / ITEM</button>
+                        <div className="desktop-create-btn">
+                            <button type="button" onClick={openAddItemModal} style={{ borderRadius: '12px', border: '2px solid var(--red)', color: 'var(--white)', background: 'var(--red)', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.85rem', cursor: 'pointer' }}>+ ADD TRANSACTION / ITEM</button>
+                        </div>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', background: 'var(--gray-50)', border: '1.5px solid var(--gray-300)', borderRadius: '16px', padding: '1.5rem', marginBottom: '1.75rem' }}>

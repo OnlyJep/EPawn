@@ -57343,7 +57343,7 @@ function BudgetPlanningPage(_ref) {
     },
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
       type: "button",
-      onClick: function onClick() {
+      onClick: selectedPlanId ? openAddItemModal : function () {
         setNewPlanName('');
         setNewPlanBudget((stats === null || stats === void 0 ? void 0 : stats.totalSaved) || '0');
         setNewPlanDay(new Date().getDate());
@@ -57609,20 +57609,23 @@ function BudgetPlanningPage(_ref) {
               })]
             })
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-          type: "button",
-          onClick: openAddItemModal,
-          style: {
-            borderRadius: '12px',
-            border: '2px solid var(--red)',
-            color: 'var(--white)',
-            background: 'var(--red)',
-            fontWeight: 700,
-            padding: '0.5rem 1.5rem',
-            fontSize: '0.85rem',
-            cursor: 'pointer'
-          },
-          children: "+ ADD TRANSACTION / ITEM"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+          className: "desktop-create-btn",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+            type: "button",
+            onClick: openAddItemModal,
+            style: {
+              borderRadius: '12px',
+              border: '2px solid var(--red)',
+              color: 'var(--white)',
+              background: 'var(--red)',
+              fontWeight: 700,
+              padding: '0.5rem 1.5rem',
+              fontSize: '0.85rem',
+              cursor: 'pointer'
+            },
+            children: "+ ADD TRANSACTION / ITEM"
+          })
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
         style: {
