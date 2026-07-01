@@ -42,7 +42,7 @@
             }
 
             &.negative {
-                color: #dc2626;
+                color: var(--red);
             }
         }
 
@@ -311,11 +311,11 @@
     text-align: right;
 
     &.savings {
-        color: #16a34a;
+        color: var(--success-color);
     }
 
     &.expense {
-        color: #8b0000;
+        color: var(--red);
     }
 }
 
@@ -683,12 +683,12 @@
 }
 
 .positive {
-    color: #16a34a;
+    color: var(--success-color);
     font-weight: 600;
 }
 
 .negative {
-    color: #dc2626;
+    color: var(--red);
     font-weight: 600;
 }
 

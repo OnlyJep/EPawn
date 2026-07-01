@@ -138,9 +138,6 @@ export default function Navbar({ user, logo, routes, csrf, onOpenModal, theme, o
                     ))}
                 </ul>
                 <div className="mobile-nav-actions">
-                    <div style={{ display: 'flex', justifyContent: 'center', padding: '0.5rem 0' }}>
-                        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-                    </div>
                     {user ? (
                         <>
                             <a href={dashboardUrl} className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }}>

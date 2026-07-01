@@ -7,8 +7,6 @@ axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-let csrfReady = false;
-
 axios.interceptors.request.use(function (config) {
     const token = getEpawn().token;
     if (token) {
@@ -17,23 +15,8 @@ axios.interceptors.request.use(function (config) {
     return config;
 });
 
-function getCookie(name) {
-    const match = document.cookie.match(new RegExp('(?:^|;\\s*)' + encodeURIComponent(name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)'));
-    return match ? decodeURIComponent(match[1]) : null;
-}
-
 async function ensureCsrf() {
-    if (csrfReady) return;
-    try {
-        await axios.get('/sanctum/csrf-cookie');
-        const token = getCookie('XSRF-TOKEN');
-        if (token) {
-            axios.defaults.headers.common['X-XSRF-TOKEN'] = token;
-            csrfReady = true;
-        }
-    } catch (e) {
-        // Will retry on next call
-    }
+    // Not needed with Bearer token auth
 }
 
 function storeDashboard(data) {
