@@ -12,8 +12,13 @@ body {
     font-family: 'Montserrat', sans-serif;
     color: var(--gray-900);
     background: var(--white);
+    background-color: #FAFAFA;
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+[data-theme="dark"] body {
+    background-color: #111122;
 }
 
 section {

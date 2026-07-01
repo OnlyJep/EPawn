@@ -330,7 +330,7 @@ export default function OverviewPage({
                                 left: `${hoveredPoint.x + 10}px`,
                                 top: `${hoveredPoint.y - 65}px`,
                                 background: 'rgba(31, 41, 55, 0.95)',
-                                color: 'var(--white)',
+                                color: '#ffffff',
                                 padding: '0.6rem 0.9rem',
                                 borderRadius: '10px',
                                 boxShadow: '0 4px 15px rgba(0,0,0,0.25)',
@@ -340,9 +340,9 @@ export default function OverviewPage({
                                 whiteSpace: 'nowrap',
                                 border: '1px solid rgba(255,255,255,0.1)'
                             }}>
-                                <strong style={{ color: 'var(--white)' }}>{hoveredPoint.description}</strong><br/>
-                                <span style={{ color: 'var(--gray-300)' }}>{formatFriendlyDateTime(hoveredPoint.dateStr)}</span><br/>
-                                Running Balance: <span style={{ color: 'var(--red-light)', fontWeight: 800 }}>{formatCurrency(hoveredPoint.balance)}</span><br/>
+                                <strong style={{ color: '#ffffff' }}>{hoveredPoint.description}</strong><br/>
+                                <span style={{ color: '#d0d0e8' }}>{formatFriendlyDateTime(hoveredPoint.dateStr)}</span><br/>
+                                Running Balance: <span style={{ color: '#ff6b6b', fontWeight: 800 }}>{formatCurrency(hoveredPoint.balance)}</span><br/>
                                 Type: <span style={{ fontWeight: 800, color: hoveredPoint.change >= 0 ? '#10b981' : '#f87171' }}>
                                     {hoveredPoint.type} ({hoveredPoint.change >= 0 ? '+' : ''}{formatCurrency(hoveredPoint.change)})
                                 </span>
@@ -364,7 +364,7 @@ export default function OverviewPage({
                             {accounts.map((row) => (
                                 <div key={row.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--gray-200)', background: 'var(--gray-50)' }}>
                                     <div>
-                                        <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>{row.name || 'Unnamed Account'}</div>
+                                        <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--gray-900)' }}>{row.name || 'Unnamed Account'}</div>
                                         <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textTransform: 'uppercase' }}>Bank</div>
                                     </div>
                                     <div style={{ fontWeight: 700, fontSize: '1.05rem', color: (parseFloat(row.balance) || 0) >= 0 ? 'var(--gray-800)' : 'var(--red)' }}>

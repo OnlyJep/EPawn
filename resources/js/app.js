@@ -1,6 +1,8 @@
+import 'core-js/stable';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import EpawnApp from './EpawnApp';
+import ErrorBoundary from './ErrorBoundary';
 import { setEpawn } from './services/epawnStorage';
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -34,7 +36,11 @@ if (rootEl) {
     props.openModal = d.openModal || '';
     props.year = d.year ? parseInt(d.year, 10) : new Date().getFullYear();
 
-    createRoot(rootEl).render(React.createElement(EpawnApp, props));
+    createRoot(rootEl).render(
+        React.createElement(ErrorBoundary, null,
+            React.createElement(EpawnApp, props)
+        )
+    );
 } else {
     console.error('Root element not found');
 }

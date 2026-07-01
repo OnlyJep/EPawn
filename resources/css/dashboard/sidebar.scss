@@ -140,15 +140,15 @@
         color: var(--red);
     }
 
-    &--active {
-        background: var(--red);
-        color: var(--white);
-
-        &:hover {
+        &--active {
             background: var(--red);
-            color: var(--white);
+            color: #ffffff;
+
+            &:hover {
+                background: var(--red);
+                color: #ffffff;
+            }
         }
-    }
 }
 
 .sidebar__label {
@@ -176,7 +176,7 @@
 
 .sidebar-toggle {
     background: var(--red);
-    color: var(--white);
+    color: #ffffff;
     border: none;
     padding: 10px;
     border-radius: 5px;

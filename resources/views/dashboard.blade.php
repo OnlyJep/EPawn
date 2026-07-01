@@ -10,8 +10,9 @@
     <script>
         (function() {
             try {
-                const storedTheme = localStorage.getItem('epawn-theme') || 'light';
-                document.documentElement.setAttribute('data-theme', storedTheme);
+                var t = localStorage.getItem('epawn-theme');
+                var theme = (t === 'dark' || t === 'light') ? t : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
             } catch(e) {
                 document.documentElement.setAttribute('data-theme', 'light');
             }

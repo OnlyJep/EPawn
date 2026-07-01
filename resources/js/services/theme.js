@@ -2,7 +2,8 @@ const STORAGE_KEY = 'epawn-theme';
 
 export function getStoredTheme() {
     try {
-        return localStorage.getItem(STORAGE_KEY) || 'light';
+        var t = localStorage.getItem(STORAGE_KEY);
+        return (t === 'dark' || t === 'light') ? t : 'light';
     } catch {
         return 'light';
     }

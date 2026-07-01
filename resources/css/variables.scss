@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
 
+html {
+    background: #FAFAFA;
+}
+
+[data-theme="dark"] html {
+    background: #111122;
+}
+
 :root {
     --red: #C62828;
     --red-dark: #9B1B1B;
@@ -7,10 +15,15 @@
     --red-glow: rgba(198, 40, 40, 0.15);
     --white: #FFFFFF;
     --off-white: #FAFAFA;
+    --gray-50: #FAFAFA;
     --gray-100: #F5F5F5;
+    --gray-200: #EEEEEE;
     --gray-300: #E0E0E0;
+    --gray-400: #BDBDBD;
     --gray-500: #9E9E9E;
+    --gray-600: #616161;
     --gray-700: #424242;
+    --gray-800: #303030;
     --gray-900: #212121;
     --shadow: 0 4px 24px rgba(198, 40, 40, 0.12);
     --shadow-lg: 0 12px 48px rgba(198, 40, 40, 0.18);
@@ -45,10 +58,15 @@
     --red-glow: rgba(255, 107, 107, 0.15);
     --white: #151525;
     --off-white: #111122;
+    --gray-50: #101020;
     --gray-100: #181830;
+    --gray-200: #202040;
     --gray-300: #2a2a48;
+    --gray-400: #404060;
     --gray-500: #58587a;
+    --gray-600: #a0a0c0;
     --gray-700: #c0c0d8;
+    --gray-800: #d0d0e8;
     --gray-900: #eeeeff;
     --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.5);

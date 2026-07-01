@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "@ant-design/icons": "^6.3.2",
-        "antd": "^6.5.0"
+        "antd": "^6.5.0",
+        "core-js": "^3.49.0"
     }
 }
