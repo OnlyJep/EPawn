@@ -63,6 +63,21 @@ return [
             ]) : [],
         ],
 
+        'remote' => [
+            'driver' => 'mysql',
+            'host' => env('DB_REMOTE_HOST', '127.0.0.1'),
+            'port' => env('DB_REMOTE_PORT', '3306'),
+            'database' => env('DB_REMOTE_DATABASE', 'ezyro_42290947_epawn'),
+            'username' => env('DB_REMOTE_USERNAME', 'root'),
+            'password' => env('DB_REMOTE_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

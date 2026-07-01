@@ -43,7 +43,6 @@ export default function OverviewPage({
 }) {
     const [accounts, setAccounts] = useState([]);
     const [recentTransactions, setRecentTransactions] = useState([]);
-    const [budgetPlans, setBudgetPlans] = useState([]);
     const [trendData, setTrendData] = useState([]);
     const [hoveredPoint, setHoveredPoint] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -57,11 +56,6 @@ export default function OverviewPage({
         const loadDashboardData = async () => {
             setLoading(true);
             try {
-                const savedPlans = localStorage.getItem('budget_plans');
-                if (savedPlans) {
-                    setBudgetPlans(JSON.parse(savedPlans));
-                }
-
                 const [accRes, txRes] = await Promise.all([
                     fetchAccounts(),
                     fetchTransactions()
@@ -406,31 +400,6 @@ export default function OverviewPage({
                                     </div>
                                 );
                             })}
-                        </div>
-                    )}
-                </div>
-
-                <div className="overview-card" style={{ padding: '1.5rem', borderRadius: '12px', background: 'var(--white)', border: '1px solid var(--gray-300)' }}>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.25rem' }}>Budget Planning Transactions</h3>
-                    {budgetPlans.length === 0 ? (
-                        <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem' }}>No budget plans created yet. Go to Budget Planning to create one.</p>
-                    ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                            {budgetPlans.flatMap(plan => 
-                                plan.items.filter(item => !item.archived).slice(0, 3).map(item => (
-                                    <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--gray-200)' }}>
-                                        <div>
-                                            <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{item.notes || 'No description'}</div>
-                                            <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>
-                                                {item.date && item.time ? formatFriendlyDateTime(`${item.date} ${item.time}`) : '\u2014'} &bull; {plan.name}
-                                            </div>
-                                        </div>
-                                        <div style={{ fontWeight: 700, color: item.type === 'Income' ? 'var(--green, #10b981)' : 'var(--red, #ef4444)' }}>
-                                            {item.type === 'Income' ? '+' : '-'}{formatCurrency(item.amount)}
-                                        </div>
-                                    </div>
-                                ))
-                            )}
                         </div>
                     )}
                 </div>

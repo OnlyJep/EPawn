@@ -19,7 +19,38 @@
     </script>
 </head>
 <body>
-    <div id="root"></div>
-    <script src="{{ mix('js/app.js') }}"></script>
+    @php
+        $__user = Auth::check() ? Auth::user()->load('profile') : null;
+        $__errors = session('errors') ? session('errors')->getMessages() : [];
+        $__openModal = '';
+        if (!empty($__errors)) {
+            $__openModal = isset($__errors['login']) ? 'login' : 'register';
+        } elseif (session('open_modal')) {
+            $__openModal = session('open_modal');
+        }
+        $__routes = [
+            'home' => url('/'),
+            'features' => url('/features'),
+            'howItWorks' => url('/how-it-works'),
+            'about' => url('/about'),
+            'helpCenter' => url('/help-center'),
+            'privacyPolicy' => url('/privacy-policy'),
+            'termsOfService' => url('/terms-of-service'),
+            'login' => url('/api/login'),
+            'register' => url('/api/register'),
+            'logout' => url('/api/logout'),
+            'dashboard' => url('/dashboard'),
+        ];
+    @endphp
+    <div id="root"
+         data-user='@json($__user)'
+         data-logo="{{ asset('img/EPAWNlogo.png') }}"
+         data-csrf="{{ csrf_token() }}"
+         data-routes='@json($__routes)'
+         data-errors='@json($__errors)'
+         data-old='@json(session()->getOldInput())'
+         data-open-modal="{{ $__openModal }}"
+         data-year="{{ (int) date('Y') }}"></div>
+    <script src="{{ mix('js/app.js') }}?v=2"></script>
 </body>
 </html>

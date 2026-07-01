@@ -51881,7 +51881,8 @@ function PasswordField(_ref) {
     _ref$required = _ref.required,
     required = _ref$required === void 0 ? true : _ref$required,
     value = _ref.value,
-    onChange = _ref.onChange;
+    onChange = _ref.onChange,
+    defaultValue = _ref.defaultValue;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     visible = _useState2[0],
@@ -51897,7 +51898,9 @@ function PasswordField(_ref) {
     }, value !== undefined ? {
       value: value,
       onChange: onChange
-    } : {}), {}, {
+    } : {
+      defaultValue: defaultValue
+    }), {}, {
       required: required
     })), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
       type: "button",
@@ -52319,12 +52322,12 @@ function CloseIcon() {
   });
 }
 function buildProfileState(user, old) {
-  var _ref, _old$first_name, _ref2, _old$middle_initial, _ref3, _old$last_name, _ref4, _old$suffix, _ref5, _old$username;
+  var _ref, _old$first_name, _user$profile, _ref2, _old$middle_initial, _user$profile2, _ref3, _old$last_name, _user$profile3, _ref4, _old$suffix, _user$profile4, _ref5, _old$username;
   return {
-    first_name: (_ref = (_old$first_name = old === null || old === void 0 ? void 0 : old.first_name) !== null && _old$first_name !== void 0 ? _old$first_name : user === null || user === void 0 ? void 0 : user.first_name) !== null && _ref !== void 0 ? _ref : '',
-    middle_initial: (_ref2 = (_old$middle_initial = old === null || old === void 0 ? void 0 : old.middle_initial) !== null && _old$middle_initial !== void 0 ? _old$middle_initial : user === null || user === void 0 ? void 0 : user.middle_initial) !== null && _ref2 !== void 0 ? _ref2 : '',
-    last_name: (_ref3 = (_old$last_name = old === null || old === void 0 ? void 0 : old.last_name) !== null && _old$last_name !== void 0 ? _old$last_name : user === null || user === void 0 ? void 0 : user.last_name) !== null && _ref3 !== void 0 ? _ref3 : '',
-    suffix: (_ref4 = (_old$suffix = old === null || old === void 0 ? void 0 : old.suffix) !== null && _old$suffix !== void 0 ? _old$suffix : user === null || user === void 0 ? void 0 : user.suffix) !== null && _ref4 !== void 0 ? _ref4 : '',
+    first_name: (_ref = (_old$first_name = old === null || old === void 0 ? void 0 : old.first_name) !== null && _old$first_name !== void 0 ? _old$first_name : user === null || user === void 0 || (_user$profile = user.profile) === null || _user$profile === void 0 ? void 0 : _user$profile.first_name) !== null && _ref !== void 0 ? _ref : '',
+    middle_initial: (_ref2 = (_old$middle_initial = old === null || old === void 0 ? void 0 : old.middle_initial) !== null && _old$middle_initial !== void 0 ? _old$middle_initial : user === null || user === void 0 || (_user$profile2 = user.profile) === null || _user$profile2 === void 0 ? void 0 : _user$profile2.middle_initial) !== null && _ref2 !== void 0 ? _ref2 : '',
+    last_name: (_ref3 = (_old$last_name = old === null || old === void 0 ? void 0 : old.last_name) !== null && _old$last_name !== void 0 ? _old$last_name : user === null || user === void 0 || (_user$profile3 = user.profile) === null || _user$profile3 === void 0 ? void 0 : _user$profile3.last_name) !== null && _ref3 !== void 0 ? _ref3 : '',
+    suffix: (_ref4 = (_old$suffix = old === null || old === void 0 ? void 0 : old.suffix) !== null && _old$suffix !== void 0 ? _old$suffix : user === null || user === void 0 || (_user$profile4 = user.profile) === null || _user$profile4 === void 0 ? void 0 : _user$profile4.suffix) !== null && _ref4 !== void 0 ? _ref4 : '',
     username: (_ref5 = (_old$username = old === null || old === void 0 ? void 0 : old.username) !== null && _old$username !== void 0 ? _old$username : user === null || user === void 0 ? void 0 : user.username) !== null && _ref5 !== void 0 ? _ref5 : ''
   };
 }
@@ -52512,7 +52515,6 @@ function SettingsModal(_ref6) {
     setEditing(false);
     setProfile(buildProfileState(user, old));
     setDeleteConfirmOpen(false);
-    setDeletePassword('');
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
     className: "modal-overlay active",
@@ -54552,40 +54554,44 @@ function BudgetPage(_ref) {
     setTxCalcExpression = _useState32[1];
   var _useState33 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState34 = _slicedToArray(_useState33, 2),
-    selectingAccountFor = _useState34[0],
-    setSelectingAccountFor = _useState34[1];
-  var _useState35 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    txCalcResult = _useState34[0],
+    setTxCalcResult = _useState34[1];
+  var _useState35 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState36 = _slicedToArray(_useState35, 2),
-    selectingCategory = _useState36[0],
-    setSelectingCategory = _useState36[1];
+    selectingAccountFor = _useState36[0],
+    setSelectingAccountFor = _useState36[1];
   var _useState37 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState38 = _slicedToArray(_useState37, 2),
-    createAccModalOpen = _useState38[0],
-    setCreateAccModalOpen = _useState38[1];
-  var _useState39 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    selectingCategory = _useState38[0],
+    setSelectingCategory = _useState38[1];
+  var _useState39 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState40 = _slicedToArray(_useState39, 2),
-    newAccName = _useState40[0],
-    setNewAccName = _useState40[1];
+    createAccModalOpen = _useState40[0],
+    setCreateAccModalOpen = _useState40[1];
   var _useState41 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState42 = _slicedToArray(_useState41, 2),
-    newAccInitial = _useState42[0],
-    setNewAccInitial = _useState42[1];
-  var _useState43 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('/img/accicons/walleticon.png'),
+    newAccName = _useState42[0],
+    setNewAccName = _useState42[1];
+  var _useState43 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState44 = _slicedToArray(_useState43, 2),
-    newAccIcon = _useState44[0],
-    setNewAccIcon = _useState44[1];
-  var _useState45 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    newAccInitial = _useState44[0],
+    setNewAccInitial = _useState44[1];
+  var _useState45 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('/img/accicons/walleticon.png'),
     _useState46 = _slicedToArray(_useState45, 2),
-    createCatModalOpen = _useState46[0],
-    setCreateCatModalOpen = _useState46[1];
-  var _useState47 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    newAccIcon = _useState46[0],
+    setNewAccIcon = _useState46[1];
+  var _useState47 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState48 = _slicedToArray(_useState47, 2),
-    newCatName = _useState48[0],
-    setNewCatName = _useState48[1];
-  var _useState49 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    createCatModalOpen = _useState48[0],
+    setCreateCatModalOpen = _useState48[1];
+  var _useState49 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState50 = _slicedToArray(_useState49, 2),
-    txBtnHover = _useState50[0],
-    setTxBtnHover = _useState50[1];
+    newCatName = _useState50[0],
+    setNewCatName = _useState50[1];
+  var _useState51 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    _useState52 = _slicedToArray(_useState51, 2),
+    txBtnHover = _useState52[0],
+    setTxBtnHover = _useState52[1];
 
   // Build lookup maps
   var categoryNameToId = {};
@@ -54626,6 +54632,7 @@ function BudgetPage(_ref) {
         handleKeypadPress('=');
       } else if (key === 'Backspace') {
         e.preventDefault();
+        setTxCalcResult(null);
         setTxCalcExpression(function (prev) {
           if (prev.length <= 1) return '0';
           return prev.slice(0, -1);
@@ -54633,13 +54640,14 @@ function BudgetPage(_ref) {
       } else if (key.toLowerCase() === 'c' || key === 'Escape') {
         e.preventDefault();
         setTxCalcExpression('0');
+        setTxCalcResult(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return function () {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [txModalOpen, txCalcExpression]);
+  }, [txModalOpen, txCalcExpression, txCalcResult]);
   var loadData = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
       var _yield$Promise$all, _yield$Promise$all2, budgetRes, catRes, accRes, txRes, map, _t;
@@ -55007,18 +55015,23 @@ function BudgetPage(_ref) {
     if (key === '=') {
       var evaluated = evaluateExpr(txCalcExpression);
       if (evaluated !== null) {
-        setTxCalcExpression(String(evaluated));
+        setTxCalcResult(evaluated);
       } else {
         antd__WEBPACK_IMPORTED_MODULE_4__["default"].error('Invalid expression.');
       }
     } else {
+      setTxCalcResult(null);
+      var isOperator = ['+', '-', '*', '/'].includes(key);
       var _char = key;
       if (key === '*') _char = 'x';
       if (key === '/') _char = "\xF7";
-      if (txCalcExpression === '0' && !['+', '-', 'x', "\xF7"].includes(_char) && _char !== '.') {
+      if (isOperator) _char = " ".concat(_char, " ");
+      if (txCalcExpression === '0' && !isOperator && key !== '.') {
         setTxCalcExpression(_char);
       } else {
-        setTxCalcExpression(txCalcExpression + _char);
+        setTxCalcExpression(function (prev) {
+          return prev + _char;
+        });
       }
     }
   };
@@ -55806,40 +55819,56 @@ function BudgetPage(_ref) {
             borderRadius: '12px',
             padding: '0.75rem 1rem',
             background: 'var(--white)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
             marginBottom: '1rem'
           },
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
             style: {
-              fontSize: '1.75rem',
-              fontWeight: 900,
-              color: 'var(--gray-900)',
-              wordBreak: 'break-all'
-            },
-            children: txCalcExpression
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-            type: "button",
-            onClick: function onClick() {
-              if (txCalcExpression.length <= 1) {
-                setTxCalcExpression('0');
-              } else {
-                setTxCalcExpression(txCalcExpression.slice(0, -1));
-              }
-            },
-            style: {
-              background: 'none',
-              border: 'none',
-              fontSize: '1.5rem',
-              cursor: 'pointer',
-              color: 'var(--gray-500)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0.25rem'
+              justifyContent: 'space-between'
             },
-            children: "\u232B"
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+              style: {
+                fontSize: '1.75rem',
+                fontWeight: 900,
+                color: 'var(--gray-900)',
+                wordBreak: 'break-all'
+              },
+              children: txCalcExpression
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+              type: "button",
+              onClick: function onClick() {
+                if (txCalcExpression.length <= 1) {
+                  setTxCalcExpression('0');
+                  setTxCalcResult(null);
+                } else {
+                  setTxCalcExpression(txCalcExpression.slice(0, -1));
+                }
+              },
+              style: {
+                background: 'none',
+                border: 'none',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                color: 'var(--gray-500)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0.25rem'
+              },
+              children: "\u232B"
+            })]
+          }), txCalcResult !== null && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+            style: {
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              color: 'var(--red)',
+              borderTop: '1px solid var(--gray-200)',
+              paddingTop: '0.5rem',
+              marginTop: '0.5rem',
+              textAlign: 'right'
+            },
+            children: ["= ", txCalcResult]
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
           style: {
@@ -56540,26 +56569,30 @@ function BudgetPlanningPage(_ref) {
     _useState50 = _slicedToArray(_useState49, 2),
     itemCalcExpression = _useState50[0],
     setItemCalcExpression = _useState50[1];
-  var _useState51 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+  var _useState51 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState52 = _slicedToArray(_useState51, 2),
-    itemDate = _useState52[0],
-    setItemDate = _useState52[1];
+    itemCalcResult = _useState52[0],
+    setItemCalcResult = _useState52[1];
   var _useState53 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState54 = _slicedToArray(_useState53, 2),
-    itemTime = _useState54[0],
-    setItemTime = _useState54[1];
-  var _useState55 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    itemDate = _useState54[0],
+    setItemDate = _useState54[1];
+  var _useState55 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState56 = _slicedToArray(_useState55, 2),
-    selectingCategory = _useState56[0],
-    setSelectingCategory = _useState56[1];
+    itemTime = _useState56[0],
+    setItemTime = _useState56[1];
   var _useState57 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState58 = _slicedToArray(_useState57, 2),
-    createCatModalOpen = _useState58[0],
-    setCreateCatModalOpen = _useState58[1];
-  var _useState59 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    selectingCategory = _useState58[0],
+    setSelectingCategory = _useState58[1];
+  var _useState59 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState60 = _slicedToArray(_useState59, 2),
-    newCatName = _useState60[0],
-    setNewCatName = _useState60[1];
+    createCatModalOpen = _useState60[0],
+    setCreateCatModalOpen = _useState60[1];
+  var _useState61 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    _useState62 = _slicedToArray(_useState61, 2),
+    newCatName = _useState62[0],
+    setNewCatName = _useState62[1];
   var loadPlans = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
       var res, _t;
@@ -57202,13 +57235,16 @@ function BudgetPlanningPage(_ref) {
   var handleKeypadPress = function handleKeypadPress(key) {
     if (key === '=') {
       var evaluated = evaluateExpr(itemCalcExpression);
-      if (evaluated !== null) setItemCalcExpression(String(evaluated));else antd__WEBPACK_IMPORTED_MODULE_4__["default"].error('Invalid expression.');
+      if (evaluated !== null) setItemCalcResult(evaluated);else antd__WEBPACK_IMPORTED_MODULE_4__["default"].error('Invalid expression.');
     } else {
+      setItemCalcResult(null);
+      var isOperator = ['+', '-', '*', '/'].includes(key);
       var _char = key;
       if (key === '*') _char = 'x';
       if (key === '/') _char = "\xF7";
+      if (isOperator) _char = " ".concat(_char, " ");
       setItemCalcExpression(function (prev) {
-        return prev === '0' && !['+', '-', 'x', "\xF7"].includes(_char) && _char !== '.' ? _char : prev + _char;
+        return prev === '0' && !isOperator && key !== '.' ? _char : prev + _char;
       });
     }
   };
@@ -57234,30 +57270,37 @@ function BudgetPlanningPage(_ref) {
         setItemCalcExpression(function (prev) {
           return prev.length <= 1 ? '0' : prev.slice(0, -1);
         });
+        setItemCalcResult(null);
       } else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') {
         e.preventDefault();
         setItemCalcExpression('0');
+        setItemCalcResult(null);
       }
     };
     window.addEventListener('keydown', handler);
     return function () {
       return window.removeEventListener('keydown', handler);
     };
-  }, [itemModalOpen, itemCalcExpression]);
+  }, [itemModalOpen, itemCalcExpression, itemCalcResult]);
   var getFilteredItems = function getFilteredItems(plan) {
     if (!plan || !plan.items) return [];
     return plan.items.filter(function (item) {
       if (showArchived && !item.archived) return false;
       if (!showArchived && item.archived) return false;
-      var d = item.date ? new Date(item.date) : null;
-      if (!d) return false;
-      if (d.getFullYear() !== activeYear || d.getMonth() !== activeMonth) return false;
-      var day = d.getDate();
-      if (activePeriod === '1st-15th') return day >= 1 && day <= 15;
-      if (activePeriod === '16th-End') return day >= 16;
+      var datePart = item.date ? item.date.split('T')[0] : null;
+      if (!datePart) return false;
+      var parts = datePart.split('-');
+      var itemYear = parseInt(parts[0], 10);
+      var itemMonth = parseInt(parts[1], 10) - 1;
+      var itemDay = parseInt(parts[2], 10);
+      if (itemYear !== activeYear || itemMonth !== activeMonth) return false;
+      if (activePeriod === '1st-15th') return itemDay >= 1 && itemDay <= 15;
+      if (activePeriod === '16th-End') return itemDay >= 16;
       return true;
     }).sort(function (a, b) {
-      return new Date(a.date) - new Date(b.date);
+      var da = a.date || '';
+      var db = b.date || '';
+      return da < db ? -1 : da > db ? 1 : 0;
     });
   };
   var filteredPlanItems = getFilteredItems(currentPlan);
@@ -57354,6 +57397,7 @@ function BudgetPlanningPage(_ref) {
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
           type: "button",
+          className: "desktop-create-btn",
           onMouseEnter: function onMouseEnter() {
             return setBtnHover(true);
           },
@@ -58436,33 +58480,49 @@ function BudgetPlanningPage(_ref) {
             borderRadius: '12px',
             padding: '0.75rem 1rem',
             background: 'var(--white)',
-            display: 'flex',
-            justifyContent: 'space-between',
             marginBottom: '1rem'
           },
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
             style: {
-              fontSize: '1.75rem',
-              fontWeight: 900,
-              color: 'var(--gray-900)',
-              wordBreak: 'break-all'
+              display: 'flex',
+              justifyContent: 'space-between'
             },
-            children: itemCalcExpression
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-            type: "button",
-            onClick: function onClick() {
-              return setItemCalcExpression(function (prev) {
-                return prev.length <= 1 ? '0' : prev.slice(0, -1);
-              });
-            },
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+              style: {
+                fontSize: '1.75rem',
+                fontWeight: 900,
+                color: 'var(--gray-900)',
+                wordBreak: 'break-all'
+              },
+              children: itemCalcExpression
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+              type: "button",
+              onClick: function onClick() {
+                setItemCalcExpression(function (prev) {
+                  return prev.length <= 1 ? '0' : prev.slice(0, -1);
+                });
+                setItemCalcResult(null);
+              },
+              style: {
+                background: 'none',
+                border: 'none',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                color: 'var(--gray-500)'
+              },
+              children: "BK"
+            })]
+          }), itemCalcResult !== null && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
             style: {
-              background: 'none',
-              border: 'none',
               fontSize: '1.5rem',
-              cursor: 'pointer',
-              color: 'var(--gray-500)'
+              fontWeight: 700,
+              color: 'var(--red)',
+              borderTop: '1px solid var(--gray-200)',
+              paddingTop: '0.5rem',
+              marginTop: '0.5rem',
+              textAlign: 'right'
             },
-            children: "BK"
+            children: ["= ", itemCalcResult]
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
           style: {
@@ -59676,28 +59736,24 @@ function OverviewPage(_ref) {
     setRecentTransactions = _useState4[1];
   var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState6 = _slicedToArray(_useState5, 2),
-    budgetPlans = _useState6[0],
-    setBudgetPlans = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    trendData = _useState6[0],
+    setTrendData = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState8 = _slicedToArray(_useState7, 2),
-    trendData = _useState8[0],
-    setTrendData = _useState8[1];
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
+    hoveredPoint = _useState8[0],
+    setHoveredPoint = _useState8[1];
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState0 = _slicedToArray(_useState9, 2),
-    hoveredPoint = _useState0[0],
-    setHoveredPoint = _useState0[1];
-  var _useState1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState10 = _slicedToArray(_useState1, 2),
-    loading = _useState10[0],
-    setLoading = _useState10[1];
-  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    loading = _useState0[0],
+    setLoading = _useState0[1];
+  var _useState1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
       netBalance: 0,
       totalIncome: 0,
       totalExpenses: 0
     }),
-    _useState12 = _slicedToArray(_useState11, 2),
-    calculatedTotals = _useState12[0],
-    setCalculatedTotals = _useState12[1];
+    _useState10 = _slicedToArray(_useState1, 2),
+    calculatedTotals = _useState10[0],
+    setCalculatedTotals = _useState10[1];
   var displayName = (user === null || user === void 0 ? void 0 : user.fullname) || (user === null || user === void 0 ? void 0 : user.display_name) || (user === null || user === void 0 ? void 0 : user.username);
   var curMonthName = new Date().toLocaleString('default', {
     month: 'long'
@@ -59706,16 +59762,12 @@ function OverviewPage(_ref) {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     var loadDashboardData = /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-        var _points, savedPlans, _yield$Promise$all, _yield$Promise$all2, accRes, txRes, accountsData, netBalance, allRecords, allTransactions, sorted, now, curMonth, _curYear, runningBalance, descAllTransactions, startOfCurMonth, initialMonthBalance, curMonthTransactions, points, currentBal, today, totalIncome, totalExpenses, _t;
+        var _points, _yield$Promise$all, _yield$Promise$all2, accRes, txRes, accountsData, netBalance, allRecords, allTransactions, sorted, now, curMonth, _curYear, runningBalance, descAllTransactions, startOfCurMonth, initialMonthBalance, curMonthTransactions, points, currentBal, today, totalIncome, totalExpenses, _t;
         return _regenerator().w(function (_context) {
           while (1) switch (_context.p = _context.n) {
             case 0:
               setLoading(true);
               _context.p = 1;
-              savedPlans = localStorage.getItem('budget_plans');
-              if (savedPlans) {
-                setBudgetPlans(JSON.parse(savedPlans));
-              }
               _context.n = 2;
               return Promise.all([(0,_services_epawnApi__WEBPACK_IMPORTED_MODULE_1__.fetchAccounts)(), (0,_services_epawnApi__WEBPACK_IMPORTED_MODULE_1__.fetchTransactions)()]);
             case 2:
@@ -60361,71 +60413,6 @@ function OverviewPage(_ref) {
             }, row.id);
           })
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-        className: "overview-card",
-        style: {
-          padding: '1.5rem',
-          borderRadius: '12px',
-          background: 'var(--white)',
-          border: '1px solid var(--gray-300)'
-        },
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h3", {
-          style: {
-            fontSize: '1.1rem',
-            fontWeight: 600,
-            marginBottom: '1.25rem'
-          },
-          children: "Budget Planning Transactions"
-        }), budgetPlans.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("p", {
-          style: {
-            color: 'var(--gray-500)',
-            fontSize: '0.9rem'
-          },
-          children: "No budget plans created yet. Go to Budget Planning to create one."
-        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-          style: {
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem'
-          },
-          children: budgetPlans.flatMap(function (plan) {
-            return plan.items.filter(function (item) {
-              return !item.archived;
-            }).slice(0, 3).map(function (item) {
-              return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-                style: {
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '0.75rem 1rem',
-                  borderRadius: '8px',
-                  border: '1px solid var(--gray-200)'
-                },
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-                    style: {
-                      fontWeight: 600,
-                      fontSize: '0.9rem'
-                    },
-                    children: item.notes || 'No description'
-                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-                    style: {
-                      fontSize: '0.75rem',
-                      color: 'var(--gray-500)'
-                    },
-                    children: [item.date && item.time ? formatFriendlyDateTime("".concat(item.date, " ").concat(item.time)) : "\u2014", " \u2022 ", plan.name]
-                  })]
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-                  style: {
-                    fontWeight: 700,
-                    color: item.type === 'Income' ? 'var(--green, #10b981)' : 'var(--red, #ef4444)'
-                  },
-                  children: [item.type === 'Income' ? '+' : '-', (0,_constants_sheetDefaults__WEBPACK_IMPORTED_MODULE_2__.formatCurrency)(item.amount)]
-                })]
-              }, item.id);
-            });
-          })
-        })]
       })]
     })]
   });
@@ -60584,75 +60571,79 @@ function RecordsPage(_ref) {
     setCalcExpression = _useState26[1];
   var _useState27 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState28 = _slicedToArray(_useState27, 2),
-    selectingAccountFor = _useState28[0],
-    setSelectingAccountFor = _useState28[1];
-  var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    calcResult = _useState28[0],
+    setCalcResult = _useState28[1];
+  var _useState29 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState30 = _slicedToArray(_useState29, 2),
-    selectingCategory = _useState30[0],
-    setSelectingCategory = _useState30[1];
+    selectingAccountFor = _useState30[0],
+    setSelectingAccountFor = _useState30[1];
   var _useState31 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState32 = _slicedToArray(_useState31, 2),
-    createAccModalOpen = _useState32[0],
-    setCreateAccModalOpen = _useState32[1];
-  var _useState33 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    selectingCategory = _useState32[0],
+    setSelectingCategory = _useState32[1];
+  var _useState33 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState34 = _slicedToArray(_useState33, 2),
-    newAccName = _useState34[0],
-    setNewAccName = _useState34[1];
+    createAccModalOpen = _useState34[0],
+    setCreateAccModalOpen = _useState34[1];
   var _useState35 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState36 = _slicedToArray(_useState35, 2),
-    newAccInitial = _useState36[0],
-    setNewAccInitial = _useState36[1];
-  var _useState37 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('/img/accicons/walleticon.png'),
+    newAccName = _useState36[0],
+    setNewAccName = _useState36[1];
+  var _useState37 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState38 = _slicedToArray(_useState37, 2),
-    newAccIcon = _useState38[0],
-    setNewAccIcon = _useState38[1];
-  var _useState39 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    newAccInitial = _useState38[0],
+    setNewAccInitial = _useState38[1];
+  var _useState39 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('/img/accicons/walleticon.png'),
     _useState40 = _slicedToArray(_useState39, 2),
-    createCatModalOpen = _useState40[0],
-    setCreateCatModalOpen = _useState40[1];
-  var _useState41 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    newAccIcon = _useState40[0],
+    setNewAccIcon = _useState40[1];
+  var _useState41 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState42 = _slicedToArray(_useState41, 2),
-    newCatName = _useState42[0],
-    setNewCatName = _useState42[1];
-  var _useState43 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(1),
+    createCatModalOpen = _useState42[0],
+    setCreateCatModalOpen = _useState42[1];
+  var _useState43 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState44 = _slicedToArray(_useState43, 2),
-    currentPage = _useState44[0],
-    setCurrentPage = _useState44[1];
-  var rowsPerPage = 5;
-  var _useState45 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    newCatName = _useState44[0],
+    setNewCatName = _useState44[1];
+  var _useState45 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(1),
     _useState46 = _slicedToArray(_useState45, 2),
-    btnHover = _useState46[0],
-    setBtnHover = _useState46[1];
+    currentPage = _useState46[0],
+    setCurrentPage = _useState46[1];
+  var rowsPerPage = 5;
   var _useState47 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState48 = _slicedToArray(_useState47, 2),
-    filterDropdownOpen = _useState48[0],
-    setFilterDropdownOpen = _useState48[1];
-  var _useState49 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('All'),
+    btnHover = _useState48[0],
+    setBtnHover = _useState48[1];
+  var _useState49 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState50 = _slicedToArray(_useState49, 2),
-    activeFilter = _useState50[0],
-    setActiveFilter = _useState50[1];
-  var _useState51 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(function () {
+    filterDropdownOpen = _useState50[0],
+    setFilterDropdownOpen = _useState50[1];
+  var _useState51 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('All'),
+    _useState52 = _slicedToArray(_useState51, 2),
+    activeFilter = _useState52[0],
+    setActiveFilter = _useState52[1];
+  var _useState53 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(function () {
       return new Date().getMonth();
     }),
-    _useState52 = _slicedToArray(_useState51, 2),
-    activeMonth = _useState52[0],
-    setActiveMonth = _useState52[1];
-  var _useState53 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(function () {
+    _useState54 = _slicedToArray(_useState53, 2),
+    activeMonth = _useState54[0],
+    setActiveMonth = _useState54[1];
+  var _useState55 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(function () {
       return new Date().getFullYear();
     }),
-    _useState54 = _slicedToArray(_useState53, 2),
-    activeYear = _useState54[0],
-    setActiveYear = _useState54[1];
-  var _useState55 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('Daily'),
     _useState56 = _slicedToArray(_useState55, 2),
-    activePeriod = _useState56[0],
-    setActivePeriod = _useState56[1];
-  var _useState57 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(function () {
+    activeYear = _useState56[0],
+    setActiveYear = _useState56[1];
+  var _useState57 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('Daily'),
+    _useState58 = _slicedToArray(_useState57, 2),
+    activePeriod = _useState58[0],
+    setActivePeriod = _useState58[1];
+  var _useState59 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(function () {
       return new Date().getDate();
     }),
-    _useState58 = _slicedToArray(_useState57, 2),
-    selectedDay = _useState58[0],
-    setSelectedDay = _useState58[1];
+    _useState60 = _slicedToArray(_useState59, 2),
+    selectedDay = _useState60[0],
+    setSelectedDay = _useState60[1];
 
   // Build lookup maps
   var categoryNameToId = {};
@@ -60701,6 +60692,7 @@ function RecordsPage(_ref) {
         handleKeypadPress('=');
       } else if (key === 'Backspace') {
         e.preventDefault();
+        setCalcResult(null);
         setCalcExpression(function (prev) {
           if (prev.length <= 1) return '0';
           return prev.slice(0, -1);
@@ -60708,13 +60700,14 @@ function RecordsPage(_ref) {
       } else if (key.toLowerCase() === 'c' || key === 'Escape') {
         e.preventDefault();
         setCalcExpression('0');
+        setCalcResult(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return function () {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [modalOpen, calcExpression]);
+  }, [modalOpen, calcExpression, calcResult]);
   var loadData = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
       var _yield$Promise$all, _yield$Promise$all2, txRes, catRes, accRes, savedPlans, budgetPlans, budgetItems, _t;
@@ -61037,18 +61030,23 @@ function RecordsPage(_ref) {
     if (key === '=') {
       var evaluated = evaluateExpr(calcExpression);
       if (evaluated !== null) {
-        setCalcExpression(String(evaluated));
+        setCalcResult(evaluated);
       } else {
         antd__WEBPACK_IMPORTED_MODULE_4__["default"].error('Invalid expression.');
       }
     } else {
+      setCalcResult(null);
+      var isOperator = ['+', '-', '*', '/'].includes(key);
       var _char = key;
       if (key === '*') _char = 'x';
       if (key === '/') _char = "\xF7";
-      if (calcExpression === '0' && !['+', '-', 'x', "\xF7"].includes(_char) && _char !== '.') {
+      if (isOperator) _char = " ".concat(_char, " ");
+      if (calcExpression === '0' && !isOperator && key !== '.') {
         setCalcExpression(_char);
       } else {
-        setCalcExpression(calcExpression + _char);
+        setCalcExpression(function (prev) {
+          return prev + _char;
+        });
       }
     }
   };
@@ -62009,40 +62007,56 @@ function RecordsPage(_ref) {
             borderRadius: '12px',
             padding: '0.75rem 1rem',
             background: 'var(--white)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
             marginBottom: '1rem'
           },
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
             style: {
-              fontSize: '1.75rem',
-              fontWeight: 900,
-              color: 'var(--gray-900)',
-              wordBreak: 'break-all'
-            },
-            children: calcExpression
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-            type: "button",
-            onClick: function onClick() {
-              if (calcExpression.length <= 1) {
-                setCalcExpression('0');
-              } else {
-                setCalcExpression(calcExpression.slice(0, -1));
-              }
-            },
-            style: {
-              background: 'none',
-              border: 'none',
-              fontSize: '1.5rem',
-              cursor: 'pointer',
-              color: 'var(--gray-500)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0.25rem'
+              justifyContent: 'space-between'
             },
-            children: "\u232B"
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+              style: {
+                fontSize: '1.75rem',
+                fontWeight: 900,
+                color: 'var(--gray-900)',
+                wordBreak: 'break-all'
+              },
+              children: calcExpression
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+              type: "button",
+              onClick: function onClick() {
+                if (calcExpression.length <= 1) {
+                  setCalcExpression('0');
+                } else {
+                  setCalcExpression(calcExpression.slice(0, -1));
+                }
+                setCalcResult(null);
+              },
+              style: {
+                background: 'none',
+                border: 'none',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                color: 'var(--gray-500)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0.25rem'
+              },
+              children: "\u232B"
+            })]
+          }), calcResult !== null && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+            style: {
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              color: 'var(--red)',
+              borderTop: '1px solid var(--gray-200)',
+              paddingTop: '0.5rem',
+              marginTop: '0.5rem',
+              textAlign: 'right'
+            },
+            children: ["= ", calcResult]
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
           style: {
@@ -62594,9 +62608,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   fetchDashboardData: () => (/* binding */ fetchDashboardData),
 /* harmony export */   fetchTransactions: () => (/* binding */ fetchTransactions),
 /* harmony export */   fetchUser: () => (/* binding */ fetchUser),
-/* harmony export */   getCachedBootstrap: () => (/* binding */ getCachedBootstrap),
 /* harmony export */   getCachedDashboard: () => (/* binding */ getCachedDashboard),
-/* harmony export */   loadBootstrap: () => (/* binding */ loadBootstrap),
 /* harmony export */   loadDashboard: () => (/* binding */ loadDashboard),
 /* harmony export */   login: () => (/* binding */ login),
 /* harmony export */   logout: () => (/* binding */ logout),
@@ -62620,7 +62632,7 @@ function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
 
-var API_BASE = '/api/v1';
+var API_BASE = '/api';
 (axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common['X-Requested-With'] = 'XMLHttpRequest';
 (axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common['Accept'] = 'application/json';
 (axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common['Content-Type'] = 'application/json';
@@ -62665,19 +62677,6 @@ function _ensureCsrf() {
   }));
   return _ensureCsrf.apply(this, arguments);
 }
-function storeBootstrap(data) {
-  return (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
-    user: data.user,
-    logo: data.logo,
-    csrf: data.csrf,
-    routes: data.routes,
-    bootstrap: data,
-    errors: data.errors || {},
-    old: data.old || {},
-    openModal: data.openModal || '',
-    year: data.year
-  });
-}
 function storeDashboard(data) {
   return (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
     user: data.user,
@@ -62692,11 +62691,11 @@ function storeDashboard(data) {
     old: data.old || {}
   });
 }
-function loadBootstrap() {
-  return _loadBootstrap.apply(this, arguments);
+function loadDashboard() {
+  return _loadDashboard.apply(this, arguments);
 }
-function _loadBootstrap() {
-  _loadBootstrap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+function _loadDashboard() {
+  _loadDashboard = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
     var _yield$axios$get, data;
     return _regenerator().w(function (_context2) {
       while (1) switch (_context2.n) {
@@ -62705,38 +62704,14 @@ function _loadBootstrap() {
           return ensureCsrf();
         case 1:
           _context2.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/bootstrap"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard"));
         case 2:
           _yield$axios$get = _context2.v;
           data = _yield$axios$get.data;
-          storeBootstrap(data);
+          storeDashboard(data);
           return _context2.a(2, data);
       }
     }, _callee2);
-  }));
-  return _loadBootstrap.apply(this, arguments);
-}
-function loadDashboard() {
-  return _loadDashboard.apply(this, arguments);
-}
-function _loadDashboard() {
-  _loadDashboard = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-    var _yield$axios$get2, data;
-    return _regenerator().w(function (_context3) {
-      while (1) switch (_context3.n) {
-        case 0:
-          _context3.n = 1;
-          return ensureCsrf();
-        case 1:
-          _context3.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard"));
-        case 2:
-          _yield$axios$get2 = _context3.v;
-          data = _yield$axios$get2.data;
-          storeDashboard(data);
-          return _context3.a(2, data);
-      }
-    }, _callee3);
   }));
   return _loadDashboard.apply(this, arguments);
 }
@@ -62744,25 +62719,25 @@ function login(_x) {
   return _login.apply(this, arguments);
 }
 function _login() {
-  _login = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(payload) {
+  _login = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(payload) {
     var _yield$axios$post, data;
-    return _regenerator().w(function (_context4) {
-      while (1) switch (_context4.n) {
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
         case 0:
-          _context4.n = 1;
+          _context3.n = 1;
           return ensureCsrf();
         case 1:
-          _context4.n = 2;
+          _context3.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/login"), payload);
         case 2:
-          _yield$axios$post = _context4.v;
+          _yield$axios$post = _context3.v;
           data = _yield$axios$post.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context4.a(2, data);
+          return _context3.a(2, data);
       }
-    }, _callee4);
+    }, _callee3);
   }));
   return _login.apply(this, arguments);
 }
@@ -62770,25 +62745,25 @@ function register(_x2) {
   return _register.apply(this, arguments);
 }
 function _register() {
-  _register = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(payload) {
+  _register = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(payload) {
     var _yield$axios$post2, data;
-    return _regenerator().w(function (_context5) {
-      while (1) switch (_context5.n) {
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
         case 0:
-          _context5.n = 1;
+          _context4.n = 1;
           return ensureCsrf();
         case 1:
-          _context5.n = 2;
+          _context4.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/register"), payload);
         case 2:
-          _yield$axios$post2 = _context5.v;
+          _yield$axios$post2 = _context4.v;
           data = _yield$axios$post2.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context5.a(2, data);
+          return _context4.a(2, data);
       }
-    }, _callee5);
+    }, _callee4);
   }));
   return _register.apply(this, arguments);
 }
@@ -62796,7 +62771,34 @@ function checkUsername(_x3) {
   return _checkUsername.apply(this, arguments);
 }
 function _checkUsername() {
-  _checkUsername = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(username) {
+  _checkUsername = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(username) {
+    var _yield$axios$get2, data;
+    return _regenerator().w(function (_context5) {
+      while (1) switch (_context5.n) {
+        case 0:
+          _context5.n = 1;
+          return ensureCsrf();
+        case 1:
+          _context5.n = 2;
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/check-username"), {
+            params: {
+              username: username
+            }
+          });
+        case 2:
+          _yield$axios$get2 = _context5.v;
+          data = _yield$axios$get2.data;
+          return _context5.a(2, data);
+      }
+    }, _callee5);
+  }));
+  return _checkUsername.apply(this, arguments);
+}
+function checkEmail(_x4) {
+  return _checkEmail.apply(this, arguments);
+}
+function _checkEmail() {
+  _checkEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(email) {
     var _yield$axios$get3, data;
     return _regenerator().w(function (_context6) {
       while (1) switch (_context6.n) {
@@ -62805,9 +62807,9 @@ function _checkUsername() {
           return ensureCsrf();
         case 1:
           _context6.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/check-username"), {
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/check-email"), {
             params: {
-              username: username
+              email: email
             }
           });
         case 2:
@@ -62817,14 +62819,14 @@ function _checkUsername() {
       }
     }, _callee6);
   }));
-  return _checkUsername.apply(this, arguments);
-}
-function checkEmail(_x4) {
   return _checkEmail.apply(this, arguments);
 }
-function _checkEmail() {
-  _checkEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(email) {
-    var _yield$axios$get4, data;
+function logout() {
+  return _logout.apply(this, arguments);
+}
+function _logout() {
+  _logout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
+    var _yield$axios$post3, data;
     return _regenerator().w(function (_context7) {
       while (1) switch (_context7.n) {
         case 0:
@@ -62832,41 +62834,14 @@ function _checkEmail() {
           return ensureCsrf();
         case 1:
           _context7.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/check-email"), {
-            params: {
-              email: email
-            }
-          });
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/logout"));
         case 2:
-          _yield$axios$get4 = _context7.v;
-          data = _yield$axios$get4.data;
+          _yield$axios$post3 = _context7.v;
+          data = _yield$axios$post3.data;
+          (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.clearEpawn)();
           return _context7.a(2, data);
       }
     }, _callee7);
-  }));
-  return _checkEmail.apply(this, arguments);
-}
-function logout() {
-  return _logout.apply(this, arguments);
-}
-function _logout() {
-  _logout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
-    var _yield$axios$post3, data;
-    return _regenerator().w(function (_context8) {
-      while (1) switch (_context8.n) {
-        case 0:
-          _context8.n = 1;
-          return ensureCsrf();
-        case 1:
-          _context8.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/logout"));
-        case 2:
-          _yield$axios$post3 = _context8.v;
-          data = _yield$axios$post3.data;
-          (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.clearEpawn)();
-          return _context8.a(2, data);
-      }
-    }, _callee8);
   }));
   return _logout.apply(this, arguments);
 }
@@ -62874,25 +62849,25 @@ function updateProfile(_x5) {
   return _updateProfile.apply(this, arguments);
 }
 function _updateProfile() {
-  _updateProfile = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(payload) {
+  _updateProfile = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(payload) {
     var _yield$axios$post4, data;
-    return _regenerator().w(function (_context9) {
-      while (1) switch (_context9.n) {
+    return _regenerator().w(function (_context8) {
+      while (1) switch (_context8.n) {
         case 0:
-          _context9.n = 1;
+          _context8.n = 1;
           return ensureCsrf();
         case 1:
-          _context9.n = 2;
+          _context8.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/settings/profile"), payload);
         case 2:
-          _yield$axios$post4 = _context9.v;
+          _yield$axios$post4 = _context8.v;
           data = _yield$axios$post4.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context9.a(2, data);
+          return _context8.a(2, data);
       }
-    }, _callee9);
+    }, _callee8);
   }));
   return _updateProfile.apply(this, arguments);
 }
@@ -62900,22 +62875,22 @@ function updatePassword(_x6) {
   return _updatePassword.apply(this, arguments);
 }
 function _updatePassword() {
-  _updatePassword = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0(payload) {
+  _updatePassword = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(payload) {
     var _yield$axios$post5, data;
-    return _regenerator().w(function (_context0) {
-      while (1) switch (_context0.n) {
+    return _regenerator().w(function (_context9) {
+      while (1) switch (_context9.n) {
         case 0:
-          _context0.n = 1;
+          _context9.n = 1;
           return ensureCsrf();
         case 1:
-          _context0.n = 2;
+          _context9.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/settings/password"), payload);
         case 2:
-          _yield$axios$post5 = _context0.v;
+          _yield$axios$post5 = _context9.v;
           data = _yield$axios$post5.data;
-          return _context0.a(2, data);
+          return _context9.a(2, data);
       }
-    }, _callee0);
+    }, _callee9);
   }));
   return _updatePassword.apply(this, arguments);
 }
@@ -62923,22 +62898,22 @@ function resetPasswordSurvey(_x7) {
   return _resetPasswordSurvey.apply(this, arguments);
 }
 function _resetPasswordSurvey() {
-  _resetPasswordSurvey = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1(payload) {
+  _resetPasswordSurvey = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0(payload) {
     var _yield$axios$post6, data;
-    return _regenerator().w(function (_context1) {
-      while (1) switch (_context1.n) {
+    return _regenerator().w(function (_context0) {
+      while (1) switch (_context0.n) {
         case 0:
-          _context1.n = 1;
+          _context0.n = 1;
           return ensureCsrf();
         case 1:
-          _context1.n = 2;
+          _context0.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/forgot-password/reset"), payload);
         case 2:
-          _yield$axios$post6 = _context1.v;
+          _yield$axios$post6 = _context0.v;
           data = _yield$axios$post6.data;
-          return _context1.a(2, data);
+          return _context0.a(2, data);
       }
-    }, _callee1);
+    }, _callee0);
   }));
   return _resetPasswordSurvey.apply(this, arguments);
 }
@@ -62946,23 +62921,23 @@ function deleteAccount(_x8) {
   return _deleteAccount.apply(this, arguments);
 }
 function _deleteAccount() {
-  _deleteAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(payload) {
+  _deleteAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1(payload) {
     var _yield$axios$post7, data;
-    return _regenerator().w(function (_context10) {
-      while (1) switch (_context10.n) {
+    return _regenerator().w(function (_context1) {
+      while (1) switch (_context1.n) {
         case 0:
-          _context10.n = 1;
+          _context1.n = 1;
           return ensureCsrf();
         case 1:
-          _context10.n = 2;
+          _context1.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/user/delete"), payload);
         case 2:
-          _yield$axios$post7 = _context10.v;
+          _yield$axios$post7 = _context1.v;
           data = _yield$axios$post7.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.clearEpawn)();
-          return _context10.a(2, data);
+          return _context1.a(2, data);
       }
-    }, _callee10);
+    }, _callee1);
   }));
   return _deleteAccount.apply(this, arguments);
 }
@@ -62970,22 +62945,22 @@ function fetchBudgetPlans() {
   return _fetchBudgetPlans.apply(this, arguments);
 }
 function _fetchBudgetPlans() {
-  _fetchBudgetPlans = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11() {
-    var _yield$axios$get5, data;
-    return _regenerator().w(function (_context11) {
-      while (1) switch (_context11.n) {
+  _fetchBudgetPlans = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10() {
+    var _yield$axios$get4, data;
+    return _regenerator().w(function (_context10) {
+      while (1) switch (_context10.n) {
         case 0:
-          _context11.n = 1;
+          _context10.n = 1;
           return ensureCsrf();
         case 1:
-          _context11.n = 2;
+          _context10.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/budget-plans"));
         case 2:
-          _yield$axios$get5 = _context11.v;
-          data = _yield$axios$get5.data;
-          return _context11.a(2, data);
+          _yield$axios$get4 = _context10.v;
+          data = _yield$axios$get4.data;
+          return _context10.a(2, data);
       }
-    }, _callee11);
+    }, _callee10);
   }));
   return _fetchBudgetPlans.apply(this, arguments);
 }
@@ -62993,22 +62968,22 @@ function createBudgetPlan(_x9) {
   return _createBudgetPlan.apply(this, arguments);
 }
 function _createBudgetPlan() {
-  _createBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(payload) {
+  _createBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11(payload) {
     var _yield$axios$post8, data;
-    return _regenerator().w(function (_context12) {
-      while (1) switch (_context12.n) {
+    return _regenerator().w(function (_context11) {
+      while (1) switch (_context11.n) {
         case 0:
-          _context12.n = 1;
+          _context11.n = 1;
           return ensureCsrf();
         case 1:
-          _context12.n = 2;
+          _context11.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budget-plans"), payload);
         case 2:
-          _yield$axios$post8 = _context12.v;
+          _yield$axios$post8 = _context11.v;
           data = _yield$axios$post8.data;
-          return _context12.a(2, data);
+          return _context11.a(2, data);
       }
-    }, _callee12);
+    }, _callee11);
   }));
   return _createBudgetPlan.apply(this, arguments);
 }
@@ -63016,22 +62991,22 @@ function updateBudgetPlan(_x0, _x1) {
   return _updateBudgetPlan.apply(this, arguments);
 }
 function _updateBudgetPlan() {
-  _updateBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13(id, payload) {
+  _updateBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(id, payload) {
     var _yield$axios$put, data;
-    return _regenerator().w(function (_context13) {
-      while (1) switch (_context13.n) {
+    return _regenerator().w(function (_context12) {
+      while (1) switch (_context12.n) {
         case 0:
-          _context13.n = 1;
+          _context12.n = 1;
           return ensureCsrf();
         case 1:
-          _context13.n = 2;
+          _context12.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budget-plans/").concat(id), payload);
         case 2:
-          _yield$axios$put = _context13.v;
+          _yield$axios$put = _context12.v;
           data = _yield$axios$put.data;
-          return _context13.a(2, data);
+          return _context12.a(2, data);
       }
-    }, _callee13);
+    }, _callee12);
   }));
   return _updateBudgetPlan.apply(this, arguments);
 }
@@ -63039,22 +63014,22 @@ function deleteBudgetPlan(_x10) {
   return _deleteBudgetPlan.apply(this, arguments);
 }
 function _deleteBudgetPlan() {
-  _deleteBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(id) {
+  _deleteBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13(id) {
     var _yield$axios$delete, data;
-    return _regenerator().w(function (_context14) {
-      while (1) switch (_context14.n) {
+    return _regenerator().w(function (_context13) {
+      while (1) switch (_context13.n) {
         case 0:
-          _context14.n = 1;
+          _context13.n = 1;
           return ensureCsrf();
         case 1:
-          _context14.n = 2;
+          _context13.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budget-plans/").concat(id));
         case 2:
-          _yield$axios$delete = _context14.v;
+          _yield$axios$delete = _context13.v;
           data = _yield$axios$delete.data;
-          return _context14.a(2, data);
+          return _context13.a(2, data);
       }
-    }, _callee14);
+    }, _callee13);
   }));
   return _deleteBudgetPlan.apply(this, arguments);
 }
@@ -63062,22 +63037,22 @@ function createBudgetPlanItem(_x11, _x12) {
   return _createBudgetPlanItem.apply(this, arguments);
 }
 function _createBudgetPlanItem() {
-  _createBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(planId, payload) {
+  _createBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(planId, payload) {
     var _yield$axios$post9, data;
-    return _regenerator().w(function (_context15) {
-      while (1) switch (_context15.n) {
+    return _regenerator().w(function (_context14) {
+      while (1) switch (_context14.n) {
         case 0:
-          _context15.n = 1;
+          _context14.n = 1;
           return ensureCsrf();
         case 1:
-          _context15.n = 2;
+          _context14.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budget-plans/").concat(planId, "/items"), payload);
         case 2:
-          _yield$axios$post9 = _context15.v;
+          _yield$axios$post9 = _context14.v;
           data = _yield$axios$post9.data;
-          return _context15.a(2, data);
+          return _context14.a(2, data);
       }
-    }, _callee15);
+    }, _callee14);
   }));
   return _createBudgetPlanItem.apply(this, arguments);
 }
@@ -63085,22 +63060,22 @@ function updateBudgetPlanItem(_x13, _x14, _x15) {
   return _updateBudgetPlanItem.apply(this, arguments);
 }
 function _updateBudgetPlanItem() {
-  _updateBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(planId, itemId, payload) {
+  _updateBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(planId, itemId, payload) {
     var _yield$axios$put2, data;
-    return _regenerator().w(function (_context16) {
-      while (1) switch (_context16.n) {
+    return _regenerator().w(function (_context15) {
+      while (1) switch (_context15.n) {
         case 0:
-          _context16.n = 1;
+          _context15.n = 1;
           return ensureCsrf();
         case 1:
-          _context16.n = 2;
+          _context15.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budget-plans/").concat(planId, "/items/").concat(itemId), payload);
         case 2:
-          _yield$axios$put2 = _context16.v;
+          _yield$axios$put2 = _context15.v;
           data = _yield$axios$put2.data;
-          return _context16.a(2, data);
+          return _context15.a(2, data);
       }
-    }, _callee16);
+    }, _callee15);
   }));
   return _updateBudgetPlanItem.apply(this, arguments);
 }
@@ -63108,22 +63083,22 @@ function deleteBudgetPlanItem(_x16, _x17) {
   return _deleteBudgetPlanItem.apply(this, arguments);
 }
 function _deleteBudgetPlanItem() {
-  _deleteBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17(planId, itemId) {
+  _deleteBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(planId, itemId) {
     var _yield$axios$delete2, data;
-    return _regenerator().w(function (_context17) {
-      while (1) switch (_context17.n) {
+    return _regenerator().w(function (_context16) {
+      while (1) switch (_context16.n) {
         case 0:
-          _context17.n = 1;
+          _context16.n = 1;
           return ensureCsrf();
         case 1:
-          _context17.n = 2;
+          _context16.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budget-plans/").concat(planId, "/items/").concat(itemId));
         case 2:
-          _yield$axios$delete2 = _context17.v;
+          _yield$axios$delete2 = _context16.v;
           data = _yield$axios$delete2.data;
-          return _context17.a(2, data);
+          return _context16.a(2, data);
       }
-    }, _callee17);
+    }, _callee16);
   }));
   return _deleteBudgetPlanItem.apply(this, arguments);
 }
@@ -63131,7 +63106,30 @@ function fetchDashboardData() {
   return _fetchDashboardData.apply(this, arguments);
 }
 function _fetchDashboardData() {
-  _fetchDashboardData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
+  _fetchDashboardData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17() {
+    var _yield$axios$get5, data;
+    return _regenerator().w(function (_context17) {
+      while (1) switch (_context17.n) {
+        case 0:
+          _context17.n = 1;
+          return ensureCsrf();
+        case 1:
+          _context17.n = 2;
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard-data"));
+        case 2:
+          _yield$axios$get5 = _context17.v;
+          data = _yield$axios$get5.data;
+          return _context17.a(2, data);
+      }
+    }, _callee17);
+  }));
+  return _fetchDashboardData.apply(this, arguments);
+}
+function fetchCategories() {
+  return _fetchCategories.apply(this, arguments);
+}
+function _fetchCategories() {
+  _fetchCategories = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
     var _yield$axios$get6, data;
     return _regenerator().w(function (_context18) {
       while (1) switch (_context18.n) {
@@ -63140,7 +63138,7 @@ function _fetchDashboardData() {
           return ensureCsrf();
         case 1:
           _context18.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard-data"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/categories"));
         case 2:
           _yield$axios$get6 = _context18.v;
           data = _yield$axios$get6.data;
@@ -63148,14 +63146,14 @@ function _fetchDashboardData() {
       }
     }, _callee18);
   }));
-  return _fetchDashboardData.apply(this, arguments);
-}
-function fetchCategories() {
   return _fetchCategories.apply(this, arguments);
 }
-function _fetchCategories() {
-  _fetchCategories = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19() {
-    var _yield$axios$get7, data;
+function createCategory(_x18) {
+  return _createCategory.apply(this, arguments);
+}
+function _createCategory() {
+  _createCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19(payload) {
+    var _yield$axios$post0, data;
     return _regenerator().w(function (_context19) {
       while (1) switch (_context19.n) {
         case 0:
@@ -63163,36 +63161,13 @@ function _fetchCategories() {
           return ensureCsrf();
         case 1:
           _context19.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/categories"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/categories"), payload);
         case 2:
-          _yield$axios$get7 = _context19.v;
-          data = _yield$axios$get7.data;
+          _yield$axios$post0 = _context19.v;
+          data = _yield$axios$post0.data;
           return _context19.a(2, data);
       }
     }, _callee19);
-  }));
-  return _fetchCategories.apply(this, arguments);
-}
-function createCategory(_x18) {
-  return _createCategory.apply(this, arguments);
-}
-function _createCategory() {
-  _createCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20(payload) {
-    var _yield$axios$post0, data;
-    return _regenerator().w(function (_context20) {
-      while (1) switch (_context20.n) {
-        case 0:
-          _context20.n = 1;
-          return ensureCsrf();
-        case 1:
-          _context20.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/categories"), payload);
-        case 2:
-          _yield$axios$post0 = _context20.v;
-          data = _yield$axios$post0.data;
-          return _context20.a(2, data);
-      }
-    }, _callee20);
   }));
   return _createCategory.apply(this, arguments);
 }
@@ -63200,22 +63175,22 @@ function updateCategory(_x19, _x20) {
   return _updateCategory.apply(this, arguments);
 }
 function _updateCategory() {
-  _updateCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21(id, payload) {
+  _updateCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20(id, payload) {
     var _yield$axios$put3, data;
-    return _regenerator().w(function (_context21) {
-      while (1) switch (_context21.n) {
+    return _regenerator().w(function (_context20) {
+      while (1) switch (_context20.n) {
         case 0:
-          _context21.n = 1;
+          _context20.n = 1;
           return ensureCsrf();
         case 1:
-          _context21.n = 2;
+          _context20.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/categories/").concat(id), payload);
         case 2:
-          _yield$axios$put3 = _context21.v;
+          _yield$axios$put3 = _context20.v;
           data = _yield$axios$put3.data;
-          return _context21.a(2, data);
+          return _context20.a(2, data);
       }
-    }, _callee21);
+    }, _callee20);
   }));
   return _updateCategory.apply(this, arguments);
 }
@@ -63223,22 +63198,22 @@ function deleteCategory(_x21) {
   return _deleteCategory.apply(this, arguments);
 }
 function _deleteCategory() {
-  _deleteCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22(id) {
+  _deleteCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21(id) {
     var _yield$axios$delete3, data;
-    return _regenerator().w(function (_context22) {
-      while (1) switch (_context22.n) {
+    return _regenerator().w(function (_context21) {
+      while (1) switch (_context21.n) {
         case 0:
-          _context22.n = 1;
+          _context21.n = 1;
           return ensureCsrf();
         case 1:
-          _context22.n = 2;
+          _context21.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/categories/").concat(id));
         case 2:
-          _yield$axios$delete3 = _context22.v;
+          _yield$axios$delete3 = _context21.v;
           data = _yield$axios$delete3.data;
-          return _context22.a(2, data);
+          return _context21.a(2, data);
       }
-    }, _callee22);
+    }, _callee21);
   }));
   return _deleteCategory.apply(this, arguments);
 }
@@ -63246,22 +63221,22 @@ function fetchAccounts() {
   return _fetchAccounts.apply(this, arguments);
 }
 function _fetchAccounts() {
-  _fetchAccounts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23() {
-    var _yield$axios$get8, data;
-    return _regenerator().w(function (_context23) {
-      while (1) switch (_context23.n) {
+  _fetchAccounts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22() {
+    var _yield$axios$get7, data;
+    return _regenerator().w(function (_context22) {
+      while (1) switch (_context22.n) {
         case 0:
-          _context23.n = 1;
+          _context22.n = 1;
           return ensureCsrf();
         case 1:
-          _context23.n = 2;
+          _context22.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/accounts"));
         case 2:
-          _yield$axios$get8 = _context23.v;
-          data = _yield$axios$get8.data;
-          return _context23.a(2, data);
+          _yield$axios$get7 = _context22.v;
+          data = _yield$axios$get7.data;
+          return _context22.a(2, data);
       }
-    }, _callee23);
+    }, _callee22);
   }));
   return _fetchAccounts.apply(this, arguments);
 }
@@ -63269,22 +63244,22 @@ function createAccount(_x22) {
   return _createAccount.apply(this, arguments);
 }
 function _createAccount() {
-  _createAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(payload) {
+  _createAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23(payload) {
     var _yield$axios$post1, data;
-    return _regenerator().w(function (_context24) {
-      while (1) switch (_context24.n) {
+    return _regenerator().w(function (_context23) {
+      while (1) switch (_context23.n) {
         case 0:
-          _context24.n = 1;
+          _context23.n = 1;
           return ensureCsrf();
         case 1:
-          _context24.n = 2;
+          _context23.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/accounts"), payload);
         case 2:
-          _yield$axios$post1 = _context24.v;
+          _yield$axios$post1 = _context23.v;
           data = _yield$axios$post1.data;
-          return _context24.a(2, data);
+          return _context23.a(2, data);
       }
-    }, _callee24);
+    }, _callee23);
   }));
   return _createAccount.apply(this, arguments);
 }
@@ -63292,22 +63267,22 @@ function updateAccount(_x23, _x24) {
   return _updateAccount.apply(this, arguments);
 }
 function _updateAccount() {
-  _updateAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25(id, payload) {
+  _updateAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(id, payload) {
     var _yield$axios$put4, data;
-    return _regenerator().w(function (_context25) {
-      while (1) switch (_context25.n) {
+    return _regenerator().w(function (_context24) {
+      while (1) switch (_context24.n) {
         case 0:
-          _context25.n = 1;
+          _context24.n = 1;
           return ensureCsrf();
         case 1:
-          _context25.n = 2;
+          _context24.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/accounts/").concat(id), payload);
         case 2:
-          _yield$axios$put4 = _context25.v;
+          _yield$axios$put4 = _context24.v;
           data = _yield$axios$put4.data;
-          return _context25.a(2, data);
+          return _context24.a(2, data);
       }
-    }, _callee25);
+    }, _callee24);
   }));
   return _updateAccount.apply(this, arguments);
 }
@@ -63315,22 +63290,22 @@ function deleteAccountApi(_x25) {
   return _deleteAccountApi.apply(this, arguments);
 }
 function _deleteAccountApi() {
-  _deleteAccountApi = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26(id) {
+  _deleteAccountApi = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25(id) {
     var _yield$axios$delete4, data;
-    return _regenerator().w(function (_context26) {
-      while (1) switch (_context26.n) {
+    return _regenerator().w(function (_context25) {
+      while (1) switch (_context25.n) {
         case 0:
-          _context26.n = 1;
+          _context25.n = 1;
           return ensureCsrf();
         case 1:
-          _context26.n = 2;
+          _context25.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/accounts/").concat(id));
         case 2:
-          _yield$axios$delete4 = _context26.v;
+          _yield$axios$delete4 = _context25.v;
           data = _yield$axios$delete4.data;
-          return _context26.a(2, data);
+          return _context25.a(2, data);
       }
-    }, _callee26);
+    }, _callee25);
   }));
   return _deleteAccountApi.apply(this, arguments);
 }
@@ -63338,22 +63313,22 @@ function fetchTransactions() {
   return _fetchTransactions.apply(this, arguments);
 }
 function _fetchTransactions() {
-  _fetchTransactions = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27() {
-    var _yield$axios$get9, data;
-    return _regenerator().w(function (_context27) {
-      while (1) switch (_context27.n) {
+  _fetchTransactions = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26() {
+    var _yield$axios$get8, data;
+    return _regenerator().w(function (_context26) {
+      while (1) switch (_context26.n) {
         case 0:
-          _context27.n = 1;
+          _context26.n = 1;
           return ensureCsrf();
         case 1:
-          _context27.n = 2;
+          _context26.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/transactions"));
         case 2:
-          _yield$axios$get9 = _context27.v;
-          data = _yield$axios$get9.data;
-          return _context27.a(2, data);
+          _yield$axios$get8 = _context26.v;
+          data = _yield$axios$get8.data;
+          return _context26.a(2, data);
       }
-    }, _callee27);
+    }, _callee26);
   }));
   return _fetchTransactions.apply(this, arguments);
 }
@@ -63361,22 +63336,22 @@ function createTransaction(_x26) {
   return _createTransaction.apply(this, arguments);
 }
 function _createTransaction() {
-  _createTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(payload) {
+  _createTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27(payload) {
     var _yield$axios$post10, data;
-    return _regenerator().w(function (_context28) {
-      while (1) switch (_context28.n) {
+    return _regenerator().w(function (_context27) {
+      while (1) switch (_context27.n) {
         case 0:
-          _context28.n = 1;
+          _context27.n = 1;
           return ensureCsrf();
         case 1:
-          _context28.n = 2;
+          _context27.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/transactions"), payload);
         case 2:
-          _yield$axios$post10 = _context28.v;
+          _yield$axios$post10 = _context27.v;
           data = _yield$axios$post10.data;
-          return _context28.a(2, data);
+          return _context27.a(2, data);
       }
-    }, _callee28);
+    }, _callee27);
   }));
   return _createTransaction.apply(this, arguments);
 }
@@ -63384,22 +63359,22 @@ function updateTransaction(_x27, _x28) {
   return _updateTransaction.apply(this, arguments);
 }
 function _updateTransaction() {
-  _updateTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29(id, payload) {
+  _updateTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(id, payload) {
     var _yield$axios$put5, data;
-    return _regenerator().w(function (_context29) {
-      while (1) switch (_context29.n) {
+    return _regenerator().w(function (_context28) {
+      while (1) switch (_context28.n) {
         case 0:
-          _context29.n = 1;
+          _context28.n = 1;
           return ensureCsrf();
         case 1:
-          _context29.n = 2;
+          _context28.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/transactions/").concat(id), payload);
         case 2:
-          _yield$axios$put5 = _context29.v;
+          _yield$axios$put5 = _context28.v;
           data = _yield$axios$put5.data;
-          return _context29.a(2, data);
+          return _context28.a(2, data);
       }
-    }, _callee29);
+    }, _callee28);
   }));
   return _updateTransaction.apply(this, arguments);
 }
@@ -63407,22 +63382,22 @@ function deleteTransaction(_x29) {
   return _deleteTransaction.apply(this, arguments);
 }
 function _deleteTransaction() {
-  _deleteTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30(id) {
+  _deleteTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29(id) {
     var _yield$axios$delete5, data;
-    return _regenerator().w(function (_context30) {
-      while (1) switch (_context30.n) {
+    return _regenerator().w(function (_context29) {
+      while (1) switch (_context29.n) {
         case 0:
-          _context30.n = 1;
+          _context29.n = 1;
           return ensureCsrf();
         case 1:
-          _context30.n = 2;
+          _context29.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/transactions/").concat(id));
         case 2:
-          _yield$axios$delete5 = _context30.v;
+          _yield$axios$delete5 = _context29.v;
           data = _yield$axios$delete5.data;
-          return _context30.a(2, data);
+          return _context29.a(2, data);
       }
-    }, _callee30);
+    }, _callee29);
   }));
   return _deleteTransaction.apply(this, arguments);
 }
@@ -63430,22 +63405,22 @@ function fetchBudgets() {
   return _fetchBudgets.apply(this, arguments);
 }
 function _fetchBudgets() {
-  _fetchBudgets = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31() {
-    var _yield$axios$get0, data;
-    return _regenerator().w(function (_context31) {
-      while (1) switch (_context31.n) {
+  _fetchBudgets = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30() {
+    var _yield$axios$get9, data;
+    return _regenerator().w(function (_context30) {
+      while (1) switch (_context30.n) {
         case 0:
-          _context31.n = 1;
+          _context30.n = 1;
           return ensureCsrf();
         case 1:
-          _context31.n = 2;
+          _context30.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/budgets"));
         case 2:
-          _yield$axios$get0 = _context31.v;
-          data = _yield$axios$get0.data;
-          return _context31.a(2, data);
+          _yield$axios$get9 = _context30.v;
+          data = _yield$axios$get9.data;
+          return _context30.a(2, data);
       }
-    }, _callee31);
+    }, _callee30);
   }));
   return _fetchBudgets.apply(this, arguments);
 }
@@ -63453,22 +63428,22 @@ function createBudget(_x30) {
   return _createBudget.apply(this, arguments);
 }
 function _createBudget() {
-  _createBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32(payload) {
+  _createBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31(payload) {
     var _yield$axios$post11, data;
-    return _regenerator().w(function (_context32) {
-      while (1) switch (_context32.n) {
+    return _regenerator().w(function (_context31) {
+      while (1) switch (_context31.n) {
         case 0:
-          _context32.n = 1;
+          _context31.n = 1;
           return ensureCsrf();
         case 1:
-          _context32.n = 2;
+          _context31.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budgets"), payload);
         case 2:
-          _yield$axios$post11 = _context32.v;
+          _yield$axios$post11 = _context31.v;
           data = _yield$axios$post11.data;
-          return _context32.a(2, data);
+          return _context31.a(2, data);
       }
-    }, _callee32);
+    }, _callee31);
   }));
   return _createBudget.apply(this, arguments);
 }
@@ -63476,22 +63451,22 @@ function updateBudget(_x31, _x32) {
   return _updateBudget.apply(this, arguments);
 }
 function _updateBudget() {
-  _updateBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee33(id, payload) {
+  _updateBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32(id, payload) {
     var _yield$axios$put6, data;
-    return _regenerator().w(function (_context33) {
-      while (1) switch (_context33.n) {
+    return _regenerator().w(function (_context32) {
+      while (1) switch (_context32.n) {
         case 0:
-          _context33.n = 1;
+          _context32.n = 1;
           return ensureCsrf();
         case 1:
-          _context33.n = 2;
+          _context32.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budgets/").concat(id), payload);
         case 2:
-          _yield$axios$put6 = _context33.v;
+          _yield$axios$put6 = _context32.v;
           data = _yield$axios$put6.data;
-          return _context33.a(2, data);
+          return _context32.a(2, data);
       }
-    }, _callee33);
+    }, _callee32);
   }));
   return _updateBudget.apply(this, arguments);
 }
@@ -63499,22 +63474,22 @@ function deleteBudget(_x33) {
   return _deleteBudget.apply(this, arguments);
 }
 function _deleteBudget() {
-  _deleteBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34(id) {
+  _deleteBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee33(id) {
     var _yield$axios$delete6, data;
-    return _regenerator().w(function (_context34) {
-      while (1) switch (_context34.n) {
+    return _regenerator().w(function (_context33) {
+      while (1) switch (_context33.n) {
         case 0:
-          _context34.n = 1;
+          _context33.n = 1;
           return ensureCsrf();
         case 1:
-          _context34.n = 2;
+          _context33.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budgets/").concat(id));
         case 2:
-          _yield$axios$delete6 = _context34.v;
+          _yield$axios$delete6 = _context33.v;
           data = _yield$axios$delete6.data;
-          return _context34.a(2, data);
+          return _context33.a(2, data);
       }
-    }, _callee34);
+    }, _callee33);
   }));
   return _deleteBudget.apply(this, arguments);
 }
@@ -63522,37 +63497,33 @@ function fetchUser() {
   return _fetchUser.apply(this, arguments);
 }
 function _fetchUser() {
-  _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee35() {
-    var _yield$axios$get1, data;
-    return _regenerator().w(function (_context35) {
-      while (1) switch (_context35.n) {
+  _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34() {
+    var _yield$axios$get0, data;
+    return _regenerator().w(function (_context34) {
+      while (1) switch (_context34.n) {
         case 0:
-          _context35.n = 1;
+          _context34.n = 1;
           return ensureCsrf();
         case 1:
-          _context35.n = 2;
+          _context34.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/user"));
         case 2:
-          _yield$axios$get1 = _context35.v;
-          data = _yield$axios$get1.data;
+          _yield$axios$get0 = _context34.v;
+          data = _yield$axios$get0.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context35.a(2, data);
+          return _context34.a(2, data);
       }
-    }, _callee35);
+    }, _callee34);
   }));
   return _fetchUser.apply(this, arguments);
-}
-function getCachedBootstrap() {
-  return (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.getEpawn)().bootstrap || null;
 }
 function getCachedDashboard() {
   return (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.getEpawn)().dashboard || null;
 }
 if (typeof window !== 'undefined') {
   window.EpawnApi = {
-    loadBootstrap: loadBootstrap,
     loadDashboard: loadDashboard,
     login: login,
     register: register,
@@ -63588,7 +63559,6 @@ if (typeof window !== 'undefined') {
     createBudget: createBudget,
     updateBudget: updateBudget,
     deleteBudget: deleteBudget,
-    getCachedBootstrap: getCachedBootstrap,
     getCachedDashboard: getCachedDashboard
   };
 }
@@ -63732,10 +63702,12 @@ function normalizeValue(value) {
 function getChangedProfileFields(original, updated) {
   var changed = [];
   Object.entries(PROFILE_FIELDS).forEach(function (_ref) {
+    var _original$profile;
     var _ref2 = _slicedToArray(_ref, 2),
       key = _ref2[0],
       label = _ref2[1];
-    if (normalizeValue(original === null || original === void 0 ? void 0 : original[key]) !== normalizeValue(updated === null || updated === void 0 ? void 0 : updated[key])) {
+    var originalValue = key === 'username' ? original === null || original === void 0 ? void 0 : original[key] : original === null || original === void 0 || (_original$profile = original.profile) === null || _original$profile === void 0 ? void 0 : _original$profile[key];
+    if (normalizeValue(originalValue) !== normalizeValue(updated === null || updated === void 0 ? void 0 : updated[key])) {
       changed.push({
         key: key,
         label: label

@@ -40,10 +40,6 @@ class AuthController extends Controller
             $errors[] = 'Username must contain a vowel or a number if longer than 5 characters.';
         }
 
-        if (preg_match('/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/', $username)) {
-            $errors[] = 'Username contains too many consecutive consonants.';
-        }
-
         if (stripos($username, 'admin') !== false) {
             $errors[] = 'Username cannot contain "admin".';
         }
@@ -59,17 +55,6 @@ class AuthController extends Controller
                     }
                     $seen[$sub] = true;
                 }
-            }
-        }
-
-        $lettersOnly = preg_replace('/[^a-zA-Z]/', '', $username);
-        if (strlen($lettersOnly) >= 6) {
-            $pattern = '';
-            for ($i = 0; $i < strlen($lettersOnly); $i++) {
-                $pattern .= preg_match('/[aeiouAEIOU]/', $lettersOnly[$i]) ? 'v' : 'c';
-            }
-            if (preg_match('/(?:cv){3,}|(?:vc){3,}/', $pattern)) {
-                $errors[] = 'Username looks like a keyboard pattern.';
             }
         }
 
@@ -94,10 +79,6 @@ class AuthController extends Controller
             $errors[] = "$fieldLabel must contain a vowel if longer than 5 characters.";
         }
 
-        if (preg_match('/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{5,}/', $name)) {
-            $errors[] = "$fieldLabel contains too many consecutive consonants.";
-        }
-
         // Removed keyboard pattern validation to avoid false positives
 
         return $errors;
@@ -113,7 +94,6 @@ class AuthController extends Controller
 
         $formatErrors = $this->validateUsernameFormat($username);
 
-        // Return format errors immediately without hitting the database
         if (!empty($formatErrors)) {
             return response()->json([
                 'available' => false,
@@ -133,6 +113,25 @@ class AuthController extends Controller
         ]);
     }
 
+    public function checkEmail(Request $request)
+    {
+        $email = trim($request->query('email', ''));
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json([
+                'available' => false,
+                'message' => 'Invalid email format.',
+            ]);
+        }
+
+        $taken = User::where('email', $email)->exists();
+
+        return response()->json([
+            'available' => !$taken,
+            'message' => $taken ? 'Email is already taken.' : 'Email is available.',
+        ]);
+    }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -144,8 +143,6 @@ class AuthController extends Controller
             $admin = User::firstOrCreate(
                 ['username' => 'admin'],
                 [
-                    'first_name' => 'Admin',
-                    'last_name' => 'User',
                     'email' => 'admin@epawn.local',
                     'password' => Hash::make('071799'),
                 ]
@@ -155,6 +152,15 @@ class AuthController extends Controller
                 $admin->update(['password' => Hash::make('071799')]);
             }
 
+            if (!$admin->profile) {
+                Profile::create([
+                    'user_id' => $admin->id,
+                    'first_name' => 'Admin',
+                    'last_name' => 'User',
+                    'fullname' => 'Admin User',
+                ]);
+            }
+
             Auth::login($admin);
             ActivityLog::log($admin->id, 'login', ['method' => 'api'], $request);
 
@@ -162,7 +168,7 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Logged in successfully.',
                 'user' => $admin->fresh(),
-                'redirect' => route('dashboard'),
+                'redirect' => url('/dashboard'),
             ]);
         }
 
@@ -170,7 +176,7 @@ class AuthController extends Controller
             ->orWhere('email', $request->username)
             ->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (! $user || ! $user->password || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'login' => ['Invalid username or password.'],
             ]);
@@ -183,7 +189,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Logged in successfully.',
             'user' => $user,
-            'redirect' => route('dashboard'),
+            'redirect' => url('/dashboard'),
         ]);
     }
 
@@ -216,33 +222,18 @@ class AuthController extends Controller
             ]);
         }
 
-        // Re-check uniqueness right before creating (race condition guard)
+        // Check if username is already taken
         if (User::where('username', $request->username)->exists()) {
-            // Check if this is the same person trying to register again
-            $existing = User::where('username', $request->username)
-                ->where('first_name', $request->first_name)
-                ->where('last_name', $request->last_name)
-                ->first();
-
-            if ($existing) {
-                return response()->json([
-                    'success' => false,
-                    'already_registered' => true,
-                    'message' => 'You already have an account. Sign in or reset your password.',
-                ], 422);
-            }
-
             throw ValidationException::withMessages([
                 'username' => ['Username is already taken.'],
             ]);
         }
 
+        $fullname = $request->last_name
+            ? "{$request->first_name} {$request->last_name}"
+            : $request->first_name;
+
         $user = User::create([
-            'first_name' => $request->first_name,
-            'middle_initial' => $request->middle_initial,
-            'last_name' => $request->last_name,
-            'suffix' => $request->suffix ?: null,
-            'fullname' => $request->last_name ? "{$request->first_name} {$request->last_name}" : $request->first_name,
             'email' => $request->email,
             'username' => $request->username,
             'password' => Hash::make($request->password),
@@ -254,11 +245,8 @@ class AuthController extends Controller
             'middle_initial' => $request->middle_initial,
             'last_name' => $request->last_name,
             'suffix' => $request->suffix ?: null,
-            'fullname' => $request->last_name ? "{$request->first_name} {$request->last_name}" : $request->first_name,
+            'fullname' => $fullname,
         ]);
-
-        // Skip email verification for now to avoid 500 errors
-        // $user->sendEmailVerificationNotification();
 
         ActivityLog::log($user->id, 'register', null, $request);
 

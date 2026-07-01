@@ -8,6 +8,7 @@ export default function Layout({
     user,
     logo,
     routes,
+    csrf,
     errors,
     old,
     openModal,
@@ -23,6 +24,7 @@ export default function Layout({
                 user={user}
                 logo={logo}
                 routes={routes}
+                csrf={csrf}
                 onOpenModal={setActiveModal}
                 theme={theme}
                 onToggleTheme={onToggleTheme}

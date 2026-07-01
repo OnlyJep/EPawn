@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -32,11 +33,20 @@ class SettingsController extends Controller
         ]);
 
         $user->update([
+            'username' => $request->username,
+        ]);
+
+        $fullname = $request->last_name
+            ? "{$request->first_name} {$request->last_name}"
+            : $request->first_name;
+
+        $profile = Profile::firstOrCreate(['user_id' => $user->id]);
+        $profile->update([
             'first_name' => $request->first_name,
             'middle_initial' => $request->middle_initial,
             'last_name' => $request->last_name,
             'suffix' => $request->suffix ?: null,
-            'username' => $request->username,
+            'fullname' => $fullname,
         ]);
 
         return redirect()->route('dashboard')->with('settings_success', 'Profile updated successfully.');

@@ -1,52 +1,32 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import EpawnApp from './EpawnApp';
-import { loadBootstrap, getCachedBootstrap } from './services/epawnApi';
-import { getEpawn, clearEpawn, setEpawn } from './services/epawnStorage';
 
 const rootEl = document.getElementById('root');
 
-async function initLanding() {
-    const cached = getCachedBootstrap() || getEpawn().bootstrap;
-    const storedData = getEpawn();
+if (rootEl) {
+    const d = rootEl.dataset;
+    const props = {};
 
-    // Clear localStorage if no valid user data exists
-    if (! storedData.user) {
-        clearEpawn();
+    if (d.user) {
+        try { props.user = JSON.parse(d.user); } catch (e) { props.user = null; }
+    }
+    if (d.routes) {
+        try { props.routes = JSON.parse(d.routes); } catch (e) { props.routes = {}; }
+    }
+    if (d.errors) {
+        try { props.errors = JSON.parse(d.errors); } catch (e) { props.errors = {}; }
+    }
+    if (d.old) {
+        try { props.old = JSON.parse(d.old); } catch (e) { props.old = {}; }
     }
 
-    try {
-        const data = await loadBootstrap();
+    props.logo = d.logo;
+    props.csrf = d.csrf;
+    props.openModal = d.openModal || '';
+    props.year = d.year ? parseInt(d.year, 10) : new Date().getFullYear();
 
-        // Only store bootstrap data if user is authenticated
-        if (data.user) {
-            setEpawn({
-                user: data.user,
-                logo: data.logo,
-                csrf: data.csrf,
-                routes: data.routes,
-                bootstrap: data,
-                errors: data.errors || {},
-                old: data.old || {},
-                openModal: data.openModal || '',
-                year: data.year,
-            });
-        } else {
-            // Clear localStorage if backend returns no user
-            clearEpawn();
-        }
-
-        createRoot(rootEl).render(React.createElement(EpawnApp, data));
-    } catch {
-        if (cached && storedData.user) {
-            createRoot(rootEl).render(React.createElement(EpawnApp, cached));
-        } else {
-            clearEpawn();
-            createRoot(rootEl).render(
-                React.createElement('div', { className: 'loading' }, 'Unable to load E-PAWN.')
-            );
-        }
-    }
+    createRoot(rootEl).render(React.createElement(EpawnApp, props));
+} else {
+    console.error('Root element not found');
 }
-
-initLanding();

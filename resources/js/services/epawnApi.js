@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { clearEpawn, getEpawn, setEpawn } from './epawnStorage';
 
-const API_BASE = '/api/v1';
+const API_BASE = '/api';
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Accept'] = 'application/json';
@@ -28,20 +28,6 @@ async function ensureCsrf() {
     }
 }
 
-function storeBootstrap(data) {
-    return setEpawn({
-        user: data.user,
-        logo: data.logo,
-        csrf: data.csrf,
-        routes: data.routes,
-        bootstrap: data,
-        errors: data.errors || {},
-        old: data.old || {},
-        openModal: data.openModal || '',
-        year: data.year,
-    });
-}
-
 function storeDashboard(data) {
     return setEpawn({
         user: data.user,
@@ -55,15 +41,6 @@ function storeDashboard(data) {
         errors: data.errors || {},
         old: data.old || {},
     });
-}
-
-export async function loadBootstrap() {
-    await ensureCsrf();
-    const { data } = await axios.get(`${API_BASE}/bootstrap`);
-
-    storeBootstrap(data);
-
-    return data;
 }
 
 export async function loadDashboard() {
@@ -303,17 +280,12 @@ export async function fetchUser() {
     return data;
 }
 
-export function getCachedBootstrap() {
-    return getEpawn().bootstrap || null;
-}
-
 export function getCachedDashboard() {
     return getEpawn().dashboard || null;
 }
 
 if (typeof window !== 'undefined') {
     window.EpawnApi = {
-        loadBootstrap,
         loadDashboard,
         login,
         register,
@@ -349,7 +321,6 @@ if (typeof window !== 'undefined') {
         createBudget,
         updateBudget,
         deleteBudget,
-        getCachedBootstrap,
         getCachedDashboard,
     };
 }

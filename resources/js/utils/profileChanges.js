@@ -18,7 +18,8 @@ export function getChangedProfileFields(original, updated) {
     const changed = [];
 
     Object.entries(PROFILE_FIELDS).forEach(([key, label]) => {
-        if (normalizeValue(original?.[key]) !== normalizeValue(updated?.[key])) {
+        const originalValue = key === 'username' ? original?.[key] : original?.profile?.[key];
+        if (normalizeValue(originalValue) !== normalizeValue(updated?.[key])) {
             changed.push({ key, label });
         }
     });

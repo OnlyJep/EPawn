@@ -20622,76 +20622,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _EpawnApp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./EpawnApp */ "./resources/js/EpawnApp.jsx");
-/* harmony import */ var _services_epawnApi__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./services/epawnApi */ "./resources/js/services/epawnApi.js");
-/* harmony import */ var _services_epawnStorage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./services/epawnStorage */ "./resources/js/services/epawnStorage.js");
-function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
-
-
 
 
 
 var rootEl = document.getElementById('root');
-function initLanding() {
-  return _initLanding.apply(this, arguments);
+if (rootEl) {
+  var d = rootEl.dataset;
+  var props = {};
+  if (d.user) {
+    try {
+      props.user = JSON.parse(d.user);
+    } catch (e) {
+      props.user = null;
+    }
+  }
+  if (d.routes) {
+    try {
+      props.routes = JSON.parse(d.routes);
+    } catch (e) {
+      props.routes = {};
+    }
+  }
+  if (d.errors) {
+    try {
+      props.errors = JSON.parse(d.errors);
+    } catch (e) {
+      props.errors = {};
+    }
+  }
+  if (d.old) {
+    try {
+      props.old = JSON.parse(d.old);
+    } catch (e) {
+      props.old = {};
+    }
+  }
+  props.logo = d.logo;
+  props.csrf = d.csrf;
+  props.openModal = d.openModal || '';
+  props.year = d.year ? parseInt(d.year, 10) : new Date().getFullYear();
+  (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootEl).render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_EpawnApp__WEBPACK_IMPORTED_MODULE_2__["default"], props));
+} else {
+  console.error('Root element not found');
 }
-function _initLanding() {
-  _initLanding = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-    var cached, storedData, data, _t;
-    return _regenerator().w(function (_context) {
-      while (1) switch (_context.p = _context.n) {
-        case 0:
-          cached = (0,_services_epawnApi__WEBPACK_IMPORTED_MODULE_3__.getCachedBootstrap)() || (0,_services_epawnStorage__WEBPACK_IMPORTED_MODULE_4__.getEpawn)().bootstrap;
-          storedData = (0,_services_epawnStorage__WEBPACK_IMPORTED_MODULE_4__.getEpawn)(); // Clear localStorage if no valid user data exists
-          if (!storedData.user) {
-            (0,_services_epawnStorage__WEBPACK_IMPORTED_MODULE_4__.clearEpawn)();
-          }
-          _context.p = 1;
-          _context.n = 2;
-          return (0,_services_epawnApi__WEBPACK_IMPORTED_MODULE_3__.loadBootstrap)();
-        case 2:
-          data = _context.v;
-          // Only store bootstrap data if user is authenticated
-          if (data.user) {
-            (0,_services_epawnStorage__WEBPACK_IMPORTED_MODULE_4__.setEpawn)({
-              user: data.user,
-              logo: data.logo,
-              csrf: data.csrf,
-              routes: data.routes,
-              bootstrap: data,
-              errors: data.errors || {},
-              old: data.old || {},
-              openModal: data.openModal || '',
-              year: data.year
-            });
-          } else {
-            // Clear localStorage if backend returns no user
-            (0,_services_epawnStorage__WEBPACK_IMPORTED_MODULE_4__.clearEpawn)();
-          }
-          (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootEl).render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_EpawnApp__WEBPACK_IMPORTED_MODULE_2__["default"], data));
-          _context.n = 4;
-          break;
-        case 3:
-          _context.p = 3;
-          _t = _context.v;
-          if (cached && storedData.user) {
-            (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootEl).render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_EpawnApp__WEBPACK_IMPORTED_MODULE_2__["default"], cached));
-          } else {
-            (0,_services_epawnStorage__WEBPACK_IMPORTED_MODULE_4__.clearEpawn)();
-            (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootEl).render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement('div', {
-              className: 'loading'
-            }, 'Unable to load E-PAWN.'));
-          }
-        case 4:
-          return _context.a(2);
-      }
-    }, _callee, null, [[1, 3]]);
-  }));
-  return _initLanding.apply(this, arguments);
-}
-initLanding();
 
 /***/ }),
 
@@ -21142,16 +21115,16 @@ function AuthModals(_ref) {
               textAlign: 'center'
             },
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("a", {
-              href: "/api/v1/auth/google",
+              href: "/api/auth/google",
               className: "btn btn-google",
               style: {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.5rem 1rem',
-                backgroundColor: '#fff',
-                color: '#444',
-                border: '1px solid #ddd',
+                backgroundColor: 'var(--google-btn-bg)',
+                color: 'var(--google-btn-text)',
+                border: '1px solid var(--google-btn-border)',
                 borderRadius: '4px',
                 textDecoration: 'none',
                 fontSize: '0.9rem',
@@ -21506,16 +21479,16 @@ function AuthModals(_ref) {
                 textAlign: 'center'
               },
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("a", {
-                href: "/api/v1/auth/google",
+                href: "/api/auth/google",
                 className: "btn btn-google",
                 style: {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.5rem',
                   padding: '0.5rem 1rem',
-                  backgroundColor: '#fff',
-                  color: '#444',
-                  border: '1px solid #ddd',
+                  backgroundColor: 'var(--google-btn-bg)',
+                  color: 'var(--google-btn-text)',
+                  border: '1px solid var(--google-btn-border)',
                   borderRadius: '4px',
                   textDecoration: 'none',
                   fontSize: '0.9rem',
@@ -21833,34 +21806,34 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-dev-runtime */ "./node_modules/react/jsx-dev-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 
 function HeroIllustration() {
-  return /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("svg", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("svg", {
     viewBox: "0 0 480 420",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
-    children: [/*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("circle", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
       cx: "240",
       cy: "210",
       r: "180",
       fill: "#FFEBEE",
       opacity: "0.6"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("circle", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
       cx: "240",
       cy: "210",
       r: "130",
       fill: "#FFCDD2",
       opacity: "0.4"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "140",
       y: "120",
       width: "200",
       height: "140",
       rx: "16",
       fill: "#C62828"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "155",
       y: "135",
       width: "170",
@@ -21868,7 +21841,7 @@ function HeroIllustration() {
       rx: "8",
       fill: "#FFFFFF",
       opacity: "0.15"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "170",
       y: "155",
       width: "60",
@@ -21876,7 +21849,7 @@ function HeroIllustration() {
       rx: "4",
       fill: "#FFFFFF",
       opacity: "0.8"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "170",
       y: "175",
       width: "100",
@@ -21884,7 +21857,7 @@ function HeroIllustration() {
       rx: "3",
       fill: "#FFFFFF",
       opacity: "0.5"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "170",
       y: "190",
       width: "80",
@@ -21892,13 +21865,13 @@ function HeroIllustration() {
       rx: "3",
       fill: "#FFFFFF",
       opacity: "0.5"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("circle", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
       cx: "290",
       cy: "210",
       r: "30",
       fill: "#FFFFFF",
       opacity: "0.2"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("text", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("text", {
       x: "278",
       y: "218",
       fill: "#FFFFFF",
@@ -21906,7 +21879,7 @@ function HeroIllustration() {
       fontWeight: "bold",
       fontFamily: "Montserrat",
       children: "\u20B1"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "180",
       y: "230",
       width: "120",
@@ -21914,25 +21887,25 @@ function HeroIllustration() {
       rx: "8",
       fill: "#FFFFFF",
       opacity: "0.9"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("path", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
       d: "M100 280 Q140 240 180 280",
       stroke: "#C62828",
       strokeWidth: "3",
       fill: "none",
       strokeLinecap: "round"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("circle", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
       cx: "100",
       cy: "280",
       r: "20",
       fill: "#C62828"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("path", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
       d: "M93 280 L98 285 L108 273",
       stroke: "#FFF",
       strokeWidth: "2.5",
       fill: "none",
       strokeLinecap: "round",
       strokeLinejoin: "round"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "300",
       y: "260",
       width: "80",
@@ -21941,63 +21914,63 @@ function HeroIllustration() {
       fill: "#FFFFFF",
       stroke: "#C62828",
       strokeWidth: "2"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "312",
       y: "275",
       width: "56",
       height: "40",
       rx: "6",
       fill: "#FFEBEE"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "320",
       y: "285",
       width: "12",
       height: "20",
       rx: "2",
       fill: "#C62828"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "336",
       y: "280",
       width: "12",
       height: "25",
       rx: "2",
       fill: "#E53935"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "352",
       y: "275",
       width: "12",
       height: "30",
       rx: "2",
       fill: "#C62828"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("path", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
       d: "M328 315 L360 295",
       stroke: "#C62828",
       strokeWidth: "2",
       strokeLinecap: "round"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("path", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
       d: "M355 295 L360 295 L360 300",
       stroke: "#C62828",
       strokeWidth: "2",
       strokeLinecap: "round",
       strokeLinejoin: "round"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("circle", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
       cx: "340",
       cy: "340",
       r: "8",
       fill: "#C62828"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("path", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
       d: "M60 160 L80 140 L100 155 L120 130",
       stroke: "#E53935",
       strokeWidth: "2.5",
       fill: "none",
       strokeLinecap: "round",
       strokeLinejoin: "round"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("circle", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
       cx: "120",
       cy: "130",
       r: "6",
       fill: "#C62828"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("rect", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("rect", {
       x: "350",
       y: "100",
       width: "50",
@@ -22006,7 +21979,7 @@ function HeroIllustration() {
       fill: "#FFEBEE",
       stroke: "#C62828",
       strokeWidth: "2"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("text", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("text", {
       x: "362",
       y: "132",
       fill: "#C62828",
@@ -22014,24 +21987,24 @@ function HeroIllustration() {
       fontWeight: "bold",
       fontFamily: "Montserrat",
       children: "E"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("path", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("path", {
       d: "M200 350 L240 320 L280 340 L320 310",
       stroke: "#FFCDD2",
       strokeWidth: "4",
       fill: "none",
       strokeLinecap: "round"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("circle", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
       cx: "200",
       cy: "350",
       r: "8",
       fill: "#C62828"
-    }, void 0, false), /*#__PURE__*/(0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxDEV)("circle", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("circle", {
       cx: "320",
       cy: "310",
       r: "8",
       fill: "#E53935"
-    }, void 0, false)]
-  }, void 0, true);
+    })]
+  });
 }
 
 /***/ }),
@@ -22069,6 +22042,7 @@ function Layout(_ref) {
     user = _ref.user,
     logo = _ref.logo,
     routes = _ref.routes,
+    csrf = _ref.csrf,
     errors = _ref.errors,
     old = _ref.old,
     openModal = _ref.openModal,
@@ -22084,6 +22058,7 @@ function Layout(_ref) {
       user: user,
       logo: logo,
       routes: routes,
+      csrf: csrf,
       onOpenModal: setActiveModal,
       theme: theme,
       onToggleTheme: onToggleTheme
@@ -22168,14 +22143,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _services_epawnApi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/epawnApi */ "./resources/js/services/epawnApi.js");
-/* harmony import */ var _services_epawnStorage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/epawnStorage */ "./resources/js/services/epawnStorage.js");
-/* harmony import */ var _ThemeToggle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ThemeToggle */ "./resources/js/components/ThemeToggle.jsx");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-function _regenerator() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */ var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag"; function i(r, n, o, i) { var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype); return _regeneratorDefine2(u, "_invoke", function (r, n, o) { var i, c, u, f = 0, p = o || [], y = !1, G = { p: 0, n: 0, v: e, a: d, f: d.bind(e, 4), d: function d(t, r) { return i = t, c = 0, u = e, G.n = r, a; } }; function d(r, n) { for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) { var o, i = p[t], d = G.p, l = i[2]; r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0)); } if (o || r > 1) return a; throw y = !0, n; } return function (o, p, l) { if (f > 1) throw TypeError("Generator is already running"); for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) { i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u); try { if (f = 2, i) { if (c || (o = "next"), t = i[o]) { if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object"); if (!t.done) return t; u = t.value, c < 2 && (c = 0); } else 1 === c && (t = i["return"]) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1); i = e; } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break; } catch (t) { i = e, c = 1, u = t; } finally { f = 1; } } return { value: t, done: y }; }; }(r, o, i), !0), u; } var a = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} t = Object.getPrototypeOf; var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function () { return this; }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c); function f(e) { return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function () { return this; }), _regeneratorDefine2(u, "toString", function () { return "[object Generator]"; }), (_regenerator = function _regenerator() { return { w: i, m: f }; })(); }
-function _regeneratorDefine2(e, r, n, t) { var i = Object.defineProperty; try { i({}, "", {}); } catch (e) { i = 0; } _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) { function o(r, n) { _regeneratorDefine2(e, r, function (e) { return this._invoke(r, n, e); }); } r ? i ? i(e, r, { value: n, enumerable: !t, configurable: !t, writable: !t }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2)); }, _regeneratorDefine2(e, r, n, t); }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+/* harmony import */ var _ThemeToggle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ThemeToggle */ "./resources/js/components/ThemeToggle.jsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -22185,12 +22154,11 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
-
-
 function Navbar(_ref) {
   var user = _ref.user,
     logo = _ref.logo,
     routes = _ref.routes,
+    csrf = _ref.csrf,
     onOpenModal = _ref.onOpenModal,
     theme = _ref.theme,
     onToggleTheme = _ref.onToggleTheme;
@@ -22200,13 +22168,10 @@ function Navbar(_ref) {
     setMobileOpen = _useState2[1];
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState4 = _slicedToArray(_useState3, 2),
-    loggingOut = _useState4[0],
-    setLoggingOut = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
-    _useState6 = _slicedToArray(_useState5, 2),
-    scrolled = _useState6[0],
-    setScrolled = _useState6[1];
+    scrolled = _useState4[0],
+    setScrolled = _useState4[1];
   var navRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+  var logoutFormRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   var dashboardUrl = routes.dashboard;
   var currentPath = window.location.pathname;
 
@@ -22243,39 +22208,12 @@ function Navbar(_ref) {
   var handleNavLink = function handleNavLink() {
     return setMobileOpen(false);
   };
-  var handleLogout = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee() {
-      var _t;
-      return _regenerator().w(function (_context) {
-        while (1) switch (_context.p = _context.n) {
-          case 0:
-            setLoggingOut(true);
-            _context.p = 1;
-            _context.n = 2;
-            return (0,_services_epawnApi__WEBPACK_IMPORTED_MODULE_1__.logout)();
-          case 2:
-            _context.n = 4;
-            break;
-          case 3:
-            _context.p = 3;
-            _t = _context.v;
-            console.error('Logout error:', _t);
-          case 4:
-            _context.p = 4;
-            (0,_services_epawnStorage__WEBPACK_IMPORTED_MODULE_2__.clearEpawn)();
-            localStorage.removeItem('Epawn');
-            sessionStorage.clear();
-            window.location.href = routes.home || '/';
-            return _context.f(4);
-          case 5:
-            return _context.a(2);
-        }
-      }, _callee, null, [[1, 3, 4, 5]]);
-    }));
-    return function handleLogout() {
-      return _ref2.apply(this, arguments);
-    };
-  }();
+  var handleLogout = function handleLogout(e) {
+    e.preventDefault();
+    if (logoutFormRef.current) {
+      logoutFormRef.current.submit();
+    }
+  };
   var navLinks = [{
     href: routes.features,
     label: 'Features'
@@ -22289,55 +22227,54 @@ function Navbar(_ref) {
   var isActive = function isActive(href) {
     return href && currentPath === href;
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("nav", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("nav", {
     ref: navRef,
     className: "navbar".concat(scrolled ? ' navbar--scrolled' : ''),
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
       className: "navbar-inner",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
         href: routes.home,
         className: "nav-logo",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("img", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("img", {
           src: logo,
           alt: "E-PAWN Logo"
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("ul", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("ul", {
         className: "nav-links",
         children: navLinks.map(function (link) {
-          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("li", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
               href: link.href,
               className: isActive(link.href) ? 'nav-link--active' : '',
               children: link.label
             })
           }, link.href);
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
         className: "nav-actions",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ThemeToggle__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_ThemeToggle__WEBPACK_IMPORTED_MODULE_1__["default"], {
           theme: theme,
           onToggle: onToggleTheme
-        }), user ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+        }), user ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
             href: dashboardUrl,
             className: "btn btn-primary",
             children: "Dashboard"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
             type: "button",
             className: "btn btn-outline",
             onClick: handleLogout,
-            disabled: loggingOut,
-            children: loggingOut ? 'Logging out...' : 'Logout'
+            children: "Logout"
           })]
-        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
             type: "button",
             className: "btn btn-outline",
             onClick: function onClick() {
               return onOpenModal('login');
             },
             children: "Log In"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
             type: "button",
             className: "btn btn-primary",
             onClick: function onClick() {
@@ -22346,7 +22283,7 @@ function Navbar(_ref) {
             children: "Register"
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
         type: "button",
         className: "mobile-toggle",
         "aria-label": mobileOpen ? 'Close menu' : 'Open menu',
@@ -22359,38 +22296,38 @@ function Navbar(_ref) {
         children: mobileOpen ?
         /*#__PURE__*/
         // X icon
-        (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("svg", {
+        (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("svg", {
           width: "24",
           height: "24",
           fill: "none",
           stroke: "#C62828",
           strokeWidth: "2.5",
           viewBox: "0 0 24 24",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("path", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("path", {
             d: "M18 6L6 18M6 6l12 12"
           })
         }) :
         /*#__PURE__*/
         // Hamburger icon
-        (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("svg", {
+        (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("svg", {
           width: "24",
           height: "24",
           fill: "none",
           stroke: "#C62828",
           strokeWidth: "2",
           viewBox: "0 0 24 24",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("path", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("path", {
             d: "M4 6h16M4 12h16M4 18h16"
           })
         })
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
       className: "mobile-menu".concat(mobileOpen ? ' mobile-menu--open' : ''),
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("ul", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("ul", {
         className: "mobile-nav-links",
         children: navLinks.map(function (link) {
-          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("li", {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("li", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
               href: link.href,
               className: isActive(link.href) ? 'nav-link--active' : '',
               onClick: handleNavLink,
@@ -22398,20 +22335,20 @@ function Navbar(_ref) {
             })
           }, link.href);
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
         className: "mobile-nav-actions",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
           style: {
             display: 'flex',
             justifyContent: 'center',
             padding: '0.5rem 0'
           },
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ThemeToggle__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_ThemeToggle__WEBPACK_IMPORTED_MODULE_1__["default"], {
             theme: theme,
             onToggle: onToggleTheme
           })
-        }), user ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("a", {
+        }), user ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
             href: dashboardUrl,
             className: "btn btn-primary",
             style: {
@@ -22419,18 +22356,17 @@ function Navbar(_ref) {
               textAlign: 'center'
             },
             children: "Dashboard"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
             type: "button",
             className: "btn btn-outline",
             style: {
               width: '100%'
             },
             onClick: handleLogout,
-            disabled: loggingOut,
-            children: loggingOut ? 'Logging out...' : 'Logout'
+            children: "Logout"
           })]
-        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
             type: "button",
             className: "btn btn-outline",
             style: {
@@ -22441,7 +22377,7 @@ function Navbar(_ref) {
               setMobileOpen(false);
             },
             children: "Log In"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
             type: "button",
             className: "btn btn-primary",
             style: {
@@ -22455,6 +22391,18 @@ function Navbar(_ref) {
           })]
         })]
       })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("form", {
+      ref: logoutFormRef,
+      method: "POST",
+      action: "/logout",
+      style: {
+        display: 'none'
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+        type: "hidden",
+        name: "_token",
+        value: csrf
+      })
     })]
   });
 }
@@ -22532,7 +22480,8 @@ function PasswordField(_ref) {
     _ref$required = _ref.required,
     required = _ref$required === void 0 ? true : _ref$required,
     value = _ref.value,
-    onChange = _ref.onChange;
+    onChange = _ref.onChange,
+    defaultValue = _ref.defaultValue;
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
     visible = _useState2[0],
@@ -22548,7 +22497,9 @@ function PasswordField(_ref) {
     }, value !== undefined ? {
       value: value,
       onChange: onChange
-    } : {}), {}, {
+    } : {
+      defaultValue: defaultValue
+    }), {}, {
       required: required
     })), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
       type: "button",
@@ -23767,9 +23718,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   fetchDashboardData: () => (/* binding */ fetchDashboardData),
 /* harmony export */   fetchTransactions: () => (/* binding */ fetchTransactions),
 /* harmony export */   fetchUser: () => (/* binding */ fetchUser),
-/* harmony export */   getCachedBootstrap: () => (/* binding */ getCachedBootstrap),
 /* harmony export */   getCachedDashboard: () => (/* binding */ getCachedDashboard),
-/* harmony export */   loadBootstrap: () => (/* binding */ loadBootstrap),
 /* harmony export */   loadDashboard: () => (/* binding */ loadDashboard),
 /* harmony export */   login: () => (/* binding */ login),
 /* harmony export */   logout: () => (/* binding */ logout),
@@ -23793,7 +23742,7 @@ function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
 
-var API_BASE = '/api/v1';
+var API_BASE = '/api';
 (axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common['X-Requested-With'] = 'XMLHttpRequest';
 (axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common['Accept'] = 'application/json';
 (axios__WEBPACK_IMPORTED_MODULE_0___default().defaults).headers.common['Content-Type'] = 'application/json';
@@ -23838,19 +23787,6 @@ function _ensureCsrf() {
   }));
   return _ensureCsrf.apply(this, arguments);
 }
-function storeBootstrap(data) {
-  return (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
-    user: data.user,
-    logo: data.logo,
-    csrf: data.csrf,
-    routes: data.routes,
-    bootstrap: data,
-    errors: data.errors || {},
-    old: data.old || {},
-    openModal: data.openModal || '',
-    year: data.year
-  });
-}
 function storeDashboard(data) {
   return (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
     user: data.user,
@@ -23865,11 +23801,11 @@ function storeDashboard(data) {
     old: data.old || {}
   });
 }
-function loadBootstrap() {
-  return _loadBootstrap.apply(this, arguments);
+function loadDashboard() {
+  return _loadDashboard.apply(this, arguments);
 }
-function _loadBootstrap() {
-  _loadBootstrap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
+function _loadDashboard() {
+  _loadDashboard = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee2() {
     var _yield$axios$get, data;
     return _regenerator().w(function (_context2) {
       while (1) switch (_context2.n) {
@@ -23878,38 +23814,14 @@ function _loadBootstrap() {
           return ensureCsrf();
         case 1:
           _context2.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/bootstrap"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard"));
         case 2:
           _yield$axios$get = _context2.v;
           data = _yield$axios$get.data;
-          storeBootstrap(data);
+          storeDashboard(data);
           return _context2.a(2, data);
       }
     }, _callee2);
-  }));
-  return _loadBootstrap.apply(this, arguments);
-}
-function loadDashboard() {
-  return _loadDashboard.apply(this, arguments);
-}
-function _loadDashboard() {
-  _loadDashboard = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-    var _yield$axios$get2, data;
-    return _regenerator().w(function (_context3) {
-      while (1) switch (_context3.n) {
-        case 0:
-          _context3.n = 1;
-          return ensureCsrf();
-        case 1:
-          _context3.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard"));
-        case 2:
-          _yield$axios$get2 = _context3.v;
-          data = _yield$axios$get2.data;
-          storeDashboard(data);
-          return _context3.a(2, data);
-      }
-    }, _callee3);
   }));
   return _loadDashboard.apply(this, arguments);
 }
@@ -23917,25 +23829,25 @@ function login(_x) {
   return _login.apply(this, arguments);
 }
 function _login() {
-  _login = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(payload) {
+  _login = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3(payload) {
     var _yield$axios$post, data;
-    return _regenerator().w(function (_context4) {
-      while (1) switch (_context4.n) {
+    return _regenerator().w(function (_context3) {
+      while (1) switch (_context3.n) {
         case 0:
-          _context4.n = 1;
+          _context3.n = 1;
           return ensureCsrf();
         case 1:
-          _context4.n = 2;
+          _context3.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/login"), payload);
         case 2:
-          _yield$axios$post = _context4.v;
+          _yield$axios$post = _context3.v;
           data = _yield$axios$post.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context4.a(2, data);
+          return _context3.a(2, data);
       }
-    }, _callee4);
+    }, _callee3);
   }));
   return _login.apply(this, arguments);
 }
@@ -23943,25 +23855,25 @@ function register(_x2) {
   return _register.apply(this, arguments);
 }
 function _register() {
-  _register = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(payload) {
+  _register = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee4(payload) {
     var _yield$axios$post2, data;
-    return _regenerator().w(function (_context5) {
-      while (1) switch (_context5.n) {
+    return _regenerator().w(function (_context4) {
+      while (1) switch (_context4.n) {
         case 0:
-          _context5.n = 1;
+          _context4.n = 1;
           return ensureCsrf();
         case 1:
-          _context5.n = 2;
+          _context4.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/register"), payload);
         case 2:
-          _yield$axios$post2 = _context5.v;
+          _yield$axios$post2 = _context4.v;
           data = _yield$axios$post2.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context5.a(2, data);
+          return _context4.a(2, data);
       }
-    }, _callee5);
+    }, _callee4);
   }));
   return _register.apply(this, arguments);
 }
@@ -23969,7 +23881,34 @@ function checkUsername(_x3) {
   return _checkUsername.apply(this, arguments);
 }
 function _checkUsername() {
-  _checkUsername = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(username) {
+  _checkUsername = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee5(username) {
+    var _yield$axios$get2, data;
+    return _regenerator().w(function (_context5) {
+      while (1) switch (_context5.n) {
+        case 0:
+          _context5.n = 1;
+          return ensureCsrf();
+        case 1:
+          _context5.n = 2;
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/check-username"), {
+            params: {
+              username: username
+            }
+          });
+        case 2:
+          _yield$axios$get2 = _context5.v;
+          data = _yield$axios$get2.data;
+          return _context5.a(2, data);
+      }
+    }, _callee5);
+  }));
+  return _checkUsername.apply(this, arguments);
+}
+function checkEmail(_x4) {
+  return _checkEmail.apply(this, arguments);
+}
+function _checkEmail() {
+  _checkEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee6(email) {
     var _yield$axios$get3, data;
     return _regenerator().w(function (_context6) {
       while (1) switch (_context6.n) {
@@ -23978,9 +23917,9 @@ function _checkUsername() {
           return ensureCsrf();
         case 1:
           _context6.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/check-username"), {
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/check-email"), {
             params: {
-              username: username
+              email: email
             }
           });
         case 2:
@@ -23990,14 +23929,14 @@ function _checkUsername() {
       }
     }, _callee6);
   }));
-  return _checkUsername.apply(this, arguments);
-}
-function checkEmail(_x4) {
   return _checkEmail.apply(this, arguments);
 }
-function _checkEmail() {
-  _checkEmail = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7(email) {
-    var _yield$axios$get4, data;
+function logout() {
+  return _logout.apply(this, arguments);
+}
+function _logout() {
+  _logout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee7() {
+    var _yield$axios$post3, data;
     return _regenerator().w(function (_context7) {
       while (1) switch (_context7.n) {
         case 0:
@@ -24005,41 +23944,14 @@ function _checkEmail() {
           return ensureCsrf();
         case 1:
           _context7.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/check-email"), {
-            params: {
-              email: email
-            }
-          });
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/logout"));
         case 2:
-          _yield$axios$get4 = _context7.v;
-          data = _yield$axios$get4.data;
+          _yield$axios$post3 = _context7.v;
+          data = _yield$axios$post3.data;
+          (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.clearEpawn)();
           return _context7.a(2, data);
       }
     }, _callee7);
-  }));
-  return _checkEmail.apply(this, arguments);
-}
-function logout() {
-  return _logout.apply(this, arguments);
-}
-function _logout() {
-  _logout = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8() {
-    var _yield$axios$post3, data;
-    return _regenerator().w(function (_context8) {
-      while (1) switch (_context8.n) {
-        case 0:
-          _context8.n = 1;
-          return ensureCsrf();
-        case 1:
-          _context8.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/logout"));
-        case 2:
-          _yield$axios$post3 = _context8.v;
-          data = _yield$axios$post3.data;
-          (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.clearEpawn)();
-          return _context8.a(2, data);
-      }
-    }, _callee8);
   }));
   return _logout.apply(this, arguments);
 }
@@ -24047,25 +23959,25 @@ function updateProfile(_x5) {
   return _updateProfile.apply(this, arguments);
 }
 function _updateProfile() {
-  _updateProfile = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(payload) {
+  _updateProfile = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee8(payload) {
     var _yield$axios$post4, data;
-    return _regenerator().w(function (_context9) {
-      while (1) switch (_context9.n) {
+    return _regenerator().w(function (_context8) {
+      while (1) switch (_context8.n) {
         case 0:
-          _context9.n = 1;
+          _context8.n = 1;
           return ensureCsrf();
         case 1:
-          _context9.n = 2;
+          _context8.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/settings/profile"), payload);
         case 2:
-          _yield$axios$post4 = _context9.v;
+          _yield$axios$post4 = _context8.v;
           data = _yield$axios$post4.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context9.a(2, data);
+          return _context8.a(2, data);
       }
-    }, _callee9);
+    }, _callee8);
   }));
   return _updateProfile.apply(this, arguments);
 }
@@ -24073,22 +23985,22 @@ function updatePassword(_x6) {
   return _updatePassword.apply(this, arguments);
 }
 function _updatePassword() {
-  _updatePassword = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0(payload) {
+  _updatePassword = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee9(payload) {
     var _yield$axios$post5, data;
-    return _regenerator().w(function (_context0) {
-      while (1) switch (_context0.n) {
+    return _regenerator().w(function (_context9) {
+      while (1) switch (_context9.n) {
         case 0:
-          _context0.n = 1;
+          _context9.n = 1;
           return ensureCsrf();
         case 1:
-          _context0.n = 2;
+          _context9.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/settings/password"), payload);
         case 2:
-          _yield$axios$post5 = _context0.v;
+          _yield$axios$post5 = _context9.v;
           data = _yield$axios$post5.data;
-          return _context0.a(2, data);
+          return _context9.a(2, data);
       }
-    }, _callee0);
+    }, _callee9);
   }));
   return _updatePassword.apply(this, arguments);
 }
@@ -24096,22 +24008,22 @@ function resetPasswordSurvey(_x7) {
   return _resetPasswordSurvey.apply(this, arguments);
 }
 function _resetPasswordSurvey() {
-  _resetPasswordSurvey = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1(payload) {
+  _resetPasswordSurvey = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee0(payload) {
     var _yield$axios$post6, data;
-    return _regenerator().w(function (_context1) {
-      while (1) switch (_context1.n) {
+    return _regenerator().w(function (_context0) {
+      while (1) switch (_context0.n) {
         case 0:
-          _context1.n = 1;
+          _context0.n = 1;
           return ensureCsrf();
         case 1:
-          _context1.n = 2;
+          _context0.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/forgot-password/reset"), payload);
         case 2:
-          _yield$axios$post6 = _context1.v;
+          _yield$axios$post6 = _context0.v;
           data = _yield$axios$post6.data;
-          return _context1.a(2, data);
+          return _context0.a(2, data);
       }
-    }, _callee1);
+    }, _callee0);
   }));
   return _resetPasswordSurvey.apply(this, arguments);
 }
@@ -24119,23 +24031,23 @@ function deleteAccount(_x8) {
   return _deleteAccount.apply(this, arguments);
 }
 function _deleteAccount() {
-  _deleteAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(payload) {
+  _deleteAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee1(payload) {
     var _yield$axios$post7, data;
-    return _regenerator().w(function (_context10) {
-      while (1) switch (_context10.n) {
+    return _regenerator().w(function (_context1) {
+      while (1) switch (_context1.n) {
         case 0:
-          _context10.n = 1;
+          _context1.n = 1;
           return ensureCsrf();
         case 1:
-          _context10.n = 2;
+          _context1.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/user/delete"), payload);
         case 2:
-          _yield$axios$post7 = _context10.v;
+          _yield$axios$post7 = _context1.v;
           data = _yield$axios$post7.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.clearEpawn)();
-          return _context10.a(2, data);
+          return _context1.a(2, data);
       }
-    }, _callee10);
+    }, _callee1);
   }));
   return _deleteAccount.apply(this, arguments);
 }
@@ -24143,22 +24055,22 @@ function fetchBudgetPlans() {
   return _fetchBudgetPlans.apply(this, arguments);
 }
 function _fetchBudgetPlans() {
-  _fetchBudgetPlans = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11() {
-    var _yield$axios$get5, data;
-    return _regenerator().w(function (_context11) {
-      while (1) switch (_context11.n) {
+  _fetchBudgetPlans = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10() {
+    var _yield$axios$get4, data;
+    return _regenerator().w(function (_context10) {
+      while (1) switch (_context10.n) {
         case 0:
-          _context11.n = 1;
+          _context10.n = 1;
           return ensureCsrf();
         case 1:
-          _context11.n = 2;
+          _context10.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/budget-plans"));
         case 2:
-          _yield$axios$get5 = _context11.v;
-          data = _yield$axios$get5.data;
-          return _context11.a(2, data);
+          _yield$axios$get4 = _context10.v;
+          data = _yield$axios$get4.data;
+          return _context10.a(2, data);
       }
-    }, _callee11);
+    }, _callee10);
   }));
   return _fetchBudgetPlans.apply(this, arguments);
 }
@@ -24166,22 +24078,22 @@ function createBudgetPlan(_x9) {
   return _createBudgetPlan.apply(this, arguments);
 }
 function _createBudgetPlan() {
-  _createBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(payload) {
+  _createBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11(payload) {
     var _yield$axios$post8, data;
-    return _regenerator().w(function (_context12) {
-      while (1) switch (_context12.n) {
+    return _regenerator().w(function (_context11) {
+      while (1) switch (_context11.n) {
         case 0:
-          _context12.n = 1;
+          _context11.n = 1;
           return ensureCsrf();
         case 1:
-          _context12.n = 2;
+          _context11.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budget-plans"), payload);
         case 2:
-          _yield$axios$post8 = _context12.v;
+          _yield$axios$post8 = _context11.v;
           data = _yield$axios$post8.data;
-          return _context12.a(2, data);
+          return _context11.a(2, data);
       }
-    }, _callee12);
+    }, _callee11);
   }));
   return _createBudgetPlan.apply(this, arguments);
 }
@@ -24189,22 +24101,22 @@ function updateBudgetPlan(_x0, _x1) {
   return _updateBudgetPlan.apply(this, arguments);
 }
 function _updateBudgetPlan() {
-  _updateBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13(id, payload) {
+  _updateBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(id, payload) {
     var _yield$axios$put, data;
-    return _regenerator().w(function (_context13) {
-      while (1) switch (_context13.n) {
+    return _regenerator().w(function (_context12) {
+      while (1) switch (_context12.n) {
         case 0:
-          _context13.n = 1;
+          _context12.n = 1;
           return ensureCsrf();
         case 1:
-          _context13.n = 2;
+          _context12.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budget-plans/").concat(id), payload);
         case 2:
-          _yield$axios$put = _context13.v;
+          _yield$axios$put = _context12.v;
           data = _yield$axios$put.data;
-          return _context13.a(2, data);
+          return _context12.a(2, data);
       }
-    }, _callee13);
+    }, _callee12);
   }));
   return _updateBudgetPlan.apply(this, arguments);
 }
@@ -24212,22 +24124,22 @@ function deleteBudgetPlan(_x10) {
   return _deleteBudgetPlan.apply(this, arguments);
 }
 function _deleteBudgetPlan() {
-  _deleteBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(id) {
+  _deleteBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13(id) {
     var _yield$axios$delete, data;
-    return _regenerator().w(function (_context14) {
-      while (1) switch (_context14.n) {
+    return _regenerator().w(function (_context13) {
+      while (1) switch (_context13.n) {
         case 0:
-          _context14.n = 1;
+          _context13.n = 1;
           return ensureCsrf();
         case 1:
-          _context14.n = 2;
+          _context13.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budget-plans/").concat(id));
         case 2:
-          _yield$axios$delete = _context14.v;
+          _yield$axios$delete = _context13.v;
           data = _yield$axios$delete.data;
-          return _context14.a(2, data);
+          return _context13.a(2, data);
       }
-    }, _callee14);
+    }, _callee13);
   }));
   return _deleteBudgetPlan.apply(this, arguments);
 }
@@ -24235,22 +24147,22 @@ function createBudgetPlanItem(_x11, _x12) {
   return _createBudgetPlanItem.apply(this, arguments);
 }
 function _createBudgetPlanItem() {
-  _createBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(planId, payload) {
+  _createBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(planId, payload) {
     var _yield$axios$post9, data;
-    return _regenerator().w(function (_context15) {
-      while (1) switch (_context15.n) {
+    return _regenerator().w(function (_context14) {
+      while (1) switch (_context14.n) {
         case 0:
-          _context15.n = 1;
+          _context14.n = 1;
           return ensureCsrf();
         case 1:
-          _context15.n = 2;
+          _context14.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budget-plans/").concat(planId, "/items"), payload);
         case 2:
-          _yield$axios$post9 = _context15.v;
+          _yield$axios$post9 = _context14.v;
           data = _yield$axios$post9.data;
-          return _context15.a(2, data);
+          return _context14.a(2, data);
       }
-    }, _callee15);
+    }, _callee14);
   }));
   return _createBudgetPlanItem.apply(this, arguments);
 }
@@ -24258,22 +24170,22 @@ function updateBudgetPlanItem(_x13, _x14, _x15) {
   return _updateBudgetPlanItem.apply(this, arguments);
 }
 function _updateBudgetPlanItem() {
-  _updateBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(planId, itemId, payload) {
+  _updateBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(planId, itemId, payload) {
     var _yield$axios$put2, data;
-    return _regenerator().w(function (_context16) {
-      while (1) switch (_context16.n) {
+    return _regenerator().w(function (_context15) {
+      while (1) switch (_context15.n) {
         case 0:
-          _context16.n = 1;
+          _context15.n = 1;
           return ensureCsrf();
         case 1:
-          _context16.n = 2;
+          _context15.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budget-plans/").concat(planId, "/items/").concat(itemId), payload);
         case 2:
-          _yield$axios$put2 = _context16.v;
+          _yield$axios$put2 = _context15.v;
           data = _yield$axios$put2.data;
-          return _context16.a(2, data);
+          return _context15.a(2, data);
       }
-    }, _callee16);
+    }, _callee15);
   }));
   return _updateBudgetPlanItem.apply(this, arguments);
 }
@@ -24281,22 +24193,22 @@ function deleteBudgetPlanItem(_x16, _x17) {
   return _deleteBudgetPlanItem.apply(this, arguments);
 }
 function _deleteBudgetPlanItem() {
-  _deleteBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17(planId, itemId) {
+  _deleteBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(planId, itemId) {
     var _yield$axios$delete2, data;
-    return _regenerator().w(function (_context17) {
-      while (1) switch (_context17.n) {
+    return _regenerator().w(function (_context16) {
+      while (1) switch (_context16.n) {
         case 0:
-          _context17.n = 1;
+          _context16.n = 1;
           return ensureCsrf();
         case 1:
-          _context17.n = 2;
+          _context16.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budget-plans/").concat(planId, "/items/").concat(itemId));
         case 2:
-          _yield$axios$delete2 = _context17.v;
+          _yield$axios$delete2 = _context16.v;
           data = _yield$axios$delete2.data;
-          return _context17.a(2, data);
+          return _context16.a(2, data);
       }
-    }, _callee17);
+    }, _callee16);
   }));
   return _deleteBudgetPlanItem.apply(this, arguments);
 }
@@ -24304,7 +24216,30 @@ function fetchDashboardData() {
   return _fetchDashboardData.apply(this, arguments);
 }
 function _fetchDashboardData() {
-  _fetchDashboardData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
+  _fetchDashboardData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17() {
+    var _yield$axios$get5, data;
+    return _regenerator().w(function (_context17) {
+      while (1) switch (_context17.n) {
+        case 0:
+          _context17.n = 1;
+          return ensureCsrf();
+        case 1:
+          _context17.n = 2;
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard-data"));
+        case 2:
+          _yield$axios$get5 = _context17.v;
+          data = _yield$axios$get5.data;
+          return _context17.a(2, data);
+      }
+    }, _callee17);
+  }));
+  return _fetchDashboardData.apply(this, arguments);
+}
+function fetchCategories() {
+  return _fetchCategories.apply(this, arguments);
+}
+function _fetchCategories() {
+  _fetchCategories = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18() {
     var _yield$axios$get6, data;
     return _regenerator().w(function (_context18) {
       while (1) switch (_context18.n) {
@@ -24313,7 +24248,7 @@ function _fetchDashboardData() {
           return ensureCsrf();
         case 1:
           _context18.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard-data"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/categories"));
         case 2:
           _yield$axios$get6 = _context18.v;
           data = _yield$axios$get6.data;
@@ -24321,14 +24256,14 @@ function _fetchDashboardData() {
       }
     }, _callee18);
   }));
-  return _fetchDashboardData.apply(this, arguments);
-}
-function fetchCategories() {
   return _fetchCategories.apply(this, arguments);
 }
-function _fetchCategories() {
-  _fetchCategories = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19() {
-    var _yield$axios$get7, data;
+function createCategory(_x18) {
+  return _createCategory.apply(this, arguments);
+}
+function _createCategory() {
+  _createCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19(payload) {
+    var _yield$axios$post0, data;
     return _regenerator().w(function (_context19) {
       while (1) switch (_context19.n) {
         case 0:
@@ -24336,36 +24271,13 @@ function _fetchCategories() {
           return ensureCsrf();
         case 1:
           _context19.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/categories"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/categories"), payload);
         case 2:
-          _yield$axios$get7 = _context19.v;
-          data = _yield$axios$get7.data;
+          _yield$axios$post0 = _context19.v;
+          data = _yield$axios$post0.data;
           return _context19.a(2, data);
       }
     }, _callee19);
-  }));
-  return _fetchCategories.apply(this, arguments);
-}
-function createCategory(_x18) {
-  return _createCategory.apply(this, arguments);
-}
-function _createCategory() {
-  _createCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20(payload) {
-    var _yield$axios$post0, data;
-    return _regenerator().w(function (_context20) {
-      while (1) switch (_context20.n) {
-        case 0:
-          _context20.n = 1;
-          return ensureCsrf();
-        case 1:
-          _context20.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/categories"), payload);
-        case 2:
-          _yield$axios$post0 = _context20.v;
-          data = _yield$axios$post0.data;
-          return _context20.a(2, data);
-      }
-    }, _callee20);
   }));
   return _createCategory.apply(this, arguments);
 }
@@ -24373,22 +24285,22 @@ function updateCategory(_x19, _x20) {
   return _updateCategory.apply(this, arguments);
 }
 function _updateCategory() {
-  _updateCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21(id, payload) {
+  _updateCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20(id, payload) {
     var _yield$axios$put3, data;
-    return _regenerator().w(function (_context21) {
-      while (1) switch (_context21.n) {
+    return _regenerator().w(function (_context20) {
+      while (1) switch (_context20.n) {
         case 0:
-          _context21.n = 1;
+          _context20.n = 1;
           return ensureCsrf();
         case 1:
-          _context21.n = 2;
+          _context20.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/categories/").concat(id), payload);
         case 2:
-          _yield$axios$put3 = _context21.v;
+          _yield$axios$put3 = _context20.v;
           data = _yield$axios$put3.data;
-          return _context21.a(2, data);
+          return _context20.a(2, data);
       }
-    }, _callee21);
+    }, _callee20);
   }));
   return _updateCategory.apply(this, arguments);
 }
@@ -24396,22 +24308,22 @@ function deleteCategory(_x21) {
   return _deleteCategory.apply(this, arguments);
 }
 function _deleteCategory() {
-  _deleteCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22(id) {
+  _deleteCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21(id) {
     var _yield$axios$delete3, data;
-    return _regenerator().w(function (_context22) {
-      while (1) switch (_context22.n) {
+    return _regenerator().w(function (_context21) {
+      while (1) switch (_context21.n) {
         case 0:
-          _context22.n = 1;
+          _context21.n = 1;
           return ensureCsrf();
         case 1:
-          _context22.n = 2;
+          _context21.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/categories/").concat(id));
         case 2:
-          _yield$axios$delete3 = _context22.v;
+          _yield$axios$delete3 = _context21.v;
           data = _yield$axios$delete3.data;
-          return _context22.a(2, data);
+          return _context21.a(2, data);
       }
-    }, _callee22);
+    }, _callee21);
   }));
   return _deleteCategory.apply(this, arguments);
 }
@@ -24419,22 +24331,22 @@ function fetchAccounts() {
   return _fetchAccounts.apply(this, arguments);
 }
 function _fetchAccounts() {
-  _fetchAccounts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23() {
-    var _yield$axios$get8, data;
-    return _regenerator().w(function (_context23) {
-      while (1) switch (_context23.n) {
+  _fetchAccounts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22() {
+    var _yield$axios$get7, data;
+    return _regenerator().w(function (_context22) {
+      while (1) switch (_context22.n) {
         case 0:
-          _context23.n = 1;
+          _context22.n = 1;
           return ensureCsrf();
         case 1:
-          _context23.n = 2;
+          _context22.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/accounts"));
         case 2:
-          _yield$axios$get8 = _context23.v;
-          data = _yield$axios$get8.data;
-          return _context23.a(2, data);
+          _yield$axios$get7 = _context22.v;
+          data = _yield$axios$get7.data;
+          return _context22.a(2, data);
       }
-    }, _callee23);
+    }, _callee22);
   }));
   return _fetchAccounts.apply(this, arguments);
 }
@@ -24442,22 +24354,22 @@ function createAccount(_x22) {
   return _createAccount.apply(this, arguments);
 }
 function _createAccount() {
-  _createAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(payload) {
+  _createAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23(payload) {
     var _yield$axios$post1, data;
-    return _regenerator().w(function (_context24) {
-      while (1) switch (_context24.n) {
+    return _regenerator().w(function (_context23) {
+      while (1) switch (_context23.n) {
         case 0:
-          _context24.n = 1;
+          _context23.n = 1;
           return ensureCsrf();
         case 1:
-          _context24.n = 2;
+          _context23.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/accounts"), payload);
         case 2:
-          _yield$axios$post1 = _context24.v;
+          _yield$axios$post1 = _context23.v;
           data = _yield$axios$post1.data;
-          return _context24.a(2, data);
+          return _context23.a(2, data);
       }
-    }, _callee24);
+    }, _callee23);
   }));
   return _createAccount.apply(this, arguments);
 }
@@ -24465,22 +24377,22 @@ function updateAccount(_x23, _x24) {
   return _updateAccount.apply(this, arguments);
 }
 function _updateAccount() {
-  _updateAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25(id, payload) {
+  _updateAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(id, payload) {
     var _yield$axios$put4, data;
-    return _regenerator().w(function (_context25) {
-      while (1) switch (_context25.n) {
+    return _regenerator().w(function (_context24) {
+      while (1) switch (_context24.n) {
         case 0:
-          _context25.n = 1;
+          _context24.n = 1;
           return ensureCsrf();
         case 1:
-          _context25.n = 2;
+          _context24.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/accounts/").concat(id), payload);
         case 2:
-          _yield$axios$put4 = _context25.v;
+          _yield$axios$put4 = _context24.v;
           data = _yield$axios$put4.data;
-          return _context25.a(2, data);
+          return _context24.a(2, data);
       }
-    }, _callee25);
+    }, _callee24);
   }));
   return _updateAccount.apply(this, arguments);
 }
@@ -24488,22 +24400,22 @@ function deleteAccountApi(_x25) {
   return _deleteAccountApi.apply(this, arguments);
 }
 function _deleteAccountApi() {
-  _deleteAccountApi = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26(id) {
+  _deleteAccountApi = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25(id) {
     var _yield$axios$delete4, data;
-    return _regenerator().w(function (_context26) {
-      while (1) switch (_context26.n) {
+    return _regenerator().w(function (_context25) {
+      while (1) switch (_context25.n) {
         case 0:
-          _context26.n = 1;
+          _context25.n = 1;
           return ensureCsrf();
         case 1:
-          _context26.n = 2;
+          _context25.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/accounts/").concat(id));
         case 2:
-          _yield$axios$delete4 = _context26.v;
+          _yield$axios$delete4 = _context25.v;
           data = _yield$axios$delete4.data;
-          return _context26.a(2, data);
+          return _context25.a(2, data);
       }
-    }, _callee26);
+    }, _callee25);
   }));
   return _deleteAccountApi.apply(this, arguments);
 }
@@ -24511,22 +24423,22 @@ function fetchTransactions() {
   return _fetchTransactions.apply(this, arguments);
 }
 function _fetchTransactions() {
-  _fetchTransactions = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27() {
-    var _yield$axios$get9, data;
-    return _regenerator().w(function (_context27) {
-      while (1) switch (_context27.n) {
+  _fetchTransactions = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26() {
+    var _yield$axios$get8, data;
+    return _regenerator().w(function (_context26) {
+      while (1) switch (_context26.n) {
         case 0:
-          _context27.n = 1;
+          _context26.n = 1;
           return ensureCsrf();
         case 1:
-          _context27.n = 2;
+          _context26.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/transactions"));
         case 2:
-          _yield$axios$get9 = _context27.v;
-          data = _yield$axios$get9.data;
-          return _context27.a(2, data);
+          _yield$axios$get8 = _context26.v;
+          data = _yield$axios$get8.data;
+          return _context26.a(2, data);
       }
-    }, _callee27);
+    }, _callee26);
   }));
   return _fetchTransactions.apply(this, arguments);
 }
@@ -24534,22 +24446,22 @@ function createTransaction(_x26) {
   return _createTransaction.apply(this, arguments);
 }
 function _createTransaction() {
-  _createTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(payload) {
+  _createTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27(payload) {
     var _yield$axios$post10, data;
-    return _regenerator().w(function (_context28) {
-      while (1) switch (_context28.n) {
+    return _regenerator().w(function (_context27) {
+      while (1) switch (_context27.n) {
         case 0:
-          _context28.n = 1;
+          _context27.n = 1;
           return ensureCsrf();
         case 1:
-          _context28.n = 2;
+          _context27.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/transactions"), payload);
         case 2:
-          _yield$axios$post10 = _context28.v;
+          _yield$axios$post10 = _context27.v;
           data = _yield$axios$post10.data;
-          return _context28.a(2, data);
+          return _context27.a(2, data);
       }
-    }, _callee28);
+    }, _callee27);
   }));
   return _createTransaction.apply(this, arguments);
 }
@@ -24557,22 +24469,22 @@ function updateTransaction(_x27, _x28) {
   return _updateTransaction.apply(this, arguments);
 }
 function _updateTransaction() {
-  _updateTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29(id, payload) {
+  _updateTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(id, payload) {
     var _yield$axios$put5, data;
-    return _regenerator().w(function (_context29) {
-      while (1) switch (_context29.n) {
+    return _regenerator().w(function (_context28) {
+      while (1) switch (_context28.n) {
         case 0:
-          _context29.n = 1;
+          _context28.n = 1;
           return ensureCsrf();
         case 1:
-          _context29.n = 2;
+          _context28.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/transactions/").concat(id), payload);
         case 2:
-          _yield$axios$put5 = _context29.v;
+          _yield$axios$put5 = _context28.v;
           data = _yield$axios$put5.data;
-          return _context29.a(2, data);
+          return _context28.a(2, data);
       }
-    }, _callee29);
+    }, _callee28);
   }));
   return _updateTransaction.apply(this, arguments);
 }
@@ -24580,22 +24492,22 @@ function deleteTransaction(_x29) {
   return _deleteTransaction.apply(this, arguments);
 }
 function _deleteTransaction() {
-  _deleteTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30(id) {
+  _deleteTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29(id) {
     var _yield$axios$delete5, data;
-    return _regenerator().w(function (_context30) {
-      while (1) switch (_context30.n) {
+    return _regenerator().w(function (_context29) {
+      while (1) switch (_context29.n) {
         case 0:
-          _context30.n = 1;
+          _context29.n = 1;
           return ensureCsrf();
         case 1:
-          _context30.n = 2;
+          _context29.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/transactions/").concat(id));
         case 2:
-          _yield$axios$delete5 = _context30.v;
+          _yield$axios$delete5 = _context29.v;
           data = _yield$axios$delete5.data;
-          return _context30.a(2, data);
+          return _context29.a(2, data);
       }
-    }, _callee30);
+    }, _callee29);
   }));
   return _deleteTransaction.apply(this, arguments);
 }
@@ -24603,22 +24515,22 @@ function fetchBudgets() {
   return _fetchBudgets.apply(this, arguments);
 }
 function _fetchBudgets() {
-  _fetchBudgets = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31() {
-    var _yield$axios$get0, data;
-    return _regenerator().w(function (_context31) {
-      while (1) switch (_context31.n) {
+  _fetchBudgets = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30() {
+    var _yield$axios$get9, data;
+    return _regenerator().w(function (_context30) {
+      while (1) switch (_context30.n) {
         case 0:
-          _context31.n = 1;
+          _context30.n = 1;
           return ensureCsrf();
         case 1:
-          _context31.n = 2;
+          _context30.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/budgets"));
         case 2:
-          _yield$axios$get0 = _context31.v;
-          data = _yield$axios$get0.data;
-          return _context31.a(2, data);
+          _yield$axios$get9 = _context30.v;
+          data = _yield$axios$get9.data;
+          return _context30.a(2, data);
       }
-    }, _callee31);
+    }, _callee30);
   }));
   return _fetchBudgets.apply(this, arguments);
 }
@@ -24626,22 +24538,22 @@ function createBudget(_x30) {
   return _createBudget.apply(this, arguments);
 }
 function _createBudget() {
-  _createBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32(payload) {
+  _createBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31(payload) {
     var _yield$axios$post11, data;
-    return _regenerator().w(function (_context32) {
-      while (1) switch (_context32.n) {
+    return _regenerator().w(function (_context31) {
+      while (1) switch (_context31.n) {
         case 0:
-          _context32.n = 1;
+          _context31.n = 1;
           return ensureCsrf();
         case 1:
-          _context32.n = 2;
+          _context31.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budgets"), payload);
         case 2:
-          _yield$axios$post11 = _context32.v;
+          _yield$axios$post11 = _context31.v;
           data = _yield$axios$post11.data;
-          return _context32.a(2, data);
+          return _context31.a(2, data);
       }
-    }, _callee32);
+    }, _callee31);
   }));
   return _createBudget.apply(this, arguments);
 }
@@ -24649,22 +24561,22 @@ function updateBudget(_x31, _x32) {
   return _updateBudget.apply(this, arguments);
 }
 function _updateBudget() {
-  _updateBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee33(id, payload) {
+  _updateBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32(id, payload) {
     var _yield$axios$put6, data;
-    return _regenerator().w(function (_context33) {
-      while (1) switch (_context33.n) {
+    return _regenerator().w(function (_context32) {
+      while (1) switch (_context32.n) {
         case 0:
-          _context33.n = 1;
+          _context32.n = 1;
           return ensureCsrf();
         case 1:
-          _context33.n = 2;
+          _context32.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budgets/").concat(id), payload);
         case 2:
-          _yield$axios$put6 = _context33.v;
+          _yield$axios$put6 = _context32.v;
           data = _yield$axios$put6.data;
-          return _context33.a(2, data);
+          return _context32.a(2, data);
       }
-    }, _callee33);
+    }, _callee32);
   }));
   return _updateBudget.apply(this, arguments);
 }
@@ -24672,22 +24584,22 @@ function deleteBudget(_x33) {
   return _deleteBudget.apply(this, arguments);
 }
 function _deleteBudget() {
-  _deleteBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34(id) {
+  _deleteBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee33(id) {
     var _yield$axios$delete6, data;
-    return _regenerator().w(function (_context34) {
-      while (1) switch (_context34.n) {
+    return _regenerator().w(function (_context33) {
+      while (1) switch (_context33.n) {
         case 0:
-          _context34.n = 1;
+          _context33.n = 1;
           return ensureCsrf();
         case 1:
-          _context34.n = 2;
+          _context33.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budgets/").concat(id));
         case 2:
-          _yield$axios$delete6 = _context34.v;
+          _yield$axios$delete6 = _context33.v;
           data = _yield$axios$delete6.data;
-          return _context34.a(2, data);
+          return _context33.a(2, data);
       }
-    }, _callee34);
+    }, _callee33);
   }));
   return _deleteBudget.apply(this, arguments);
 }
@@ -24695,37 +24607,33 @@ function fetchUser() {
   return _fetchUser.apply(this, arguments);
 }
 function _fetchUser() {
-  _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee35() {
-    var _yield$axios$get1, data;
-    return _regenerator().w(function (_context35) {
-      while (1) switch (_context35.n) {
+  _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34() {
+    var _yield$axios$get0, data;
+    return _regenerator().w(function (_context34) {
+      while (1) switch (_context34.n) {
         case 0:
-          _context35.n = 1;
+          _context34.n = 1;
           return ensureCsrf();
         case 1:
-          _context35.n = 2;
+          _context34.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/user"));
         case 2:
-          _yield$axios$get1 = _context35.v;
-          data = _yield$axios$get1.data;
+          _yield$axios$get0 = _context34.v;
+          data = _yield$axios$get0.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context35.a(2, data);
+          return _context34.a(2, data);
       }
-    }, _callee35);
+    }, _callee34);
   }));
   return _fetchUser.apply(this, arguments);
-}
-function getCachedBootstrap() {
-  return (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.getEpawn)().bootstrap || null;
 }
 function getCachedDashboard() {
   return (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.getEpawn)().dashboard || null;
 }
 if (typeof window !== 'undefined') {
   window.EpawnApi = {
-    loadBootstrap: loadBootstrap,
     loadDashboard: loadDashboard,
     login: login,
     register: register,
@@ -24761,7 +24669,6 @@ if (typeof window !== 'undefined') {
     createBudget: createBudget,
     updateBudget: updateBudget,
     deleteBudget: deleteBudget,
-    getCachedBootstrap: getCachedBootstrap,
     getCachedDashboard: getCachedDashboard
   };
 }
@@ -54057,355 +53964,6 @@ if (false) {} else {
 
 /***/ }),
 
-/***/ "./node_modules/react/cjs/react-jsx-dev-runtime.development.js":
-/*!*********************************************************************!*\
-  !*** ./node_modules/react/cjs/react-jsx-dev-runtime.development.js ***!
-  \*********************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/**
- * @license React
- * react-jsx-dev-runtime.development.js
- *
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-
- true &&
-  (function () {
-    function getComponentNameFromType(type) {
-      if (null == type) return null;
-      if ("function" === typeof type)
-        return type.$$typeof === REACT_CLIENT_REFERENCE
-          ? null
-          : type.displayName || type.name || null;
-      if ("string" === typeof type) return type;
-      switch (type) {
-        case REACT_FRAGMENT_TYPE:
-          return "Fragment";
-        case REACT_PROFILER_TYPE:
-          return "Profiler";
-        case REACT_STRICT_MODE_TYPE:
-          return "StrictMode";
-        case REACT_SUSPENSE_TYPE:
-          return "Suspense";
-        case REACT_SUSPENSE_LIST_TYPE:
-          return "SuspenseList";
-        case REACT_ACTIVITY_TYPE:
-          return "Activity";
-      }
-      if ("object" === typeof type)
-        switch (
-          ("number" === typeof type.tag &&
-            console.error(
-              "Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."
-            ),
-          type.$$typeof)
-        ) {
-          case REACT_PORTAL_TYPE:
-            return "Portal";
-          case REACT_CONTEXT_TYPE:
-            return type.displayName || "Context";
-          case REACT_CONSUMER_TYPE:
-            return (type._context.displayName || "Context") + ".Consumer";
-          case REACT_FORWARD_REF_TYPE:
-            var innerType = type.render;
-            type = type.displayName;
-            type ||
-              ((type = innerType.displayName || innerType.name || ""),
-              (type = "" !== type ? "ForwardRef(" + type + ")" : "ForwardRef"));
-            return type;
-          case REACT_MEMO_TYPE:
-            return (
-              (innerType = type.displayName || null),
-              null !== innerType
-                ? innerType
-                : getComponentNameFromType(type.type) || "Memo"
-            );
-          case REACT_LAZY_TYPE:
-            innerType = type._payload;
-            type = type._init;
-            try {
-              return getComponentNameFromType(type(innerType));
-            } catch (x) {}
-        }
-      return null;
-    }
-    function testStringCoercion(value) {
-      return "" + value;
-    }
-    function checkKeyStringCoercion(value) {
-      try {
-        testStringCoercion(value);
-        var JSCompiler_inline_result = !1;
-      } catch (e) {
-        JSCompiler_inline_result = !0;
-      }
-      if (JSCompiler_inline_result) {
-        JSCompiler_inline_result = console;
-        var JSCompiler_temp_const = JSCompiler_inline_result.error;
-        var JSCompiler_inline_result$jscomp$0 =
-          ("function" === typeof Symbol &&
-            Symbol.toStringTag &&
-            value[Symbol.toStringTag]) ||
-          value.constructor.name ||
-          "Object";
-        JSCompiler_temp_const.call(
-          JSCompiler_inline_result,
-          "The provided key is an unsupported type %s. This value must be coerced to a string before using it here.",
-          JSCompiler_inline_result$jscomp$0
-        );
-        return testStringCoercion(value);
-      }
-    }
-    function getTaskName(type) {
-      if (type === REACT_FRAGMENT_TYPE) return "<>";
-      if (
-        "object" === typeof type &&
-        null !== type &&
-        type.$$typeof === REACT_LAZY_TYPE
-      )
-        return "<...>";
-      try {
-        var name = getComponentNameFromType(type);
-        return name ? "<" + name + ">" : "<...>";
-      } catch (x) {
-        return "<...>";
-      }
-    }
-    function getOwner() {
-      var dispatcher = ReactSharedInternals.A;
-      return null === dispatcher ? null : dispatcher.getOwner();
-    }
-    function UnknownOwner() {
-      return Error("react-stack-top-frame");
-    }
-    function hasValidKey(config) {
-      if (hasOwnProperty.call(config, "key")) {
-        var getter = Object.getOwnPropertyDescriptor(config, "key").get;
-        if (getter && getter.isReactWarning) return !1;
-      }
-      return void 0 !== config.key;
-    }
-    function defineKeyPropWarningGetter(props, displayName) {
-      function warnAboutAccessingKey() {
-        specialPropKeyWarningShown ||
-          ((specialPropKeyWarningShown = !0),
-          console.error(
-            "%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)",
-            displayName
-          ));
-      }
-      warnAboutAccessingKey.isReactWarning = !0;
-      Object.defineProperty(props, "key", {
-        get: warnAboutAccessingKey,
-        configurable: !0
-      });
-    }
-    function elementRefGetterWithDeprecationWarning() {
-      var componentName = getComponentNameFromType(this.type);
-      didWarnAboutElementRef[componentName] ||
-        ((didWarnAboutElementRef[componentName] = !0),
-        console.error(
-          "Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release."
-        ));
-      componentName = this.props.ref;
-      return void 0 !== componentName ? componentName : null;
-    }
-    function ReactElement(type, key, props, owner, debugStack, debugTask) {
-      var refProp = props.ref;
-      type = {
-        $$typeof: REACT_ELEMENT_TYPE,
-        type: type,
-        key: key,
-        props: props,
-        _owner: owner
-      };
-      null !== (void 0 !== refProp ? refProp : null)
-        ? Object.defineProperty(type, "ref", {
-            enumerable: !1,
-            get: elementRefGetterWithDeprecationWarning
-          })
-        : Object.defineProperty(type, "ref", { enumerable: !1, value: null });
-      type._store = {};
-      Object.defineProperty(type._store, "validated", {
-        configurable: !1,
-        enumerable: !1,
-        writable: !0,
-        value: 0
-      });
-      Object.defineProperty(type, "_debugInfo", {
-        configurable: !1,
-        enumerable: !1,
-        writable: !0,
-        value: null
-      });
-      Object.defineProperty(type, "_debugStack", {
-        configurable: !1,
-        enumerable: !1,
-        writable: !0,
-        value: debugStack
-      });
-      Object.defineProperty(type, "_debugTask", {
-        configurable: !1,
-        enumerable: !1,
-        writable: !0,
-        value: debugTask
-      });
-      Object.freeze && (Object.freeze(type.props), Object.freeze(type));
-      return type;
-    }
-    function jsxDEVImpl(
-      type,
-      config,
-      maybeKey,
-      isStaticChildren,
-      debugStack,
-      debugTask
-    ) {
-      var children = config.children;
-      if (void 0 !== children)
-        if (isStaticChildren)
-          if (isArrayImpl(children)) {
-            for (
-              isStaticChildren = 0;
-              isStaticChildren < children.length;
-              isStaticChildren++
-            )
-              validateChildKeys(children[isStaticChildren]);
-            Object.freeze && Object.freeze(children);
-          } else
-            console.error(
-              "React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead."
-            );
-        else validateChildKeys(children);
-      if (hasOwnProperty.call(config, "key")) {
-        children = getComponentNameFromType(type);
-        var keys = Object.keys(config).filter(function (k) {
-          return "key" !== k;
-        });
-        isStaticChildren =
-          0 < keys.length
-            ? "{key: someKey, " + keys.join(": ..., ") + ": ...}"
-            : "{key: someKey}";
-        didWarnAboutKeySpread[children + isStaticChildren] ||
-          ((keys =
-            0 < keys.length ? "{" + keys.join(": ..., ") + ": ...}" : "{}"),
-          console.error(
-            'A props object containing a "key" prop is being spread into JSX:\n  let props = %s;\n  <%s {...props} />\nReact keys must be passed directly to JSX without using spread:\n  let props = %s;\n  <%s key={someKey} {...props} />',
-            isStaticChildren,
-            children,
-            keys,
-            children
-          ),
-          (didWarnAboutKeySpread[children + isStaticChildren] = !0));
-      }
-      children = null;
-      void 0 !== maybeKey &&
-        (checkKeyStringCoercion(maybeKey), (children = "" + maybeKey));
-      hasValidKey(config) &&
-        (checkKeyStringCoercion(config.key), (children = "" + config.key));
-      if ("key" in config) {
-        maybeKey = {};
-        for (var propName in config)
-          "key" !== propName && (maybeKey[propName] = config[propName]);
-      } else maybeKey = config;
-      children &&
-        defineKeyPropWarningGetter(
-          maybeKey,
-          "function" === typeof type
-            ? type.displayName || type.name || "Unknown"
-            : type
-        );
-      return ReactElement(
-        type,
-        children,
-        maybeKey,
-        getOwner(),
-        debugStack,
-        debugTask
-      );
-    }
-    function validateChildKeys(node) {
-      isValidElement(node)
-        ? node._store && (node._store.validated = 1)
-        : "object" === typeof node &&
-          null !== node &&
-          node.$$typeof === REACT_LAZY_TYPE &&
-          ("fulfilled" === node._payload.status
-            ? isValidElement(node._payload.value) &&
-              node._payload.value._store &&
-              (node._payload.value._store.validated = 1)
-            : node._store && (node._store.validated = 1));
-    }
-    function isValidElement(object) {
-      return (
-        "object" === typeof object &&
-        null !== object &&
-        object.$$typeof === REACT_ELEMENT_TYPE
-      );
-    }
-    var React = __webpack_require__(/*! react */ "./node_modules/react/index.js"),
-      REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"),
-      REACT_PORTAL_TYPE = Symbol.for("react.portal"),
-      REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"),
-      REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"),
-      REACT_PROFILER_TYPE = Symbol.for("react.profiler"),
-      REACT_CONSUMER_TYPE = Symbol.for("react.consumer"),
-      REACT_CONTEXT_TYPE = Symbol.for("react.context"),
-      REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"),
-      REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"),
-      REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"),
-      REACT_MEMO_TYPE = Symbol.for("react.memo"),
-      REACT_LAZY_TYPE = Symbol.for("react.lazy"),
-      REACT_ACTIVITY_TYPE = Symbol.for("react.activity"),
-      REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"),
-      ReactSharedInternals =
-        React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE,
-      hasOwnProperty = Object.prototype.hasOwnProperty,
-      isArrayImpl = Array.isArray,
-      createTask = console.createTask
-        ? console.createTask
-        : function () {
-            return null;
-          };
-    React = {
-      react_stack_bottom_frame: function (callStackForError) {
-        return callStackForError();
-      }
-    };
-    var specialPropKeyWarningShown;
-    var didWarnAboutElementRef = {};
-    var unknownOwnerDebugStack = React.react_stack_bottom_frame.bind(
-      React,
-      UnknownOwner
-    )();
-    var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
-    var didWarnAboutKeySpread = {};
-    exports.Fragment = REACT_FRAGMENT_TYPE;
-    exports.jsxDEV = function (type, config, maybeKey, isStaticChildren) {
-      var trackActualOwner =
-        1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
-      return jsxDEVImpl(
-        type,
-        config,
-        maybeKey,
-        isStaticChildren,
-        trackActualOwner
-          ? Error("react-stack-top-frame")
-          : unknownOwnerDebugStack,
-        trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask
-      );
-    };
-  })();
-
-
-/***/ }),
-
 /***/ "./node_modules/react/cjs/react-jsx-runtime.development.js":
 /*!*****************************************************************!*\
   !*** ./node_modules/react/cjs/react-jsx-runtime.development.js ***!
@@ -56077,22 +55635,6 @@ if (false) {} else {
 
 if (false) {} else {
   module.exports = __webpack_require__(/*! ./cjs/react.development.js */ "./node_modules/react/cjs/react.development.js");
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/react/jsx-dev-runtime.js":
-/*!***********************************************!*\
-  !*** ./node_modules/react/jsx-dev-runtime.js ***!
-  \***********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-if (false) {} else {
-  module.exports = __webpack_require__(/*! ./cjs/react-jsx-dev-runtime.development.js */ "./node_modules/react/cjs/react-jsx-dev-runtime.development.js");
 }
 
 

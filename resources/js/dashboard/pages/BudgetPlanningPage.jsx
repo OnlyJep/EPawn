@@ -63,6 +63,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
     const [itemType, setItemType] = useState('Expense');
     const [itemNotes, setItemNotes] = useState('');
     const [itemCalcExpression, setItemCalcExpression] = useState('0');
+    const [itemCalcResult, setItemCalcResult] = useState(null);
     const [itemDate, setItemDate] = useState('');
     const [itemTime, setItemTime] = useState('');
 
@@ -301,13 +302,18 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
     const handleKeypadPress = (key) => {
         if (key === '=') {
             const evaluated = evaluateExpr(itemCalcExpression);
-            if (evaluated !== null) setItemCalcExpression(String(evaluated));
+            if (evaluated !== null) setItemCalcResult(evaluated);
             else message.error('Invalid expression.');
         } else {
+            setItemCalcResult(null);
+
+            const isOperator = ['+', '-', '*', '/'].includes(key);
             let char = key;
             if (key === '*') char = 'x';
             if (key === '/') char = '\u00F7';
-            setItemCalcExpression(prev => prev === '0' && !['+', '-', 'x', '\u00F7'].includes(char) && char !== '.' ? char : prev + char);
+            if (isOperator) char = ` ${char} `;
+
+            setItemCalcExpression(prev => prev === '0' && !isOperator && key !== '.' ? char : prev + char);
         }
     };
 
@@ -319,26 +325,33 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
             else if (e.key === '.') { e.preventDefault(); handleKeypadPress('.'); }
             else if (['+', '-', '*', '/'].includes(e.key)) { e.preventDefault(); handleKeypadPress(e.key === '*' ? '*' : e.key); }
             else if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); handleKeypadPress('='); }
-            else if (e.key === 'Backspace') { e.preventDefault(); setItemCalcExpression(prev => prev.length <= 1 ? '0' : prev.slice(0, -1)); }
-            else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') { e.preventDefault(); setItemCalcExpression('0'); }
+            else if (e.key === 'Backspace') { e.preventDefault(); setItemCalcExpression(prev => prev.length <= 1 ? '0' : prev.slice(0, -1)); setItemCalcResult(null); }
+            else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') { e.preventDefault(); setItemCalcExpression('0'); setItemCalcResult(null); }
         };
         window.addEventListener('keydown', handler);
         return () => window.removeEventListener('keydown', handler);
-    }, [itemModalOpen, itemCalcExpression]);
+    }, [itemModalOpen, itemCalcExpression, itemCalcResult]);
 
     const getFilteredItems = (plan) => {
         if (!plan || !plan.items) return [];
         return plan.items.filter(item => {
             if (showArchived && !item.archived) return false;
             if (!showArchived && item.archived) return false;
-            const d = item.date ? new Date(item.date) : null;
-            if (!d) return false;
-            if (d.getFullYear() !== activeYear || d.getMonth() !== activeMonth) return false;
-            const day = d.getDate();
-            if (activePeriod === '1st-15th') return day >= 1 && day <= 15;
-            if (activePeriod === '16th-End') return day >= 16;
+            const datePart = item.date ? item.date.split('T')[0] : null;
+            if (!datePart) return false;
+            const parts = datePart.split('-');
+            const itemYear = parseInt(parts[0], 10);
+            const itemMonth = parseInt(parts[1], 10) - 1;
+            const itemDay = parseInt(parts[2], 10);
+            if (itemYear !== activeYear || itemMonth !== activeMonth) return false;
+            if (activePeriod === '1st-15th') return itemDay >= 1 && itemDay <= 15;
+            if (activePeriod === '16th-End') return itemDay >= 16;
             return true;
-        }).sort((a, b) => new Date(a.date) - new Date(b.date));
+        }).sort((a, b) => {
+            const da = a.date || '';
+            const db = b.date || '';
+            return da < db ? -1 : da > db ? 1 : 0;
+        });
     };
 
     const filteredPlanItems = getFilteredItems(currentPlan);
@@ -367,7 +380,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                             <h2 style={{ fontSize: '1.25rem', color: 'var(--red)', fontWeight: 700, margin: 0 }}>Budget Planning</h2>
                             <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', margin: '0.25rem 0 0' }}>Create and manage financial planning sheets for trips, events, or specific savings targets.</p>
                         </div>
-                        <button type="button" onMouseEnter={() => setBtnHover(true)} onMouseLeave={() => setBtnHover(false)} onClick={() => { setNewPlanName(''); setNewPlanBudget(stats?.totalSaved || '0'); setNewPlanDay(new Date().getDate()); setCreateModalOpen(true); }}
+                        <button type="button" className="desktop-create-btn" onMouseEnter={() => setBtnHover(true)} onMouseLeave={() => setBtnHover(false)} onClick={() => { setNewPlanName(''); setNewPlanBudget(stats?.totalSaved || '0'); setNewPlanDay(new Date().getDate()); setCreateModalOpen(true); }}
                             style={{ borderRadius: '12px', border: '2px solid var(--red)', color: btnHover ? 'var(--white)' : 'var(--red)', background: btnHover ? 'var(--red)' : 'transparent', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s' }}>+ CREATE PLAN</button>
                     </div>
                     {plans.length === 0 ? (
@@ -577,9 +590,24 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                     <div style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', padding: '0.75rem', background: '#FFFDE7', marginBottom: '1.25rem' }}>
                         <textarea value={itemNotes} onChange={e => setItemNotes(e.target.value)} placeholder="Add transaction notes" style={{ width: '100%', height: '60px', border: 'none', outline: 'none', background: 'transparent', resize: 'none', fontSize: '0.9rem', fontFamily: 'inherit' }} />
                     </div>
-                    <div style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', padding: '0.75rem 1rem', background: 'var(--white)', display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>{itemCalcExpression}</div>
-                        <button type="button" onClick={() => setItemCalcExpression(prev => prev.length <= 1 ? '0' : prev.slice(0, -1))} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--gray-500)' }}>BK</button>
+                    <div style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', padding: '0.75rem 1rem', background: 'var(--white)', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>{itemCalcExpression}</div>
+                            <button type="button" onClick={() => { setItemCalcExpression(prev => prev.length <= 1 ? '0' : prev.slice(0, -1)); setItemCalcResult(null); }} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--gray-500)' }}>BK</button>
+                        </div>
+                        {itemCalcResult !== null && (
+                            <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 700,
+                                color: 'var(--red)',
+                                borderTop: '1px solid var(--gray-200)',
+                                paddingTop: '0.5rem',
+                                marginTop: '0.5rem',
+                                textAlign: 'right'
+                            }}>
+                                = {itemCalcResult}
+                            </div>
+                        )}
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1rem' }}>
                         <button type="button" onClick={() => handleKeypadPress('+')} style={calcKeyStyle('op')}>+</button>

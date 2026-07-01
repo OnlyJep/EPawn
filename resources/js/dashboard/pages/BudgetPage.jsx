@@ -60,6 +60,7 @@ export default function BudgetPage({
     const [txAccount, setTxAccount] = useState('');
     const [txType, setTxType] = useState('Expense');
     const [txCalcExpression, setTxCalcExpression] = useState('0');
+    const [txCalcResult, setTxCalcResult] = useState(null);
 
     const [selectingAccountFor, setSelectingAccountFor] = useState(null);
     const [selectingCategory, setSelectingCategory] = useState(false);
@@ -115,6 +116,7 @@ export default function BudgetPage({
                 handleKeypadPress('=');
             } else if (key === 'Backspace') {
                 e.preventDefault();
+                setTxCalcResult(null);
                 setTxCalcExpression(prev => {
                     if (prev.length <= 1) return '0';
                     return prev.slice(0, -1);
@@ -122,6 +124,7 @@ export default function BudgetPage({
             } else if (key.toLowerCase() === 'c' || key === 'Escape') {
                 e.preventDefault();
                 setTxCalcExpression('0');
+                setTxCalcResult(null);
             }
         };
 
@@ -129,7 +132,7 @@ export default function BudgetPage({
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [txModalOpen, txCalcExpression]);
+    }, [txModalOpen, txCalcExpression, txCalcResult]);
 
     const loadData = async () => {
         setLoading(true);
@@ -361,19 +364,23 @@ export default function BudgetPage({
         if (key === '=') {
             const evaluated = evaluateExpr(txCalcExpression);
             if (evaluated !== null) {
-                setTxCalcExpression(String(evaluated));
+                setTxCalcResult(evaluated);
             } else {
                 message.error('Invalid expression.');
             }
         } else {
+            setTxCalcResult(null);
+
+            const isOperator = ['+', '-', '*', '/'].includes(key);
             let char = key;
             if (key === '*') char = 'x';
             if (key === '/') char = '\u00f7';
+            if (isOperator) char = ` ${char} `;
 
-            if (txCalcExpression === '0' && !['+', '-', 'x', '\u00f7'].includes(char) && char !== '.') {
+            if (txCalcExpression === '0' && !isOperator && key !== '.') {
                 setTxCalcExpression(char);
             } else {
-                setTxCalcExpression(txCalcExpression + char);
+                setTxCalcExpression(prev => prev + char);
             }
         }
     };
@@ -941,37 +948,54 @@ export default function BudgetPage({
                         borderRadius: '12px',
                         padding: '0.75rem 1rem',
                         background: 'var(--white)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
                         marginBottom: '1rem'
                     }}>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>
-                            {txCalcExpression}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                        }}>
+                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>
+                                {txCalcExpression}
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (txCalcExpression.length <= 1) {
+                                        setTxCalcExpression('0');
+                                        setTxCalcResult(null);
+                                    } else {
+                                        setTxCalcExpression(txCalcExpression.slice(0, -1));
+                                    }
+                                }}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    fontSize: '1.5rem',
+                                    cursor: 'pointer',
+                                    color: 'var(--gray-500)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '0.25rem'
+                                }}
+                            >
+                                ⌫
+                            </button>
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                if (txCalcExpression.length <= 1) {
-                                    setTxCalcExpression('0');
-                                } else {
-                                    setTxCalcExpression(txCalcExpression.slice(0, -1));
-                                }
-                            }}
-                            style={{
-                                background: 'none',
-                                border: 'none',
+                        {txCalcResult !== null && (
+                            <div style={{
                                 fontSize: '1.5rem',
-                                cursor: 'pointer',
-                                color: 'var(--gray-500)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                padding: '0.25rem'
-                            }}
-                        >
-                            ⌫
-                        </button>
+                                fontWeight: 700,
+                                color: 'var(--red)',
+                                borderTop: '1px solid var(--gray-200)',
+                                paddingTop: '0.5rem',
+                                marginTop: '0.5rem',
+                                textAlign: 'right'
+                            }}>
+                                = {txCalcResult}
+                            </div>
+                        )}
                     </div>
 
                     <div style={{

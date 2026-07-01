@@ -56,8 +56,8 @@ class AdminController extends Controller
     public function dashboard()
     {
         $totalUsers = User::count();
-        $activeUsers = User::whereNull('archived_at')->count();
-        $archivedUsers = User::whereNotNull('archived_at')->count();
+        $activeUsers = User::whereHas('profile', fn($q) => $q->whereNull('archived_at'))->count();
+        $archivedUsers = User::whereHas('profile', fn($q) => $q->whereNotNull('archived_at'))->count();
         $totalCategories = Category::count();
         $activeCategories = Category::whereNull('archived_at')->count();
         $archivedCategories = Category::whereNotNull('archived_at')->count();
@@ -73,7 +73,7 @@ class AdminController extends Controller
                 'username' => $u->username,
                 'email' => $u->email,
                 'created_at' => $u->created_at,
-                'archived_at' => $u->archived_at,
+                'archived_at' => $u->profile?->archived_at,
                 'avatar' => $u->profile->avatar ?? null,
             ];
         });
@@ -97,23 +97,22 @@ class AdminController extends Controller
     {
         $query = User::with('profile')->withCount(['categories', 'accounts', 'transactions', 'budgets', 'budgetPlans']);
 
-        // Filter by archived status
         if ($request->status === 'archived') {
-            $query->whereNotNull('archived_at');
+            $query->whereHas('profile', fn($q) => $q->whereNotNull('archived_at'));
         } elseif ($request->status === 'active') {
-            $query->whereNull('archived_at');
+            $query->whereHas('profile', fn($q) => $q->whereNull('archived_at'));
         }
 
         $users = $query->latest()->get()->map(function ($u) {
-            $canSeePassword = $u->password && $u->google_id === null;
+            $canSeePassword = $u->password && $u->profile?->google_id === null;
             return [
                 'id' => $u->id,
                 'username' => $u->username,
                 'email' => $u->email,
-                'google_id' => $u->google_id,
+                'google_id' => $u->profile?->google_id,
                 'has_password' => $canSeePassword,
                 'password_hash' => $canSeePassword ? $u->password : null,
-                'archived_at' => $u->archived_at,
+                'archived_at' => $u->profile?->archived_at,
                 'created_at' => $u->created_at,
                 'avatar' => $u->profile->avatar ?? null,
                 'categories_count' => $u->categories_count,
@@ -137,17 +136,17 @@ class AdminController extends Controller
         $budgets = Budget::where('user_id', $id)->get();
         $budgetPlans = BudgetPlan::with('items')->where('user_id', $id)->get();
 
-        $canSeePassword = $user->password && $user->google_id === null;
+        $canSeePassword = $user->password && $user->profile?->google_id === null;
 
         return response()->json([
             'user' => [
                 'id' => $user->id,
                 'username' => $user->username,
                 'email' => $user->email,
-                'google_id' => $user->google_id,
+                'google_id' => $user->profile?->google_id,
                 'has_password' => $canSeePassword,
                 'password_hash' => $canSeePassword ? $user->password : null,
-                'archived_at' => $user->archived_at,
+                'archived_at' => $user->profile?->archived_at,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
                 'avatar' => $user->profile->avatar ?? null,
@@ -168,11 +167,15 @@ class AdminController extends Controller
     public function userArchive($id)
     {
         $user = User::findOrFail($id);
-        if ($user->archived_at) {
-            $user->update(['archived_at' => null]);
+        $profile = $user->profile()->firstOrCreate(
+            ['user_id' => $user->id],
+            ['first_name' => 'User', 'last_name' => '', 'fullname' => 'User']
+        );
+        if ($profile->archived_at) {
+            $profile->update(['archived_at' => null]);
             $message = 'User restored successfully.';
         } else {
-            $user->update(['archived_at' => now()]);
+            $profile->update(['archived_at' => now()]);
             $message = 'User archived successfully.';
         }
         return response()->json(['message' => $message]);

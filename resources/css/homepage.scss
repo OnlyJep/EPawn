@@ -184,9 +184,9 @@
 
 // ─── Dashboard Preview ────────────────────────────────────────────────────────
 .hp-preview {
-    background: var(--gray-900);
+    background: var(--bg-primary);
     padding: 6rem 1.5rem;
-    color: var(--white);
+    color: var(--text-primary);
 }
 
 .hp-preview-inner {
@@ -203,18 +203,18 @@
 
 .hp-preview-content {
     .section-label {
-        color: #FFCDD2;
+        color: var(--red);
     }
 
     h2 {
         font-size: clamp(1.75rem, 3vw, 2.25rem);
         font-weight: 800;
-        color: var(--white);
+        color: var(--text-primary);
         margin-bottom: 1rem;
     }
 
     p {
-        color: #9E9E9E;
+        color: var(--text-primary);
         font-size: 0.95rem;
         line-height: 1.7;
         margin-bottom: 0;
@@ -234,7 +234,7 @@
         align-items: center;
         gap: 0.6rem;
         font-size: 0.9rem;
-        color: #E0E0E0;
+        color: var(--text-primary);
         font-weight: 500;
 
         svg {

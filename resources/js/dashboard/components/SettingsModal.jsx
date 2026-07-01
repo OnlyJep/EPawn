@@ -16,10 +16,10 @@ function CloseIcon() {
 
 function buildProfileState(user, old) {
     return {
-        first_name: old?.first_name ?? user?.first_name ?? '',
-        middle_initial: old?.middle_initial ?? user?.middle_initial ?? '',
-        last_name: old?.last_name ?? user?.last_name ?? '',
-        suffix: old?.suffix ?? user?.suffix ?? '',
+        first_name: old?.first_name ?? user?.profile?.first_name ?? '',
+        middle_initial: old?.middle_initial ?? user?.profile?.middle_initial ?? '',
+        last_name: old?.last_name ?? user?.profile?.last_name ?? '',
+        suffix: old?.suffix ?? user?.profile?.suffix ?? '',
         username: old?.username ?? user?.username ?? '',
     };
 }
@@ -145,7 +145,6 @@ export default function SettingsModal({ open, onClose, user, errors, old, onUser
         setEditing(false);
         setProfile(buildProfileState(user, old));
         setDeleteConfirmOpen(false);
-        setDeletePassword('');
     };
 
     return (

@@ -295,7 +295,7 @@ export default function AuthModals({
                         </button>
                         <div style={{ marginTop: '0.75rem', textAlign: 'center' }}>
                             <a
-                                href="/api/v1/auth/google"
+                                href="/api/auth/google"
                                 className="btn btn-google"
                                 style={{
                                     display: 'inline-flex',
@@ -527,7 +527,7 @@ export default function AuthModals({
                         </button>
                         <div style={{ marginTop: '0.75rem', textAlign: 'center' }}>
                             <a
-                                href="/api/v1/auth/google"
+                                href="/api/auth/google"
                                 className="btn btn-google"
                                 style={{
                                     display: 'inline-flex',

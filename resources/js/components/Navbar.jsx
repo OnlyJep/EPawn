@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { logout } from '../services/epawnApi';
-import { clearEpawn } from '../services/epawnStorage';
 import ThemeToggle from './ThemeToggle';
 
-export default function Navbar({ user, logo, routes, onOpenModal, theme, onToggleTheme }) {
+export default function Navbar({ user, logo, routes, csrf, onOpenModal, theme, onToggleTheme }) {
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [loggingOut, setLoggingOut] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const navRef = useRef(null);
+    const logoutFormRef = useRef(null);
     const dashboardUrl = routes.dashboard;
     const currentPath = window.location.pathname;
 
@@ -37,17 +35,10 @@ export default function Navbar({ user, logo, routes, onOpenModal, theme, onToggl
     // Close menu on route link click (mobile)
     const handleNavLink = () => setMobileOpen(false);
 
-    const handleLogout = async () => {
-        setLoggingOut(true);
-        try {
-            await logout();
-        } catch (error) {
-            console.error('Logout error:', error);
-        } finally {
-            clearEpawn();
-            localStorage.removeItem('Epawn');
-            sessionStorage.clear();
-            window.location.href = routes.home || '/';
+    const handleLogout = (e) => {
+        e.preventDefault();
+        if (logoutFormRef.current) {
+            logoutFormRef.current.submit();
         }
     };
 
@@ -94,9 +85,8 @@ export default function Navbar({ user, logo, routes, onOpenModal, theme, onToggl
                                 type="button"
                                 className="btn btn-outline"
                                 onClick={handleLogout}
-                                disabled={loggingOut}
                             >
-                                {loggingOut ? 'Logging out...' : 'Logout'}
+                                Logout
                             </button>
                         </>
                     ) : (
@@ -158,9 +148,8 @@ export default function Navbar({ user, logo, routes, onOpenModal, theme, onToggl
                                 className="btn btn-outline"
                                 style={{ width: '100%' }}
                                 onClick={handleLogout}
-                                disabled={loggingOut}
                             >
-                                {loggingOut ? 'Logging out...' : 'Logout'}
+                                Logout
                             </button>
                         </>
                     ) : (
@@ -175,6 +164,9 @@ export default function Navbar({ user, logo, routes, onOpenModal, theme, onToggl
                     )}
                 </div>
             </div>
+            <form ref={logoutFormRef} method="POST" action="/logout" style={{ display: 'none' }}>
+                <input type="hidden" name="_token" value={csrf} />
+            </form>
         </nav>
     );
 }

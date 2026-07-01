@@ -37,6 +37,9 @@
   --success-color: #2E7D32;
   --success-bg: #E8F5E9;
   --success-border: #43A047;
+  --google-btn-bg: #fff;
+  --google-btn-text: #444;
+  --google-btn-border: #ddd;
 }
 
 [data-theme=dark] {
@@ -70,6 +73,9 @@
   --success-color: #7ddb7d;
   --success-bg: #102010;
   --success-border: #5aae5a;
+  --google-btn-bg: #2a2a48;
+  --google-btn-text: #f0f0ff;
+  --google-btn-border: #58587a;
 }
 
 *, *::before, *::after {
@@ -127,6 +133,9 @@ section {
   --success-color: #2E7D32;
   --success-bg: #E8F5E9;
   --success-border: #43A047;
+  --google-btn-bg: #fff;
+  --google-btn-text: #444;
+  --google-btn-border: #ddd;
 }
 
 [data-theme=dark] {
@@ -160,6 +169,9 @@ section {
   --success-color: #7ddb7d;
   --success-bg: #102010;
   --success-border: #5aae5a;
+  --google-btn-bg: #2a2a48;
+  --google-btn-text: #f0f0ff;
+  --google-btn-border: #58587a;
 }
 
 * {
@@ -490,6 +502,9 @@ html, body {
   --success-color: #2E7D32;
   --success-bg: #E8F5E9;
   --success-border: #43A047;
+  --google-btn-bg: #fff;
+  --google-btn-text: #444;
+  --google-btn-border: #ddd;
 }
 
 [data-theme=dark] {
@@ -523,6 +538,9 @@ html, body {
   --success-color: #7ddb7d;
   --success-bg: #102010;
   --success-border: #5aae5a;
+  --google-btn-bg: #2a2a48;
+  --google-btn-text: #f0f0ff;
+  --google-btn-border: #58587a;
 }
 
 .topbar {
@@ -674,6 +692,9 @@ html, body {
   --success-color: #2E7D32;
   --success-bg: #E8F5E9;
   --success-border: #43A047;
+  --google-btn-bg: #fff;
+  --google-btn-text: #444;
+  --google-btn-border: #ddd;
 }
 
 [data-theme=dark] {
@@ -707,6 +728,9 @@ html, body {
   --success-color: #7ddb7d;
   --success-bg: #102010;
   --success-border: #5aae5a;
+  --google-btn-bg: #2a2a48;
+  --google-btn-text: #f0f0ff;
+  --google-btn-border: #58587a;
 }
 
 .overview-card {
@@ -1892,6 +1916,9 @@ html, body {
   --success-color: #2E7D32;
   --success-bg: #E8F5E9;
   --success-border: #43A047;
+  --google-btn-bg: #fff;
+  --google-btn-text: #444;
+  --google-btn-border: #ddd;
 }
 
 [data-theme=dark] {
@@ -1925,6 +1952,9 @@ html, body {
   --success-color: #7ddb7d;
   --success-bg: #102010;
   --success-border: #5aae5a;
+  --google-btn-bg: #2a2a48;
+  --google-btn-text: #f0f0ff;
+  --google-btn-border: #58587a;
 }
 
 .sheet-page {
@@ -2487,6 +2517,22 @@ html, body {
     padding: 0.6rem;
     font-size: 0.9rem;
     box-sizing: border-box;
+  }
+  .form-control {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important;
+    padding: 0.5rem 0.65rem !important;
+  }
+  .budget-planning-page input[type=text],
+  .budget-planning-page input[type=number],
+  .budget-planning-page input[type=date],
+  .budget-planning-page input[type=time],
+  .budget-planning-page textarea {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important;
+    padding: 0.5rem 0.65rem !important;
   }
 }
 @media (min-width: 768px) and (max-width: 1023px) {

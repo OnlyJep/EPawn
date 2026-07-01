@@ -14,12 +14,6 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'google_id',
-        'fullname',
-        'first_name',
-        'middle_initial',
-        'last_name',
-        'suffix',
         'username',
         'email',
         'password',
@@ -38,20 +32,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    protected static function booted()
-    {
-        static::saving(function (User $user) {
-            if ($user->first_name && $user->last_name) {
-                $user->fullname = self::buildFullName(
-                    $user->first_name,
-                    $user->middle_initial,
-                    $user->last_name,
-                    $user->suffix
-                );
-            }
-        });
-    }
 
     public function isAdmin(): bool
     {
@@ -81,12 +61,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getDisplayNameAttribute(): string
     {
-        return $this->fullname ?: $this->username ?: 'User';
+        return $this->profile?->fullname ?: $this->username ?: 'User';
     }
 
     public function getHasPasswordAttribute(): bool
     {
-        return $this->password !== null && $this->google_id === null;
+        return $this->password !== null && $this->profile?->google_id === null;
     }
 
     public function sendEmailVerificationNotification()

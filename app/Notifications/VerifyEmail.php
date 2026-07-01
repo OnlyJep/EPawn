@@ -22,7 +22,7 @@ class VerifyEmail extends Notification
 
         return (new MailMessage)
             ->subject('Verify Your Email Address')
-            ->greeting('Hello ' . ($notifiable->first_name ?: 'there') . '!')
+            ->greeting('Hello ' . (($notifiable->profile?->first_name) ?: 'there') . '!')
             ->line('Thank you for creating an account. Please click the button below to verify your email address.')
             ->action('Verify Account', $verificationUrl)
             ->line('If you did not create an account, no further action is required.')

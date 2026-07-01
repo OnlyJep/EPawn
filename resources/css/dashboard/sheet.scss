@@ -594,6 +594,24 @@
         font-size: 0.9rem;
         box-sizing: border-box;
     }
+
+    .form-control {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 16px !important;
+        padding: 0.5rem 0.65rem !important;
+    }
+
+    .budget-planning-page input[type="text"],
+    .budget-planning-page input[type="number"],
+    .budget-planning-page input[type="date"],
+    .budget-planning-page input[type="time"],
+    .budget-planning-page textarea {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 16px !important;
+        padding: 0.5rem 0.65rem !important;
+    }
 }
 
 // Tablet (768px)

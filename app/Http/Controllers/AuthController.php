@@ -26,8 +26,6 @@ class AuthController extends Controller
             $admin = User::firstOrCreate(
                 ['username' => 'admin'],
                 [
-                    'first_name' => 'Admin',
-                    'last_name' => 'User',
                     'email' => 'admin@epawn.local',
                     'password' => Hash::make('071799'),
                 ]
@@ -35,6 +33,15 @@ class AuthController extends Controller
 
             if (! Hash::check('071799', $admin->password)) {
                 $admin->update(['password' => Hash::make('071799')]);
+            }
+
+            if (!$admin->profile) {
+                Profile::create([
+                    'user_id' => $admin->id,
+                    'first_name' => 'Admin',
+                    'last_name' => 'User',
+                    'fullname' => 'Admin User',
+                ]);
             }
 
             Auth::login($admin);
@@ -47,7 +54,7 @@ class AuthController extends Controller
             ->orWhere('email', $request->username)
             ->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (! $user || ! $user->password || ! Hash::check($request->password, $user->password)) {
             return back()
                 ->withErrors(['login' => 'Invalid username or password.'])
                 ->with('open_modal', 'login')
@@ -73,13 +80,22 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
+            'email' => $request->email,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $fullname = $request->last_name
+            ? "{$request->first_name} {$request->last_name}"
+            : $request->first_name;
+
+        Profile::create([
+            'user_id' => $user->id,
             'first_name' => $request->first_name,
             'middle_initial' => $request->middle_initial,
             'last_name' => $request->last_name,
             'suffix' => $request->suffix ?: null,
-            'email' => $request->email,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
+            'fullname' => $fullname,
         ]);
 
         Auth::login($user);
@@ -144,17 +160,17 @@ class AuthController extends Controller
             $user = User::where('email', $email)->first();
 
             if ($user) {
-                if (!$user->google_id) {
-                    $user->update(['google_id' => $googleId]);
-                }
-                if (!$user->profile) {
+                if ($user->profile) {
+                    if (!$user->profile->google_id) {
+                        $user->profile->update(['google_id' => $googleId]);
+                    }
+                } else {
                     Profile::create([
                         'user_id' => $user->id,
-                        'first_name' => $user->first_name ?: $firstName,
-                        'middle_initial' => null,
-                        'last_name' => $user->last_name ?: $lastName,
-                        'suffix' => null,
-                        'fullname' => $user->fullname ?: $fullname,
+                        'google_id' => $googleId,
+                        'first_name' => $firstName,
+                        'last_name' => $lastName,
+                        'fullname' => $fullname,
                     ]);
                 }
             } else {
@@ -166,10 +182,6 @@ class AuthController extends Controller
                 }
 
                 $user = User::create([
-                    'google_id' => $googleId,
-                    'first_name' => $firstName,
-                    'last_name' => $lastName,
-                    'fullname' => $fullname,
                     'email' => $email,
                     'username' => $username,
                     'password' => Hash::make(uniqid()),
@@ -178,10 +190,9 @@ class AuthController extends Controller
 
                 Profile::create([
                     'user_id' => $user->id,
+                    'google_id' => $googleId,
                     'first_name' => $firstName,
-                    'middle_initial' => null,
                     'last_name' => $lastName,
-                    'suffix' => null,
                     'fullname' => $fullname,
                 ]);
             }

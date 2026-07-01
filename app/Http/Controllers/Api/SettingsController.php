@@ -31,13 +31,12 @@ class SettingsController extends Controller
         ]);
 
         $user->update([
-            'first_name' => $request->first_name,
-            'middle_initial' => $request->middle_initial,
-            'last_name' => $request->last_name,
-            'suffix' => $request->suffix ?: null,
             'username' => $request->username,
-            'fullname' => $request->last_name ? "{$request->first_name} {$request->last_name}" : $request->first_name,
         ]);
+
+        $fullname = $request->last_name
+            ? "{$request->first_name} {$request->last_name}"
+            : $request->first_name;
 
         $profile = Profile::firstOrCreate(['user_id' => $user->id]);
         $profile->update([
@@ -45,7 +44,7 @@ class SettingsController extends Controller
             'middle_initial' => $request->middle_initial,
             'last_name' => $request->last_name,
             'suffix' => $request->suffix ?: null,
-            'fullname' => $request->last_name ? "{$request->first_name} {$request->last_name}" : $request->first_name,
+            'fullname' => $fullname,
         ]);
 
         $user->refresh();
@@ -97,9 +96,11 @@ class SettingsController extends Controller
 
         $user->delete();
 
-        auth()->guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        if ($request->hasSession()) {
+            auth()->guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         return response()->json([
             'success' => true,

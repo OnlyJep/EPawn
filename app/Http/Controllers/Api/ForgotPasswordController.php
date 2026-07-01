@@ -37,8 +37,8 @@ class ForgotPasswordController extends Controller
             ]);
         }
 
-        $matches = strcasecmp(trim($user->first_name), trim($request->first_name)) === 0
-            && strcasecmp(trim($user->last_name), trim($request->last_name)) === 0
+        $matches = strcasecmp(trim($user->profile?->first_name ?: ''), trim($request->first_name)) === 0
+            && strcasecmp(trim($user->profile?->last_name ?: ''), trim($request->last_name)) === 0
             && strcasecmp(trim($user->email), trim($request->email)) === 0;
 
         if (! $matches) {

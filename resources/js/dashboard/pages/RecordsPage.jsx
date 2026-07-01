@@ -87,6 +87,7 @@ export default function RecordsPage({
     const [account, setAccount] = useState('');
     const [type, setType] = useState('Expense');
     const [calcExpression, setCalcExpression] = useState('0');
+    const [calcResult, setCalcResult] = useState(null);
 
     const [selectingAccountFor, setSelectingAccountFor] = useState(null);
     const [selectingCategory, setSelectingCategory] = useState(false);
@@ -156,6 +157,7 @@ export default function RecordsPage({
                 handleKeypadPress('=');
             } else if (key === 'Backspace') {
                 e.preventDefault();
+                setCalcResult(null);
                 setCalcExpression(prev => {
                     if (prev.length <= 1) return '0';
                     return prev.slice(0, -1);
@@ -163,6 +165,7 @@ export default function RecordsPage({
             } else if (key.toLowerCase() === 'c' || key === 'Escape') {
                 e.preventDefault();
                 setCalcExpression('0');
+                setCalcResult(null);
             }
         };
 
@@ -170,7 +173,7 @@ export default function RecordsPage({
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [modalOpen, calcExpression]);
+    }, [modalOpen, calcExpression, calcResult]);
 
     const loadData = async () => {
         setLoading(true);
@@ -387,19 +390,23 @@ export default function RecordsPage({
         if (key === '=') {
             const evaluated = evaluateExpr(calcExpression);
             if (evaluated !== null) {
-                setCalcExpression(String(evaluated));
+                setCalcResult(evaluated);
             } else {
                 message.error('Invalid expression.');
             }
         } else {
+            setCalcResult(null);
+
+            const isOperator = ['+', '-', '*', '/'].includes(key);
             let char = key;
             if (key === '*') char = 'x';
             if (key === '/') char = '\u00f7';
+            if (isOperator) char = ` ${char} `;
 
-            if (calcExpression === '0' && !['+', '-', 'x', '\u00f7'].includes(char) && char !== '.') {
+            if (calcExpression === '0' && !isOperator && key !== '.') {
                 setCalcExpression(char);
             } else {
-                setCalcExpression(calcExpression + char);
+                setCalcExpression(prev => prev + char);
             }
         }
     };
@@ -1085,37 +1092,54 @@ export default function RecordsPage({
                         borderRadius: '12px',
                         padding: '0.75rem 1rem',
                         background: 'var(--white)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
                         marginBottom: '1rem'
                     }}>
-                        <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>
-                            {calcExpression}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                        }}>
+                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>
+                                {calcExpression}
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (calcExpression.length <= 1) {
+                                        setCalcExpression('0');
+                                    } else {
+                                        setCalcExpression(calcExpression.slice(0, -1));
+                                    }
+                                    setCalcResult(null);
+                                }}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    fontSize: '1.5rem',
+                                    cursor: 'pointer',
+                                    color: 'var(--gray-500)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '0.25rem'
+                                }}
+                            >
+                                ⌫
+                            </button>
                         </div>
-                        <button
-                            type="button"
-                            onClick={() => {
-                                if (calcExpression.length <= 1) {
-                                    setCalcExpression('0');
-                                } else {
-                                    setCalcExpression(calcExpression.slice(0, -1));
-                                }
-                            }}
-                            style={{
-                                background: 'none',
-                                border: 'none',
+                        {calcResult !== null && (
+                            <div style={{
                                 fontSize: '1.5rem',
-                                cursor: 'pointer',
-                                color: 'var(--gray-500)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                padding: '0.25rem'
-                            }}
-                        >
-                            ⌫
-                        </button>
+                                fontWeight: 700,
+                                color: 'var(--red)',
+                                borderTop: '1px solid var(--gray-200)',
+                                paddingTop: '0.5rem',
+                                marginTop: '0.5rem',
+                                textAlign: 'right'
+                            }}>
+                                = {calcResult}
+                            </div>
+                        )}
                     </div>
 
                     <div style={{
