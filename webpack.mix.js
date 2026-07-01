@@ -6,4 +6,5 @@ mix.js('resources/js/app.js', 'public/js')
     .react()
     .sass('resources/css/app.scss', 'public/css')
     .sass('resources/css/dashboard.scss', 'public/css')
-    .sass('resources/css/admin/admin.scss', 'public/css/admin.css');
+    .sass('resources/css/admin/admin.scss', 'public/css/admin.css')
+    .version();

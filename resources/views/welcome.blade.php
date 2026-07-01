@@ -52,6 +52,6 @@
          data-old='@json(session()->getOldInput())'
          data-open-modal="{{ $__openModal }}"
          data-year="{{ (int) date('Y') }}"></div>
-    <script src="{{ mix('js/app.js') }}?v=2"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>
