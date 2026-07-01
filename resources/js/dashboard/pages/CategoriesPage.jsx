@@ -462,9 +462,9 @@ export default function CategoriesPage({
                 open={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 footer={null}
-                styles={{ body: { padding: '1.5rem' } }}
+                classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }}
             >
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <form className="category-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     {/* Custom INCOME | EXPENSE Toggle selection (Fits corner-to-corner at top of modal) */}
                     <div>
                         <div style={{

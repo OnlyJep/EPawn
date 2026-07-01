@@ -610,9 +610,9 @@ export default function AccountsPage({
                 open={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 footer={null}
-                styles={{ body: { padding: '1.5rem' } }}
+                classNames={{ wrapper: 'add-account-modal', header: 'add-account-header', body: 'add-account-body' }}
             >
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <form className="account-form" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div>
                         <label style={{ display: 'block', fontWeight: 700, color: 'var(--gray-700)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>Initial Amount</label>
                         <input

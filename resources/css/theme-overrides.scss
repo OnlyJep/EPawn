@@ -141,6 +141,10 @@
     color: #c0c0d0;
 }
 
+[data-theme="dark"] .modal h2 {
+    color: #ffffff;
+}
+
 [data-theme="dark"] .form-group label {
     color: #d0d0e0;
 }
@@ -237,19 +241,251 @@
     color: #d0d0e8 !important;
 }
 
-/* Center antd modals on mobile */
+/* Centered antd modals on mobile */
 @media (max-width: 767px) {
     .ant-modal-wrap {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 1rem !important;
+        z-index: 1001 !important;
     }
 
     .ant-modal-wrap .ant-modal {
-        top: 0 !important;
+        top: 50% !important;
         margin: 0 auto !important;
         max-width: calc(100vw - 2rem) !important;
+        transform: translateY(-50%) !important;
+        padding: 0 !important;
+    }
+
+    .ant-modal-wrap .ant-modal-content {
+        border-radius: 12px;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    .tx-type-group > div,
+    .item-type-group > div {
+        padding: 0.5rem !important;
+        font-size: 0.78rem !important;
+        gap: 0.2rem !important;
+    }
+
+    .tx-type-group > div span,
+    .item-type-group > div span {
+        width: 16px !important;
+        height: 16px !important;
+        font-size: 10px !important;
+    }
+}
+
+/* Fullscreen create-plan-modal on mobile */
+@media (max-width: 767px) {
+    .create-plan-modal.ant-modal-wrap {
+        z-index: 1002 !important;
+        padding: 0 !important;
+    }
+
+    .create-plan-modal.ant-modal-wrap .ant-modal,
+    .create-plan-modal.ant-modal-wrap .ant-modal-container {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    .create-plan-modal.ant-modal-wrap .ant-modal-content {
+        border-radius: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .create-plan-modal.ant-modal-wrap .create-plan-header.ant-modal-header {
+        flex-shrink: 0;
+        padding: 1rem 3rem 0.75rem 1.25rem;
+        border-radius: 0;
+    }
+
+    .create-plan-modal.ant-modal-wrap .create-plan-body.ant-modal-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        padding-top: 10vh;
+    }
+
+    .create-plan-form {
+        width: 100%;
+        max-width: 400px;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1.25rem;
+    }
+
+    .create-plan-fields {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Fullscreen add-account and add-category modals on mobile */
+@media (max-width: 767px) {
+    .add-account-modal.ant-modal-wrap,
+    .add-category-modal.ant-modal-wrap {
+        z-index: 1002 !important;
+        padding: 0 !important;
+    }
+
+    .add-account-modal.ant-modal-wrap .ant-modal,
+    .add-account-modal.ant-modal-wrap .ant-modal-container,
+    .add-category-modal.ant-modal-wrap .ant-modal,
+    .add-category-modal.ant-modal-wrap .ant-modal-container {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    .add-account-modal.ant-modal-wrap .ant-modal-content,
+    .add-category-modal.ant-modal-wrap .ant-modal-content {
+        border-radius: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .add-account-modal.ant-modal-wrap .add-account-header.ant-modal-header,
+    .add-category-modal.ant-modal-wrap .add-category-header.ant-modal-header {
+        flex-shrink: 0;
+        padding: 1rem 3rem 0.75rem 1.25rem;
+        border-radius: 0;
+    }
+
+    .add-account-modal.ant-modal-wrap .add-account-body.ant-modal-body,
+    .add-category-modal.ant-modal-wrap .add-category-body.ant-modal-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        padding-top: 8vh;
+    }
+
+    .add-account-modal.ant-modal-wrap .account-form,
+    .add-category-modal.ant-modal-wrap .category-form {
+        width: 100%;
+        max-width: 400px;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 1.25rem;
+    }
+}
+
+/* Fullscreen tx-modal (add budget entry) on mobile */
+@media (max-width: 767px) {
+    .tx-modal-wrap.ant-modal-wrap {
+        z-index: 1002 !important;
+        padding: 0 !important;
+    }
+
+    .tx-modal-wrap.ant-modal-wrap .ant-modal,
+    .tx-modal-wrap.ant-modal-wrap .ant-modal-container {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    .tx-modal-wrap.ant-modal-wrap .ant-modal-content {
+        border-radius: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tx-modal-wrap.ant-modal-wrap .tx-modal-body.ant-modal-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+
+    .tx-modal-wrap .tx-type-group > div {
+        padding: 0.5rem !important;
+        font-size: 0.78rem !important;
+        gap: 0.2rem !important;
+    }
+
+    .tx-modal-wrap .tx-type-group > div span {
+        width: 16px !important;
+        height: 16px !important;
+        font-size: 10px !important;
+    }
+}
+
+/* Fullscreen tx-select (account/category picker) on mobile */
+@media (max-width: 767px) {
+    .tx-select-wrap.ant-modal-wrap {
+        z-index: 1003 !important;
+        padding: 0 !important;
+    }
+
+    .tx-select-wrap.ant-modal-wrap .ant-modal,
+    .tx-select-wrap.ant-modal-wrap .ant-modal-container {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    .tx-select-wrap.ant-modal-wrap .ant-modal-content {
+        border-radius: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tx-select-wrap.ant-modal-wrap .ant-modal-header {
+        flex-shrink: 0;
+        padding: 1rem 3rem 0.75rem 1.25rem;
+        border-radius: 0;
+    }
+
+    .tx-select-wrap.ant-modal-wrap .ant-modal-body {
+        flex: 1;
+        padding: 1.25rem;
+        overflow-y: auto;
     }
 }
 

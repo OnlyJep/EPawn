@@ -56,7 +56,11 @@ class AccountController extends Controller
             'icon' => 'nullable|string|max:50',
         ]);
 
-        $account->update($request->only('name', 'initial_balance', 'icon'));
+        $data = $request->only('name', 'initial_balance', 'icon');
+        if ($request->has('initial_balance')) {
+            $data['balance'] = $request->initial_balance;
+        }
+        $account->update($data);
 
         ActivityLog::log($request->user()->id, 'update_account', ['account_id' => $account->id, 'name' => $account->name], $request);
 

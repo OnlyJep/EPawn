@@ -11,6 +11,8 @@
     min-height: 100vh;
     background: var(--sidebar-gradient);
     color: var(--text-primary);
+    padding: 1.5rem;
+    box-sizing: border-box;
     font-size: 14px;
     position: relative;
     display: flex;
@@ -29,19 +31,19 @@
     }
 }
 
-.sidebar__brand {
+.sidebar-header {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 20px 0;
+    margin-bottom: 1rem;
     flex-shrink: 0;
 
     &:before {
         content: '';
         display: block;
         width: 100%;
-        max-width: 210px;
-        height: 80px;
+        max-width: 200px;
+        height: 90px;
         background: url('/img/EPAWNlogo.png') no-repeat center;
         background-size: contain;
     }
@@ -56,20 +58,12 @@
     }
 }
 
-.sidebar__separator {
-    border: none;
-    height: 1px;
-    background: var(--border-color);
-    margin: 15px 20px;
-    flex-shrink: 0;
-}
-
-.sidebar__content {
+.sidebar-content {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0 20px 0;
+    padding-right: 4px;
 
     &::-webkit-scrollbar {
         width: 6px;
@@ -92,13 +86,21 @@
     }
 }
 
-.sidebar__nav ul {
+.sidebar-separator {
+    border: none;
+    height: 1px;
+    background: var(--border-color);
+    margin: 1rem 0;
+    flex-shrink: 0;
+}
+
+.sidebar-nav {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.sidebar__nav li {
+.sidebar-nav li {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -116,9 +118,14 @@
         background: var(--red-light);
         color: var(--red);
     }
+
+    &.active {
+        background: var(--red);
+        color: #ffffff;
+    }
 }
 
-.sidebar__link {
+.sidebar-link {
     width: 100%;
     display: flex;
     align-items: center;
@@ -140,18 +147,18 @@
         color: var(--red);
     }
 
-        &--active {
+    &--active {
+        background: var(--red);
+        color: #ffffff;
+
+        &:hover {
             background: var(--red);
             color: #ffffff;
-
-            &:hover {
-                background: var(--red);
-                color: #ffffff;
-            }
         }
+    }
 }
 
-.sidebar__label {
+.sidebar-label {
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.1em;

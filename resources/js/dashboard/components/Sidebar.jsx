@@ -25,20 +25,20 @@ export default function Sidebar({
 }) {
     return (
         <aside className="sidebar">
-            <div className="sidebar__brand">
+            <div className="sidebar-header">
                 <a href={routes.home}>
                     <img src={logo} alt="E-PAWN" />
                 </a>
             </div>
-            <div className="sidebar__separator"></div>
-            <div className="sidebar__content">
-                <nav className="sidebar__nav">
-                    <p className="sidebar__label">Menu</p>
+            <hr className="sidebar-separator" />
+            <div className="sidebar-content">
+                <nav className="sidebar-nav">
+                    <p className="sidebar-label">Menu</p>
                     <ul>
                         <li>
                             <button
                                 type="button"
-                                className={`sidebar__link${activeNav === 'dashboard' ? ' sidebar__link--active' : ''}`}
+                                className={`sidebar-link${activeNav === 'dashboard' ? ' sidebar-link--active' : ''}`}
                                 onClick={() => onNavChange('dashboard')}
                             >
                                 <NavIcon type="dashboard" />
@@ -48,7 +48,7 @@ export default function Sidebar({
                         <li>
                             <button
                                 type="button"
-                                className={`sidebar__link${activeNav === 'records' ? ' sidebar__link--active' : ''}`}
+                                className={`sidebar-link${activeNav === 'records' ? ' sidebar-link--active' : ''}`}
                                 onClick={() => onNavChange('records')}
                             >
                                 <NavIcon type="sheet" />
@@ -58,7 +58,7 @@ export default function Sidebar({
                         <li>
                             <button
                                 type="button"
-                                className={`sidebar__link${activeNav === 'budget_planning' ? ' sidebar__link--active' : ''}`}
+                                className={`sidebar-link${activeNav === 'budget_planning' ? ' sidebar-link--active' : ''}`}
                                 onClick={() => onNavChange('budget_planning')}
                             >
                                 <NavIcon type="planning" />
@@ -68,7 +68,7 @@ export default function Sidebar({
                         <li>
                             <button
                                 type="button"
-                                className={`sidebar__link${activeNav === 'budget' ? ' sidebar__link--active' : ''}`}
+                                className={`sidebar-link${activeNav === 'budget' ? ' sidebar-link--active' : ''}`}
                                 onClick={() => onNavChange('budget')}
                             >
                                 <NavIcon type="budget" />
@@ -78,7 +78,7 @@ export default function Sidebar({
                         <li>
                             <button
                                 type="button"
-                                className={`sidebar__link${activeNav === 'accounts' ? ' sidebar__link--active' : ''}`}
+                                className={`sidebar-link${activeNav === 'accounts' ? ' sidebar-link--active' : ''}`}
                                 onClick={() => onNavChange('accounts')}
                             >
                                 <NavIcon type="accounts" />
@@ -88,7 +88,7 @@ export default function Sidebar({
                         <li>
                             <button
                                 type="button"
-                                className={`sidebar__link${activeNav === 'categories' ? ' sidebar__link--active' : ''}`}
+                                className={`sidebar-link${activeNav === 'categories' ? ' sidebar-link--active' : ''}`}
                                 onClick={() => onNavChange('categories')}
                             >
                                 <NavIcon type="categories" />

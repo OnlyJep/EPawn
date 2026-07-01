@@ -28,10 +28,18 @@ class SettingsController extends Controller
                 Rule::unique('users', 'username')->ignore($user->id),
                 Rule::notIn(['admin']),
             ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
         ]);
 
         $user->update([
             'username' => $request->username,
+            'email' => $request->email,
         ]);
 
         $fullname = $request->last_name

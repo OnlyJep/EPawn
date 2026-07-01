@@ -391,24 +391,58 @@ export default function RecordsPage({
             const evaluated = evaluateExpr(calcExpression);
             if (evaluated !== null) {
                 setCalcResult(evaluated);
+                setCalcExpression(String(evaluated));
             } else {
                 message.error('Invalid expression.');
             }
-        } else {
-            setCalcResult(null);
-
-            const isOperator = ['+', '-', '*', '/'].includes(key);
-            let char = key;
-            if (key === '*') char = 'x';
-            if (key === '/') char = '\u00f7';
-            if (isOperator) char = ` ${char} `;
-
-            if (calcExpression === '0' && !isOperator && key !== '.') {
-                setCalcExpression(char);
-            } else {
-                setCalcExpression(prev => prev + char);
-            }
+            return;
         }
+
+        setCalcResult(null);
+        const isOperator = ['+', '-', '*', '/'].includes(key);
+
+        if (isOperator) {
+            const displayOp = key === '*' ? ' x ' : key === '/' ? ' \u00f7 ' : ` ${key} `;
+            const trimmed = calcExpression.trimEnd();
+            const lastChar = trimmed.slice(-1);
+            if (['+', '-', 'x', '\u00f7', '*', '/'].includes(lastChar)) {
+                setCalcExpression(trimmed.slice(0, -1).trimEnd() + displayOp);
+                return;
+            }
+            const evaluated = evaluateExpr(calcExpression);
+            if (evaluated !== null) {
+                setCalcExpression(String(evaluated) + displayOp);
+            } else {
+                setCalcExpression(prev => prev + displayOp);
+            }
+            return;
+        }
+
+        let char = key === '*' ? 'x' : key === '/' ? '\u00f7' : key;
+        const trimmed = calcExpression.trimEnd();
+        const tokens = trimmed.split(/\s+/);
+        const lastToken = tokens[tokens.length - 1] || '';
+        const lastChar = trimmed.slice(-1);
+        const endsWithOp = ['+', '-', 'x', '\u00f7', '*', '/'].includes(lastChar);
+
+        if (endsWithOp) {
+            setCalcExpression(prev => prev + (key === '.' ? '0.' : char));
+            return;
+        }
+
+        if (lastToken === '0' && key === '0') return;
+
+        if (lastToken === '0' && key !== '.' && calcExpression !== '0') {
+            setCalcExpression(trimmed.slice(0, -1) + char);
+            return;
+        }
+
+        if (calcExpression === '0' && key !== '.') {
+            setCalcExpression(char);
+            return;
+        }
+
+        setCalcExpression(prev => prev + char);
     };
 
     const calcKeyStyle = (keyType) => {
@@ -887,6 +921,7 @@ export default function RecordsPage({
             )}
 
             <Modal
+                classNames={{ wrapper: 'tx-modal-wrap', body: 'tx-modal-body' }}
                 open={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 footer={null}
@@ -1205,6 +1240,7 @@ export default function RecordsPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'tx-select-wrap' }}
                 title="Select an account"
                 open={selectingAccountFor !== null}
                 onCancel={() => setSelectingAccountFor(null)}
@@ -1286,6 +1322,7 @@ export default function RecordsPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'tx-select-wrap' }}
                 title="Select a category"
                 open={selectingCategory}
                 onCancel={() => setSelectingCategory(false)}
@@ -1350,13 +1387,14 @@ export default function RecordsPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'add-account-modal', header: 'add-account-header', body: 'add-account-body' }}
                 title="Add Account"
                 open={createAccModalOpen}
                 onCancel={() => setCreateAccModalOpen(false)}
                 footer={null}
                 styles={{ body: { padding: '1rem' } }}
             >
-                <form onSubmit={handleCreateAccSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <form className="account-form" onSubmit={handleCreateAccSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <input
                         type="text"
                         placeholder="Account Name"
@@ -1398,13 +1436,14 @@ export default function RecordsPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }}
                 title="Add Category"
                 open={createCatModalOpen}
                 onCancel={() => setCreateCatModalOpen(false)}
                 footer={null}
                 styles={{ body: { padding: '1rem' } }}
             >
-                <form onSubmit={handleCreateCatSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <form className="category-form" onSubmit={handleCreateCatSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <input
                         type="text"
                         placeholder="Category Name"

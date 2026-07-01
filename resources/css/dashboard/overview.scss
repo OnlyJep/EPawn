@@ -104,6 +104,28 @@
     }
 }
 
+@media (max-width: 767px) {
+    .settings-modal-overlay {
+        padding: 0 !important;
+        align-items: flex-start !important;
+    }
+
+    .settings-modal-overlay .settings-modal {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        padding: 1.5rem;
+        overflow-y: auto;
+    }
+
+    .settings-modal-overlay .settings-modal .modal-close {
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+}
+
 .overview-card--sheets {
     margin-top: 1.5rem;
 

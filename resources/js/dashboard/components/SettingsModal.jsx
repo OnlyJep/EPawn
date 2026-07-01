@@ -8,7 +8,7 @@ import { buildProfileUpdateMessage, getChangedProfileFields } from '../../utils/
 
 function CloseIcon() {
     return (
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#424242" strokeWidth="2">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M4 4l8 8M12 4l-8 8" />
         </svg>
     );
@@ -21,6 +21,7 @@ function buildProfileState(user, old) {
         last_name: old?.last_name ?? user?.profile?.last_name ?? '',
         suffix: old?.suffix ?? user?.profile?.suffix ?? '',
         username: old?.username ?? user?.username ?? '',
+        email: old?.email ?? user?.email ?? '',
     };
 }
 
@@ -96,6 +97,7 @@ export default function SettingsModal({ open, onClose, user, errors, old, onUser
                 last_name: profile.last_name,
                 suffix: profile.suffix || null,
                 username: profile.username,
+                email: profile.email,
             });
 
             setEpawn({ user: data.user });
@@ -148,7 +150,7 @@ export default function SettingsModal({ open, onClose, user, errors, old, onUser
     };
 
     return (
-        <div className="modal-overlay active" onClick={(event) => event.target === event.currentTarget && onClose()}>
+        <div className="modal-overlay active settings-modal-overlay" onClick={(event) => event.target === event.currentTarget && onClose()}>
             <div className="modal modal--wide settings-modal">
                 <button type="button" className="modal-close" onClick={onClose} aria-label="Close">
                     <CloseIcon />
@@ -245,6 +247,19 @@ export default function SettingsModal({ open, onClose, user, errors, old, onUser
                                 className="form-control"
                                 value={profile.username}
                                 onChange={handleProfileFieldChange('username')}
+                                disabled={!editing}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="set-email">Email</label>
+                            <input
+                                type="email"
+                                id="set-email"
+                                name="email"
+                                className="form-control"
+                                value={profile.email}
+                                onChange={handleProfileFieldChange('email')}
                                 disabled={!editing}
                                 required
                             />

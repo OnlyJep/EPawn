@@ -126,7 +126,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
             setNewPlanName('');
             setNewPlanBudget('');
             message.success('Budget Plan created.');
-        } catch { message.error('Failed to create plan.'); }
+        } catch (err) { message.error(err?.response?.data?.message || 'Failed to create plan.'); }
     };
 
     const handleDeletePlan = (planId, e) => {
@@ -156,7 +156,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
             setPlans(plans.map(p => p.id === selectedPlanId ? res.plan : p));
             setEditBudgetOpen(false);
             message.success('Budget updated.');
-        } catch { message.error('Failed to update budget.'); }
+        } catch (err) { message.error(err?.response?.data?.message || 'Failed to update budget.'); }
     };
 
     const handleEditPlanName = async (e) => {
@@ -304,19 +304,60 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
     const handleKeypadPress = (key) => {
         if (key === '=') {
             const evaluated = evaluateExpr(itemCalcExpression);
-            if (evaluated !== null) setItemCalcResult(evaluated);
-            else message.error('Invalid expression.');
-        } else {
-            setItemCalcResult(null);
-
-            const isOperator = ['+', '-', '*', '/'].includes(key);
-            let char = key;
-            if (key === '*') char = 'x';
-            if (key === '/') char = '\u00F7';
-            if (isOperator) char = ` ${char} `;
-
-            setItemCalcExpression(prev => prev === '0' && !isOperator && key !== '.' ? char : prev + char);
+            if (evaluated !== null) {
+                setItemCalcResult(evaluated);
+                setItemCalcExpression(String(evaluated));
+            } else {
+                message.error('Invalid expression.');
+            }
+            return;
         }
+
+        setItemCalcResult(null);
+        const isOperator = ['+', '-', '*', '/'].includes(key);
+
+        if (isOperator) {
+            const displayOp = key === '*' ? ' x ' : key === '/' ? ' \u00F7 ' : ` ${key} `;
+            const trimmed = itemCalcExpression.trimEnd();
+            const lastChar = trimmed.slice(-1);
+            if (['+', '-', 'x', '\u00F7', '*', '/'].includes(lastChar)) {
+                setItemCalcExpression(trimmed.slice(0, -1).trimEnd() + displayOp);
+                return;
+            }
+            const evaluated = evaluateExpr(itemCalcExpression);
+            if (evaluated !== null) {
+                setItemCalcExpression(String(evaluated) + displayOp);
+            } else {
+                setItemCalcExpression(prev => prev + displayOp);
+            }
+            return;
+        }
+
+        let char = key === '*' ? 'x' : key === '/' ? '\u00F7' : key;
+        const trimmed = itemCalcExpression.trimEnd();
+        const tokens = trimmed.split(/\s+/);
+        const lastToken = tokens[tokens.length - 1] || '';
+        const lastChar = trimmed.slice(-1);
+        const endsWithOp = ['+', '-', 'x', '\u00F7', '*', '/'].includes(lastChar);
+
+        if (endsWithOp) {
+            setItemCalcExpression(prev => prev + (key === '.' ? '0.' : char));
+            return;
+        }
+
+        if (lastToken === '0' && key === '0') return;
+
+        if (lastToken === '0' && key !== '.' && itemCalcExpression !== '0') {
+            setItemCalcExpression(trimmed.slice(0, -1) + char);
+            return;
+        }
+
+        if (itemCalcExpression === '0' && key !== '.') {
+            setItemCalcExpression(char);
+            return;
+        }
+
+        setItemCalcExpression(prev => prev + char);
     };
 
     useEffect(() => {
@@ -546,9 +587,9 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </>
             )}
 
-            <Modal title="Create Budget Plan" open={createModalOpen} onCancel={() => setCreateModalOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
-                <form onSubmit={handleCreatePlan} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <Modal classNames={{ wrapper: 'create-plan-modal', header: 'create-plan-header', body: 'create-plan-body' }} title="Create Budget Plan" open={createModalOpen} onCancel={() => setCreateModalOpen(false)} footer={null}>
+                <form className="create-plan-form" onSubmit={handleCreatePlan} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <div className="create-plan-fields" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>
                             <label style={{ fontWeight: 700, color: 'var(--gray-700)', marginBottom: '0.35rem', display: 'block' }}>Plan Name :</label>
                             <input type="text" value={newPlanName} onChange={e => setNewPlanName(e.target.value)} className="form-control" placeholder="e.g. Cebu Trip" required />
@@ -565,7 +606,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </form>
             </Modal>
 
-            <Modal title="Edit Plan Budget" open={editBudgetOpen} onCancel={() => setEditBudgetOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
+            <Modal classNames={{ wrapper: 'tx-select-wrap' }} title="Edit Plan Budget" open={editBudgetOpen} onCancel={() => setEditBudgetOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
                 <form onSubmit={handleUpdatePlanBudget} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <label style={{ fontWeight: 700, color: 'var(--gray-700)', display: 'block' }}>Estimated Budget :</label>
                     <input type="number" step="0.01" value={editBudgetValue} onChange={e => setEditBudgetValue(e.target.value)} className="form-control" required />
@@ -576,7 +617,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </form>
             </Modal>
 
-            <Modal title="Edit Plan Name" open={editNameOpen} onCancel={() => setEditNameOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
+            <Modal classNames={{ wrapper: 'tx-select-wrap' }} title="Edit Plan Name" open={editNameOpen} onCancel={() => setEditNameOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
                 <form onSubmit={handleEditPlanName} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <label style={{ fontWeight: 700, color: 'var(--gray-700)', display: 'block' }}>Plan Name :</label>
                     <input type="text" value={editNameValue} onChange={e => setEditNameValue(e.target.value)} className="form-control" required />
@@ -587,13 +628,13 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </form>
             </Modal>
 
-            <Modal open={itemModalOpen} onCancel={() => setItemModalOpen(false)} footer={null} closable={false} styles={{ body: { padding: '1.25rem' } }}>
+            <Modal classNames={{ wrapper: 'tx-modal-wrap', body: 'tx-modal-body' }} open={itemModalOpen} onCancel={() => setItemModalOpen(false)} footer={null} closable={false} styles={{ body: { padding: '1.25rem' } }}>
                 <form onSubmit={handleSaveItem}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                         <button type="button" onClick={() => setItemModalOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}>X CANCEL</button>
                         <button type="submit" style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}>V SAVE</button>
                     </div>
-                    <div style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', display: 'flex', overflow: 'hidden', marginBottom: '1.25rem' }}>
+                    <div className="item-type-group" style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', display: 'flex', overflow: 'hidden', marginBottom: '1.25rem' }}>
                         {['Income', 'Expense'].map(t => (
                             <div key={t} onClick={() => { setItemType(t); const m = categories.filter(c => (c.type || '').toLowerCase().includes(t.toLowerCase())); setItemCategory(m[0]?.name || 'General'); }}
                                 style={{ flex: 1, padding: '0.75rem', textAlign: 'center', cursor: 'pointer', background: itemType === t ? 'var(--red-light)' : 'transparent', color: itemType === t ? 'var(--red)' : 'var(--gray-500)', fontWeight: 700, fontSize: '0.9rem', borderRight: t !== 'Expense' ? '1.5px solid var(--gray-300)' : 'none', userSelect: 'none' }}>
@@ -612,7 +653,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                     <div style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', padding: '0.75rem 1rem', background: 'var(--white)', marginBottom: '1rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>{itemCalcExpression}</div>
-                            <button type="button" onClick={() => { setItemCalcExpression(prev => prev.length <= 1 ? '0' : prev.slice(0, -1)); setItemCalcResult(null); }} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--gray-500)' }}>BK</button>
+                            <button type="button" onClick={() => { setItemCalcExpression(prev => prev.length <= 1 ? '0' : prev.slice(0, -1)); setItemCalcResult(null); }} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--gray-500)' }}>⌫</button>
                         </div>
                         {itemCalcResult !== null && (
                             <div style={{
@@ -653,7 +694,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </form>
             </Modal>
 
-            <Modal title="Select a category" open={selectingCategory} onCancel={() => setSelectingCategory(false)} footer={null} styles={{ body: { padding: '1rem' } }}>
+            <Modal classNames={{ wrapper: 'tx-select-wrap' }} title="Select a category" open={selectingCategory} onCancel={() => setSelectingCategory(false)} footer={null} styles={{ body: { padding: '1rem' } }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '400px', overflowY: 'auto' }}>
                     {categories.filter(c => (c.type || '').toLowerCase().includes(itemType.toLowerCase())).map(cat => (
                         <div key={cat.id} onClick={() => { setItemCategory(cat.name); setSelectingCategory(false); }}
@@ -668,7 +709,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </div>
             </Modal>
 
-            <Modal title="Add Category" open={createCatModalOpen} onCancel={() => setCreateCatModalOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
+            <Modal classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }} title="Add Category" open={createCatModalOpen} onCancel={() => setCreateCatModalOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
                 <form onSubmit={handleCreateCatSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', display: 'flex', overflow: 'hidden' }}>
                         <div style={{ flex: 1, padding: '1rem', textAlign: 'center', background: 'var(--red-light)', color: 'var(--red)', fontWeight: 700, textTransform: 'uppercase' }}>{itemType.toUpperCase()}</div>

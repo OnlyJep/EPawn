@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\ActivityLog;
 use App\Models\BudgetPlan;
 use App\Models\BudgetPlanItem;
@@ -32,6 +33,15 @@ class BudgetPlanController extends Controller
             'month' => 'required|integer|min:1|max:12',
             'day' => 'sometimes|integer|min:1|max:31',
         ]);
+
+        $totalBalance = Account::where('user_id', $request->user()->id)->sum('balance');
+        if ($validated['budget'] > $totalBalance) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Budget plan amount (₱' . number_format($validated['budget'], 2) . ') exceeds your total balance (₱' . number_format($totalBalance, 2) . ').',
+                'errors' => ['budget' => ['Budget exceeds total balance.']],
+            ], 422);
+        }
 
         $plan = BudgetPlan::create([
             'user_id' => $request->user()->id,
@@ -76,6 +86,17 @@ class BudgetPlanController extends Controller
             'month' => 'sometimes|integer|min:1|max:12',
             'day' => 'sometimes|integer|min:1|max:31',
         ]);
+
+        if (isset($validated['budget'])) {
+            $totalBalance = Account::where('user_id', $request->user()->id)->sum('balance');
+            if ($validated['budget'] > $totalBalance) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Budget plan amount (₱' . number_format($validated['budget'], 2) . ') exceeds your total balance (₱' . number_format($totalBalance, 2) . ').',
+                    'errors' => ['budget' => ['Budget exceeds total balance.']],
+                ], 422);
+            }
+        }
 
         $plan->update($validated);
 

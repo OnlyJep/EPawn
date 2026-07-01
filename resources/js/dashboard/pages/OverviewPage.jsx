@@ -249,7 +249,7 @@ export default function OverviewPage({
                 <p>Welcome back to E-PAWN. Here is your financial summary.</p>
             </div>
 
-            <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div className="overview-card" style={{ padding: '1.5rem', borderRadius: '12px', background: 'var(--white)', border: '1px solid var(--gray-300)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                     <h3 style={{ fontSize: '0.9rem', color: 'var(--gray-500)', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>Net Balance</h3>
                     <div style={{ fontSize: '1.8rem', fontWeight: 700, color: calculatedTotals.netBalance >= 0 ? 'var(--green, #10b981)' : 'var(--red, #ef4444)' }}>
@@ -273,11 +273,10 @@ export default function OverviewPage({
                     </div>
                     <p style={{ fontSize: '0.8rem', color: 'var(--gray-400)', marginTop: '0.25rem' }}>All-time logged spending</p>
                 </div>
-            </div>
 
-            <div className="overview-card" style={{ padding: '1.5rem', borderRadius: '12px', background: 'var(--white)', border: '1px solid var(--gray-300)', marginBottom: '2rem' }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)', marginBottom: '0.25rem' }}>Savings & Spending Trend</h3>
-                <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', marginBottom: '1.5rem' }}>Visual balance changes for {curMonthName} {curYear}. Hover over data points to check transaction logs.</p>
+                <div className="overview-card" style={{ padding: '1.5rem', borderRadius: '12px', background: 'var(--white)', border: '1px solid var(--gray-300)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--red)', marginBottom: '0.25rem' }}>Savings & Spending Trend</h3>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', marginBottom: '1.5rem' }}>Visual balance changes for {curMonthName} {curYear}. Hover over data points to check transaction logs.</p>
                 
                 {trendData.length === 0 ? (
                     <p style={{ textAlign: 'center', color: 'var(--gray-500)' }}>No trend data for this month.</p>
@@ -353,29 +352,22 @@ export default function OverviewPage({
                         )}
                     </div>
                 )}
-            </div>
+                </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '2rem' }}>
-                <div className="overview-card" style={{ padding: '1.5rem', borderRadius: '12px', background: 'var(--white)', border: '1px solid var(--gray-300)' }}>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.25rem' }}>My Accounts</h3>
+                <div className="overview-card" style={{ padding: '1.5rem', borderRadius: '12px', background: 'var(--white)', border: '1px solid var(--gray-300)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexShrink: 0 }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>My Accounts</h3>
+                        {accounts.length > rowsPerPage && (
+                            <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Page {accPage} of {Math.ceil(accounts.length / rowsPerPage)}</span>
+                        )}
+                    </div>
                     {loading ? (
-                        <p>Loading accounts...</p>
+                        <p style={{ flex: 1 }}>Loading accounts...</p>
                     ) : accounts.length === 0 ? (
-                        <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem' }}>No accounts created yet. Go to the Accounts section to add one.</p>
+                        <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', flex: 1 }}>No accounts created yet. Go to the Accounts section to add one.</p>
                     ) : (
                         <>
-                        {Math.ceil(accounts.length / rowsPerPage) > 1 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Page {accPage} of {Math.ceil(accounts.length / rowsPerPage)}</span>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <button onClick={() => setAccPage(p => Math.max(1, p - 1))} disabled={accPage === 1}
-                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: accPage === 1 ? 'var(--gray-100)' : 'var(--white)', color: accPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: accPage === 1 ? 'not-allowed' : 'pointer' }}>Previous</button>
-                                    <button onClick={() => setAccPage(p => Math.min(Math.ceil(accounts.length / rowsPerPage), p + 1))} disabled={accPage === Math.ceil(accounts.length / rowsPerPage)}
-                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'var(--gray-100)' : 'var(--white)', color: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'not-allowed' : 'pointer' }}>Next</button>
-                                </div>
-                            </div>
-                        )}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
                             {accounts.slice((accPage - 1) * rowsPerPage, accPage * rowsPerPage).map((row) => (
                                 <div key={row.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--gray-200)', background: 'var(--gray-50)' }}>
                                     <div>
@@ -388,30 +380,32 @@ export default function OverviewPage({
                                 </div>
                             ))}
                         </div>
+                        {Math.ceil(accounts.length / rowsPerPage) > 1 && (
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.75rem', flexShrink: 0 }}>
+                                <button onClick={() => setAccPage(p => Math.max(1, p - 1))} disabled={accPage === 1}
+                                    style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: accPage === 1 ? 'var(--gray-100)' : 'var(--white)', color: accPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: accPage === 1 ? 'not-allowed' : 'pointer' }}>Previous</button>
+                                <button onClick={() => setAccPage(p => Math.min(Math.ceil(accounts.length / rowsPerPage), p + 1))} disabled={accPage === Math.ceil(accounts.length / rowsPerPage)}
+                                    style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'var(--gray-100)' : 'var(--white)', color: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: accPage === Math.ceil(accounts.length / rowsPerPage) ? 'not-allowed' : 'pointer' }}>Next</button>
+                            </div>
+                        )}
                         </>
                     )}
                 </div>
 
-                <div className="overview-card" style={{ padding: '1.5rem', borderRadius: '12px', background: 'var(--white)', border: '1px solid var(--gray-300)' }}>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.25rem' }}>Recent Transactions</h3>
+                <div className="overview-card" style={{ padding: '1.5rem', borderRadius: '12px', background: 'var(--white)', border: '1px solid var(--gray-300)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexShrink: 0 }}>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>Recent Transactions</h3>
+                        {recentTransactions.length > rowsPerPage && (
+                            <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Page {txPage} of {Math.ceil(recentTransactions.length / rowsPerPage)}</span>
+                        )}
+                    </div>
                     {loading ? (
-                        <p>Loading transactions...</p>
+                        <p style={{ flex: 1 }}>Loading transactions...</p>
                     ) : recentTransactions.length === 0 ? (
-                        <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem' }}>No transactions recorded yet. Go to the Records section to add one.</p>
+                        <p style={{ color: 'var(--gray-500)', fontSize: '0.9rem', flex: 1 }}>No transactions recorded yet. Go to the Records section to add one.</p>
                     ) : (
                         <>
-                        {Math.ceil(recentTransactions.length / rowsPerPage) > 1 && (
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--gray-500)' }}>Page {txPage} of {Math.ceil(recentTransactions.length / rowsPerPage)}</span>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <button onClick={() => setTxPage(p => Math.max(1, p - 1))} disabled={txPage === 1}
-                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: txPage === 1 ? 'var(--gray-100)' : 'var(--white)', color: txPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: txPage === 1 ? 'not-allowed' : 'pointer' }}>Previous</button>
-                                    <button onClick={() => setTxPage(p => Math.min(Math.ceil(recentTransactions.length / rowsPerPage), p + 1))} disabled={txPage === Math.ceil(recentTransactions.length / rowsPerPage)}
-                                        style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'var(--gray-100)' : 'var(--white)', color: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'not-allowed' : 'pointer' }}>Next</button>
-                                </div>
-                            </div>
-                        )}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
                             {recentTransactions.slice((txPage - 1) * rowsPerPage, txPage * rowsPerPage).map((row) => {
                                 const isExpense = (row.type || '').toLowerCase().includes('expense');
                                 return (
@@ -429,6 +423,14 @@ export default function OverviewPage({
                                 );
                             })}
                         </div>
+                        {Math.ceil(recentTransactions.length / rowsPerPage) > 1 && (
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.75rem', flexShrink: 0 }}>
+                                <button onClick={() => setTxPage(p => Math.max(1, p - 1))} disabled={txPage === 1}
+                                    style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: txPage === 1 ? 'var(--gray-100)' : 'var(--white)', color: txPage === 1 ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: txPage === 1 ? 'not-allowed' : 'pointer' }}>Previous</button>
+                                <button onClick={() => setTxPage(p => Math.min(Math.ceil(recentTransactions.length / rowsPerPage), p + 1))} disabled={txPage === Math.ceil(recentTransactions.length / rowsPerPage)}
+                                    style={{ padding: '0.3rem 0.6rem', borderRadius: '6px', border: '1.5px solid var(--gray-300)', background: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'var(--gray-100)' : 'var(--white)', color: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'var(--gray-400)' : 'var(--gray-700)', fontWeight: 700, fontSize: '0.75rem', cursor: txPage === Math.ceil(recentTransactions.length / rowsPerPage) ? 'not-allowed' : 'pointer' }}>Next</button>
+                            </div>
+                        )}
                         </>
                     )}
                 </div>

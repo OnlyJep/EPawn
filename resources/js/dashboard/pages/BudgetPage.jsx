@@ -368,24 +368,58 @@ export default function BudgetPage({
             const evaluated = evaluateExpr(txCalcExpression);
             if (evaluated !== null) {
                 setTxCalcResult(evaluated);
+                setTxCalcExpression(String(evaluated));
             } else {
                 message.error('Invalid expression.');
             }
-        } else {
-            setTxCalcResult(null);
-
-            const isOperator = ['+', '-', '*', '/'].includes(key);
-            let char = key;
-            if (key === '*') char = 'x';
-            if (key === '/') char = '\u00f7';
-            if (isOperator) char = ` ${char} `;
-
-            if (txCalcExpression === '0' && !isOperator && key !== '.') {
-                setTxCalcExpression(char);
-            } else {
-                setTxCalcExpression(prev => prev + char);
-            }
+            return;
         }
+
+        setTxCalcResult(null);
+        const isOperator = ['+', '-', '*', '/'].includes(key);
+
+        if (isOperator) {
+            const displayOp = key === '*' ? ' x ' : key === '/' ? ' \u00f7 ' : ` ${key} `;
+            const trimmed = txCalcExpression.trimEnd();
+            const lastChar = trimmed.slice(-1);
+            if (['+', '-', 'x', '\u00f7', '*', '/'].includes(lastChar)) {
+                setTxCalcExpression(trimmed.slice(0, -1).trimEnd() + displayOp);
+                return;
+            }
+            const evaluated = evaluateExpr(txCalcExpression);
+            if (evaluated !== null) {
+                setTxCalcExpression(String(evaluated) + displayOp);
+            } else {
+                setTxCalcExpression(prev => prev + displayOp);
+            }
+            return;
+        }
+
+        let char = key === '*' ? 'x' : key === '/' ? '\u00f7' : key;
+        const trimmed = txCalcExpression.trimEnd();
+        const tokens = trimmed.split(/\s+/);
+        const lastToken = tokens[tokens.length - 1] || '';
+        const lastChar = trimmed.slice(-1);
+        const endsWithOp = ['+', '-', 'x', '\u00f7', '*', '/'].includes(lastChar);
+
+        if (endsWithOp) {
+            setTxCalcExpression(prev => prev + (key === '.' ? '0.' : char));
+            return;
+        }
+
+        if (lastToken === '0' && key === '0') return;
+
+        if (lastToken === '0' && key !== '.' && txCalcExpression !== '0') {
+            setTxCalcExpression(trimmed.slice(0, -1) + char);
+            return;
+        }
+
+        if (txCalcExpression === '0' && key !== '.') {
+            setTxCalcExpression(char);
+            return;
+        }
+
+        setTxCalcExpression(prev => prev + char);
     };
 
     const calcKeyStyle = (keyType) => {
@@ -759,6 +793,7 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'tx-modal-wrap', body: 'tx-modal-body' }}
                 open={txModalOpen}
                 onCancel={() => setTxModalOpen(false)}
                 footer={null}
@@ -782,7 +817,7 @@ export default function BudgetPage({
                         </button>
                     </div>
 
-                    <div style={{
+                    <div className="tx-type-group" style={{
                         border: '1.5px solid var(--gray-300)',
                         borderRadius: '12px',
                         display: 'flex',
@@ -1077,6 +1112,7 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'tx-select-wrap' }}
                 title="Select an account"
                 open={selectingAccountFor !== null}
                 onCancel={() => setSelectingAccountFor(null)}
@@ -1158,6 +1194,7 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'tx-select-wrap' }}
                 title="Select a category"
                 open={selectingCategory}
                 onCancel={() => setSelectingCategory(false)}
@@ -1222,13 +1259,14 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'add-account-modal', header: 'add-account-header', body: 'add-account-body' }}
                 title="Add Account"
                 open={createAccModalOpen}
                 onCancel={() => setCreateAccModalOpen(false)}
                 footer={null}
                 styles={{ body: { padding: '1rem' } }}
             >
-                <form onSubmit={handleCreateAccSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <form className="account-form" onSubmit={handleCreateAccSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <input
                         type="text"
                         placeholder="Account Name"
@@ -1270,13 +1308,14 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }}
                 title="Add Category"
                 open={createCatModalOpen}
                 onCancel={() => setCreateCatModalOpen(false)}
                 footer={null}
                 styles={{ body: { padding: '1rem' } }}
             >
-                <form onSubmit={handleCreateCatSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <form className="category-form" onSubmit={handleCreateCatSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <input
                         type="text"
                         placeholder="Category Name"
