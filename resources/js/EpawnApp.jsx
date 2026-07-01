@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { App } from 'antd';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import FeaturesPage from './pages/FeaturesPage';
@@ -31,8 +32,10 @@ export default function EpawnApp(props) {
     };
 
     return (
-        <Layout {...props} theme={theme} onToggleTheme={toggleTheme}>
-            <Page {...props} />
-        </Layout>
+        <App>
+            <Layout {...props} theme={theme} onToggleTheme={toggleTheme}>
+                <Page {...props} />
+            </Layout>
+        </App>
     );
 }

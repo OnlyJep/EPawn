@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { message } from 'antd';
+import { App } from 'antd';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import OverviewPage from './pages/OverviewPage';
@@ -40,69 +40,72 @@ export default function DashboardApp(props) {
     }, []);
 
     return (
-        <div className="dashboard">
-            <Sidebar
-                logo={props.logo}
-                activeNav={activeNav}
-                onNavChange={setActiveNav}
-                routes={props.routes}
-                isMobile={isMobile}
-                isOpen={sidebarOpen}
-                onToggle={() => setSidebarOpen(!sidebarOpen)}
-            />
-            <div className="dashboard-main">
-                <Topbar
-                    user={user}
-                    defaultAvatar={props.defaultAvatar}
-                    onOpenSettings={() => setSettingsOpen(true)}
+        <App>
+            <div className="dashboard">
+                <Sidebar
+                    logo={props.logo}
+                    activeNav={activeNav}
+                    onNavChange={setActiveNav}
                     routes={props.routes}
+                    isMobile={isMobile}
+                    isOpen={sidebarOpen}
+                    onToggle={() => setSidebarOpen(!sidebarOpen)}
                 />
-                <div className="dashboard-content">
-                    {activeNav === 'dashboard' && (
-                        <OverviewPage
-                            user={user}
-                            stats={stats}
-                            onStatsUpdate={setStats}
-                        />
-                    )}
-                    {activeNav === 'records' && (
-                        <RecordsPage
-                            onStatsUpdate={setStats}
-                        />
-                    )}
-                    {activeNav === 'budget' && (
-                        <BudgetPage
-                            onStatsUpdate={setStats}
-                        />
-                    )}
-                    {activeNav === 'accounts' && (
-                        <AccountsPage
-                            onStatsUpdate={setStats}
-                        />
-                    )}
-                    {activeNav === 'categories' && (
-                        <CategoriesPage
-                            onStatsUpdate={setStats}
-                        />
-                    )}
-                    {activeNav === 'budget_planning' && (
-                        <BudgetPlanningPage
-                            user={user}
-                            stats={stats}
-                            onStatsUpdate={setStats}
-                        />
-                    )}
+                <div className="dashboard-main">
+                    <Topbar
+                        user={user}
+                        defaultAvatar={props.defaultAvatar}
+                        onOpenSettings={() => setSettingsOpen(true)}
+                        routes={props.routes}
+                        csrf={props.csrf}
+                    />
+                    <div className="dashboard-content">
+                        {activeNav === 'dashboard' && (
+                            <OverviewPage
+                                user={user}
+                                stats={stats}
+                                onStatsUpdate={setStats}
+                            />
+                        )}
+                        {activeNav === 'records' && (
+                            <RecordsPage
+                                onStatsUpdate={setStats}
+                            />
+                        )}
+                        {activeNav === 'budget' && (
+                            <BudgetPage
+                                onStatsUpdate={setStats}
+                            />
+                        )}
+                        {activeNav === 'accounts' && (
+                            <AccountsPage
+                                onStatsUpdate={setStats}
+                            />
+                        )}
+                        {activeNav === 'categories' && (
+                            <CategoriesPage
+                                onStatsUpdate={setStats}
+                            />
+                        )}
+                        {activeNav === 'budget_planning' && (
+                            <BudgetPlanningPage
+                                user={user}
+                                stats={stats}
+                                onStatsUpdate={setStats}
+                            />
+                        )}
+                    </div>
                 </div>
+                <SettingsModal
+                    open={settingsOpen}
+                    onClose={() => setSettingsOpen(false)}
+                    user={user}
+                    routes={props.routes}
+                    errors={props.errors}
+                    old={props.old}
+                    onUserUpdated={setUser}
+                />
             </div>
-            <SettingsModal
-                open={settingsOpen}
-                onClose={() => setSettingsOpen(false)}
-                user={user}
-                routes={props.routes}
-                errors={props.errors}
-                old={props.old}
-                onUserUpdated={setUser}
-            />
-        </div>
+        </App>
     );
 }

@@ -275,9 +275,11 @@ class AuthController extends Controller
         if ($token = $user->currentAccessToken()) {
             $token->delete();
         }
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        if (Auth::guard('web')->check()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         return response()->json([
             'success' => true,

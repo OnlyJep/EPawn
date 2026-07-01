@@ -74,6 +74,13 @@
     flex-shrink: 0;
 }
 
+// Mobile icon row (theme toggle + hamburger) — hidden on desktop
+.mobile-actions {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 // Hamburger / X toggle — hidden on desktop
 .mobile-toggle {
     display: none;
@@ -157,6 +164,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .mobile-actions {
+        display: flex;
     }
 
     .mobile-menu {

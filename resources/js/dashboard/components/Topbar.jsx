@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { logout } from '../../services/epawnApi';
 import { clearEpawn } from '../../services/epawnStorage';
 import ThemeToggle from '../../components/ThemeToggle';
 import { getStoredTheme, applyTheme } from '../../services/theme';
 
-export default function Topbar({ user, defaultAvatar, onOpenSettings, routes }) {
+export default function Topbar({ user, defaultAvatar, onOpenSettings, routes, csrf }) {
     const [open, setOpen] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
     const [theme, setTheme] = useState(() => getStoredTheme());
     const dropdownRef = useRef(null);
+    const logoutFormRef = useRef(null);
 
     const toggleTheme = () => {
         const next = theme === 'dark' ? 'light' : 'dark';
@@ -32,16 +32,10 @@ export default function Topbar({ user, defaultAvatar, onOpenSettings, routes }) 
 
     const handleLogout = async () => {
         setLoggingOut(true);
-
-        try {
-            await logout();
-        } catch (error) {
-            console.error('Logout error:', error);
-        } finally {
-            clearEpawn();
-            localStorage.removeItem('Epawn');
-            sessionStorage.clear();
-            window.location.href = routes.home || '/';
+        clearEpawn();
+        localStorage.removeItem('Epawn');
+        if (logoutFormRef.current) {
+            logoutFormRef.current.submit();
         }
     };
 
@@ -84,6 +78,9 @@ export default function Topbar({ user, defaultAvatar, onOpenSettings, routes }) 
                 )}
                 </div>
             </div>
+            <form ref={logoutFormRef} method="POST" action="/logout" style={{ display: 'none' }}>
+                <input type="hidden" name="_token" value={csrf} />
+            </form>
         </header>
     );
 }
