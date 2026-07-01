@@ -237,6 +237,22 @@
     color: #d0d0e8 !important;
 }
 
+/* Center antd modals on mobile */
+@media (max-width: 767px) {
+    .ant-modal-wrap {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1rem !important;
+    }
+
+    .ant-modal-wrap .ant-modal {
+        top: 0 !important;
+        margin: 0 auto !important;
+        max-width: calc(100vw - 2rem) !important;
+    }
+}
+
 [data-theme="dark"] .overview-card--welcome h2 {
     color: #ffffff;
 }
@@ -260,4 +276,8 @@
 
 [data-theme="dark"] .bottom-nav__item--active {
     color: #ff6b6b;
+}
+
+[data-theme="dark"] .topbar__profile-btn svg {
+    stroke: #ffffff;
 }

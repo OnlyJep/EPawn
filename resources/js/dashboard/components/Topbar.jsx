@@ -66,6 +66,7 @@ export default function Topbar({ user, defaultAvatar, onOpenSettings, routes, cs
                             <div>
                                 <strong>{displayName}</strong>
                                 <span>{user?.email}</span>
+                                <span className="topbar__dropdown-username">@{user?.username}</span>
                             </div>
                         </div>
                         <button type="button" onClick={() => { setOpen(false); onOpenSettings(); }}>
