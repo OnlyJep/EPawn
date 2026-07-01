@@ -20,9 +20,13 @@ class Transaction extends Model
 
     protected $casts = [
         'amount' => 'float',
-        'date' => 'datetime',
         'archived_at' => 'datetime',
     ];
+
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
+    }
 
     public function user(): BelongsTo
     {

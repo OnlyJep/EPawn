@@ -40,7 +40,13 @@ class TransactionController extends Controller
                 'date' => 'required|date',
             ]);
 
-            $dateOnly = explode(' ', $request->date)[0];
+            // Handle both ISO format (2026-07-01T00:00:00.000000Z) and yyyy-MM-dd HH:mm:ss format
+            $dateValue = $request->date;
+            if (strpos($dateValue, 'T') !== false) {
+                $dateOnly = explode('T', $dateValue)[0];
+            } else {
+                $dateOnly = explode(' ', $dateValue)[0];
+            }
 
             $transaction = Transaction::create([
                 'user_id' => $request->user()->id,
@@ -70,11 +76,14 @@ class TransactionController extends Controller
     public function update(Request $request, Transaction $transaction)
     {
         try {
+            Log::info('TransactionController@update - Request data: ' . json_encode($request->all()));
+            Log::info('TransactionController@update - Transaction ID: ' . $transaction->id . ', User ID: ' . $request->user()->id . ', Transaction User ID: ' . $transaction->user_id);
+
             if ($transaction->user_id !== $request->user()->id) {
                 abort(403);
             }
 
-            $request->validate([
+            $validated = $request->validate([
                 'account_id' => 'nullable|exists:accounts,id',
                 'category_id' => 'nullable|exists:categories,id',
                 'type' => 'required|in:income,expense,transfer',
@@ -83,8 +92,16 @@ class TransactionController extends Controller
                 'date' => 'required|date',
             ]);
 
+            Log::info('TransactionController@update - Validation passed');
+
             $data = $request->only('account_id', 'category_id', 'type', 'amount', 'description');
-            $data['date'] = explode(' ', $request->date)[0];
+            // Handle both ISO format (2026-07-01T00:00:00.000000Z) and yyyy-MM-dd HH:mm:ss format
+            $dateValue = $request->date;
+            if (strpos($dateValue, 'T') !== false) {
+                $data['date'] = explode('T', $dateValue)[0];
+            } else {
+                $data['date'] = explode(' ', $dateValue)[0];
+            }
             $transaction->update($data);
 
             ActivityLog::log($request->user()->id, 'update_transaction', ['transaction_id' => $transaction->id], $request);
@@ -96,6 +113,9 @@ class TransactionController extends Controller
             }
 
             return response()->json(['success' => true, 'transaction' => $transaction->fresh()->load('account:id,name', 'category:id,name')]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('TransactionController@update - Validation failed: ' . json_encode($e->errors()));
+            return response()->json(['success' => false, 'message' => 'Validation failed', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             Log::error('TransactionController@update: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);

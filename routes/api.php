@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+Route::post('send-verification-code', [AuthController::class, 'sendVerificationCode']);
+Route::post('register-with-code', [AuthController::class, 'registerWithCode']);
+Route::post('resend-code', [AuthController::class, 'resendCode']);
 Route::post('forgot-password/reset', [ForgotPasswordController::class, 'reset']);
 Route::get('check-username', [AuthController::class, 'checkUsername']);
 Route::get('check-email', [AuthController::class, 'checkEmail']);
@@ -21,38 +24,39 @@ Route::get('check-email', [AuthController::class, 'checkEmail']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::get('dashboard', function (\Illuminate\Http\Request $request) {
-    $user = $request->user()->load('profile');
-    $totalSaved = $user->accounts()->sum('balance');
-    $incomeLogged = $user->transactions()->where('type', 'income')->sum('amount');
-    $activeLoans = $user->transactions()->where('type', 'expense')->sum('amount');
+        $user = $request->user()->load('profile');
+        $totalSaved = $user->accounts()->sum('balance');
+        $incomeLogged = $user->transactions()->where('type', 'income')->sum('amount');
+        $activeLoans = $user->transactions()->where('type', 'expense')->sum('amount');
 
-    return response()->json([
-        'success' => true,
-        'user' => $user,
-        'logo' => asset('img/EPAWNlogo.png'),
-        'defaultAvatar' => asset('img/defpfp.webp'),
-        'csrf' => csrf_token(),
-        'routes' => [
-            'home' => url('/'),
-            'dashboard' => url('/dashboard'),
-            'logout' => url('/api/logout'),
-            'updateProfile' => url('/api/settings/profile'),
-            'updatePassword' => url('/api/settings/password'),
-        ],
-        'stats' => [
-            'totalSaved' => round($totalSaved, 2),
-            'activeLoans' => round($activeLoans, 2),
-            'incomeLogged' => round($incomeLogged, 2),
-            'dynamicStats' => [],
-        ],
-        'flash' => [
-            'settingsSuccess' => session('settings_success'),
-            'openSettings' => session('open_settings', false),
-        ],
-        'errors' => session('errors') ? session('errors')->getMessages() : [],
-        'old' => session()->getOldInput(),
-    ]);
-});
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'logo' => asset('img/EPAWNlogo.png'),
+            'defaultAvatar' => asset('img/defpfp.webp'),
+            'csrf' => csrf_token(),
+            'routes' => [
+                'home' => url('/'),
+                'dashboard' => url('/dashboard'),
+                'logout' => url('/api/logout'),
+                'updateProfile' => url('/api/settings/profile'),
+                'updatePassword' => url('/api/settings/password'),
+            ],
+            'stats' => [
+                'totalSaved' => round($totalSaved, 2),
+                'activeLoans' => round($activeLoans, 2),
+                'incomeLogged' => round($incomeLogged, 2),
+                'dynamicStats' => [],
+            ],
+            'flash' => [
+                'settingsSuccess' => session('settings_success'),
+                'openSettings' => session('open_settings', false),
+            ],
+            'errors' => session('errors') ? session('errors')->getMessages() : [],
+            'old' => session()->getOldInput(),
+        ]);
+    });
+
     Route::get('dashboard-data', [DashboardController::class, 'index']);
     Route::get('dashboard-cards', [DashboardCardController::class, 'index']);
     Route::post('dashboard-cards', [DashboardCardController::class, 'store']);
@@ -92,3 +96,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('budget-plans/{plan}/items/{item}', [BudgetPlanController::class, 'updateItem']);
     Route::delete('budget-plans/{plan}/items/{item}', [BudgetPlanController::class, 'destroyItem']);
 });
+

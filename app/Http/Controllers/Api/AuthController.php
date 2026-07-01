@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\VerificationCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -286,5 +289,176 @@ class AuthController extends Controller
             'message' => 'Logged out successfully.',
             'redirect' => url('/'),
         ]);
+    }
+
+    public function sendVerificationCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $email = $request->email;
+
+        if (User::where('email', $email)->exists()) {
+            return response()->json(['success' => false, 'message' => 'Email already registered'], 400);
+        }
+
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        VerificationCode::where('email', $email)->where('used', false)->delete();
+
+        VerificationCode::create([
+            'email' => $email,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(15),
+        ]);
+
+        try {
+            $logoUrl = config('app.url') . '/img/EPAWNlogo.png';
+            
+            $html = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="background: linear-gradient(135deg, #dc2626 0%, #ffffff 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+                        <img src="' . $logoUrl . '" alt="Epawn" style="height: 60px; margin: 0 auto;">
+                        <p style="color: #333; margin: 15px 0 0; font-size: 16px;">Email Verification</p>
+                    </div>
+                    <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
+                        <p style="color: #333; font-size: 16px; line-height: 1.6;">Hello,</p>
+                        <p style="color: #333; font-size: 16px; line-height: 1.6;">Thank you for registering with Epawn. Please use the verification code below to complete your registration:</p>
+                        <div style="background: white; border: 2px dashed #dc2626; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                            <span style="font-size: 36px; font-weight: bold; color: #dc2626; letter-spacing: 5px;">' . $code . '</span>
+                        </div>
+                        <p style="color: #666; font-size: 14px; line-height: 1.6;">This code will expire in <strong>15 minutes</strong>.</p>
+                        <p style="color: #666; font-size: 14px; line-height: 1.6;">If you did not request this code, please ignore this email.</p>
+                        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+                        <p style="color: #999; font-size: 12px; text-align: center; margin: 0;">© 2026 Epawn. All rights reserved.</p>
+                    </div>
+                </div>';
+            
+            Mail::html(
+                $html,
+                function ($message) use ($email) {
+                    $message->to($email)->subject('Epawn - Email Verification Code');
+                }
+            );
+
+            Log::info("Verification code sent to: {$email}");
+            return response()->json(['success' => true, 'message' => 'Verification code sent to your email']);
+        } catch (\Exception $e) {
+            Log::error("Failed to send email: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to send verification code. Please try again.'], 500);
+        }
+    }
+
+    public function registerWithCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'code' => 'required|string|size:6',
+            'username' => 'required|string|unique:users,username',
+            'password' => 'required|string|min:6',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'middle_initial' => 'nullable|string|max:10',
+            'suffix' => 'nullable|string|max:20',
+        ]);
+
+        $email = $request->email;
+        $code = $request->code;
+
+        $verificationCode = VerificationCode::where('email', $email)
+            ->where('code', $code)
+            ->where('expires_at', '>', now())
+            ->where('used', false)
+            ->first();
+
+        if (!$verificationCode) {
+            return response()->json(['success' => false, 'message' => 'Invalid or expired verification code'], 400);
+        }
+
+        $verificationCode->update(['used' => true]);
+
+        try {
+            $user = User::create([
+                'username' => $request->username,
+                'email' => $email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            Profile::create([
+                'user_id' => $user->id,
+                'first_name' => $request->first_name,
+                'middle_initial' => $request->middle_initial,
+                'last_name' => $request->last_name,
+                'suffix' => $request->suffix,
+                'fullname' => trim($request->first_name . ' ' . ($request->middle_initial ? $request->middle_initial . ' ' : '') . $request->last_name . ' ' . ($request->suffix ?: '')),
+            ]);
+
+            ActivityLog::log($user->id, 'register', null, $request);
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            Log::info("User registered with email verification: {$email}");
+            return response()->json(['success' => true, 'message' => 'Registration successful', 'user' => $user->load('profile'), 'token' => $token]);
+        } catch (\Exception $e) {
+            Log::error("Registration failed: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Registration failed. Please try again.'], 500);
+        }
+    }
+
+    public function resendCode(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $email = $request->email;
+
+        if (User::where('email', $email)->exists()) {
+            return response()->json(['success' => false, 'message' => 'Email already registered'], 400);
+        }
+
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        VerificationCode::where('email', $email)->where('used', false)->delete();
+
+        VerificationCode::create([
+            'email' => $email,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(15),
+        ]);
+
+        try {
+            $logoUrl = config('app.url') . '/img/EPAWNlogo.png';
+            
+            $html = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="background: linear-gradient(135deg, #dc2626 0%, #ffffff 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+                        <img src="' . $logoUrl . '" alt="Epawn" style="height: 60px; margin: 0 auto;">
+                        <p style="color: #333; margin: 15px 0 0; font-size: 16px;">Email Verification</p>
+                    </div>
+                    <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
+                        <p style="color: #333; font-size: 16px; line-height: 1.6;">Hello,</p>
+                        <p style="color: #333; font-size: 16px; line-height: 1.6;">Please use the verification code below to complete your registration:</p>
+                        <div style="background: white; border: 2px dashed #dc2626; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
+                            <span style="font-size: 36px; font-weight: bold; color: #dc2626; letter-spacing: 5px;">' . $code . '</span>
+                        </div>
+                        <p style="color: #666; font-size: 14px; line-height: 1.6;">This code will expire in <strong>15 minutes</strong>.</p>
+                        <p style="color: #666; font-size: 14px; line-height: 1.6;">If you did not request this code, please ignore this email.</p>
+                        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+                        <p style="color: #999; font-size: 12px; text-align: center; margin: 0;">© 2026 Epawn. All rights reserved.</p>
+                    </div>
+                </div>';
+            
+            Mail::html(
+                $html,
+                function ($message) use ($email) {
+                    $message->to($email)->subject('Epawn - Email Verification Code');
+                }
+            );
+
+            Log::info("Verification code resent to: {$email}");
+            return response()->json(['success' => true, 'message' => 'Verification code resent to your email']);
+        } catch (\Exception $e) {
+            Log::error("Failed to resend email: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to send verification code. Please try again.'], 500);
+        }
     }
 }

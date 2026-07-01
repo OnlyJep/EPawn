@@ -78,6 +78,25 @@ export async function checkEmail(email) {
     return data;
 }
 
+export async function sendVerificationCode(email) {
+    await ensureCsrf();
+    const { data } = await axios.post(`${API_BASE}/send-verification-code`, { email });
+    return data;
+}
+
+export async function registerWithCode(payload) {
+    await ensureCsrf();
+    const { data } = await axios.post(`${API_BASE}/register-with-code`, payload);
+    setEpawn({ user: data.user, token: data.token });
+    return data;
+}
+
+export async function resendCode(email) {
+    await ensureCsrf();
+    const { data } = await axios.post(`${API_BASE}/resend-code`, { email });
+    return data;
+}
+
 export async function logout() {
     await ensureCsrf();
     const { data } = await axios.post(`${API_BASE}/logout`);

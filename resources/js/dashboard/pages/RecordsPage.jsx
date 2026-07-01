@@ -235,11 +235,13 @@ export default function RecordsPage({
 
     const openEditModal = (row) => {
         setEditingRow(row);
-        
+
         const dateStr = row.date || '';
-        const parts = dateStr.split(' ');
+        // Handle ISO format dates (2026-07-01T00:00:00.000000Z)
+        const dateOnly = dateStr.includes('T') ? dateStr.split('T')[0] : dateStr.split(' ')[0];
+        const parts = dateOnly.split(' ');
         setDate(parts[0] || new Date().toISOString().split('T')[0]);
-        
+
         const now = new Date();
         const defaultTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
         setTime(parts[1] || defaultTime);
@@ -282,13 +284,17 @@ export default function RecordsPage({
 
         const combinedDate = time ? `${date} ${time}` : date;
 
+        // Ensure date is in yyyy-MM-dd format (not ISO format)
+        const formattedDate = date.includes('T') ? date.split('T')[0] : date;
+        const finalDate = time ? `${formattedDate} ${time}` : formattedDate;
+
         const payload = {
             account_id: accountNameToId[account] || null,
             category_id: categoryNameToId[category] || null,
             type: type.toLowerCase(),
             amount: amtVal,
             description,
-            date: combinedDate,
+            date: finalDate,
         };
 
         try {
