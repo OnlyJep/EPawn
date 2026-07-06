@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class BudgetPlan extends Model
 {
     protected $fillable = [
-        'user_id', 'name', 'budget', 'year', 'month', 'day',
+        'user_id', 'name', 'budget', 'year', 'month', 'day', 'box_color', 'text_color',
     ];
 
     protected $casts = [

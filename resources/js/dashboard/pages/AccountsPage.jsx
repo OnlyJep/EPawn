@@ -560,6 +560,8 @@ export default function AccountsPage({
                                                 const day = date.getDate();
                                                 const isExpense = (tx.type || '').toLowerCase().includes('expense');
                                                 const isTransfer = (tx.type || '').toLowerCase().includes('transfer');
+                                                const isTransferSource = isTransfer && (tx.is_source === true || tx.is_source === 1);
+                                                const isTransferDest = isTransfer && (tx.is_source === false || tx.is_source === 0);
                                                 return (
                                                     <div key={tx.id} style={{
                                                         padding: '0.75rem 0',
@@ -579,18 +581,18 @@ export default function AccountsPage({
                                                         
                                                         <div style={{ flex: 1 }}>
                                                             <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--gray-900)' }}>
-                                                                {tx.description || 'No description'}
+                                                                {isTransferSource ? `Transferred to ${tx.to_account?.name || 'another account'}` : (isTransferDest ? `Transferred from ${tx.to_account?.name || 'another account'}` : (tx.description || 'No description'))}
                                                             </div>
                                                             <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>
-                                                                {tx.category?.name || 'General'}
+                                                                {isTransfer ? 'Transfer' : (tx.category?.name || 'General')}
                                                             </div>
                                                         </div>
                                                         
                                                         <div style={{
                                                             fontWeight: 800,
-                                                            color: isTransfer ? 'var(--gray-900)' : (isExpense ? 'var(--red)' : 'var(--gray-900)')
+                                                            color: isTransferSource ? 'var(--red)' : (isTransferDest ? 'var(--gray-900)' : (isExpense ? 'var(--red)' : 'var(--gray-900)'))
                                                         }}>
-                                                            {isTransfer ? '' : (isExpense ? '-' : '+')}{formatCurrency(tx.amount || 0)}
+                                                            {isTransferSource ? '-' : (isTransferDest ? '+' : (isExpense ? '-' : '+'))}{formatCurrency(tx.amount || 0)}
                                                         </div>
                                                     </div>
                                                 );

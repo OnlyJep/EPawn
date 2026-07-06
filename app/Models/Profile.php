@@ -15,6 +15,7 @@ class Profile extends Model
         'last_name',
         'suffix',
         'fullname',
+        'avatar',
         'archived_at',
     ];
 

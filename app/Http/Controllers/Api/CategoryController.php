@@ -26,12 +26,14 @@ class CategoryController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('categories', 'name')->where('user_id', $request->user()->id)],
             'type' => 'required|in:income,expense',
+            'icon' => 'nullable|string|max:255',
         ]);
 
         $category = Category::create([
             'user_id' => $request->user()->id,
             'name' => $request->name,
             'type' => $request->type,
+            'icon' => $request->icon,
             'sort_order' => Category::where('user_id', $request->user()->id)->max('sort_order') + 1,
         ]);
 
@@ -49,9 +51,10 @@ class CategoryController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255', Rule::unique('categories', 'name')->where('user_id', $request->user()->id)->ignore($category->id)],
             'type' => 'required|in:income,expense',
+            'icon' => 'nullable|string|max:255',
         ]);
 
-        $category->update($request->only('name', 'type'));
+        $category->update($request->only('name', 'type', 'icon'));
 
         ActivityLog::log($request->user()->id, 'update_category', ['category_id' => $category->id, 'name' => $category->name], $request);
 

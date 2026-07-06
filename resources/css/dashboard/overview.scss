@@ -124,6 +124,112 @@
         top: 0.75rem;
         right: 0.75rem;
     }
+
+    .settings-avatar-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .settings-avatar-wrapper {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 1rem;
+        position: relative;
+    }
+
+    .settings-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .settings-avatar-upload {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: var(--red);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .settings-avatar-edit-icon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        background: var(--red);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 3px solid var(--white);
+    }
+
+    .settings-avatar-edit-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+@media (min-width: 768px) {
+    .settings-avatar-section {
+        margin-bottom: 2rem;
+    }
+
+    .settings-avatar-wrapper {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 1.5rem;
+        position: relative;
+    }
+
+    .settings-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .settings-avatar-upload {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: var(--red);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .settings-avatar-edit-icon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        background: var(--red);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 3px solid var(--white);
+    }
+
+    .settings-avatar-edit-icon svg {
+        width: 20px;
+        height: 20px;
+    }
 }
 
 .overview-card--sheets {

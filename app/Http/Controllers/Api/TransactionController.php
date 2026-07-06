@@ -16,7 +16,7 @@ class TransactionController extends Controller
     {
         try {
             $transactions = Transaction::where('user_id', $request->user()->id)
-                ->with('account:id,name', 'category:id,name')
+                ->with(['account:id,name', 'category:id,name', 'toAccount:id,name'])
                 ->orderBy('date', 'desc')
                 ->orderBy('id', 'desc')
                 ->get();
@@ -33,6 +33,7 @@ class TransactionController extends Controller
         try {
             $request->validate([
                 'account_id' => 'nullable|exists:accounts,id',
+                'to_account_id' => 'nullable|exists:accounts,id',
                 'category_id' => 'nullable|exists:categories,id',
                 'type' => 'required|in:income,expense,transfer',
                 'amount' => 'required|numeric|min:0',
@@ -48,6 +49,57 @@ class TransactionController extends Controller
                 $dateOnly = explode(' ', $dateValue)[0];
             }
 
+            // For transfers, create two transactions
+            if ($request->type === 'transfer') {
+                $fromAccountId = $request->account_id;
+                $toAccountId = $request->to_account_id;
+                
+                if (!$fromAccountId || !$toAccountId) {
+                    return response()->json(['success' => false, 'message' => 'Both source and destination accounts are required for transfers.'], 422);
+                }
+
+                if ($fromAccountId == $toAccountId) {
+                    return response()->json(['success' => false, 'message' => 'Cannot transfer to the same account.'], 422);
+                }
+
+                // Create transaction for source account (expense)
+                $fromTransaction = Transaction::create([
+                    'user_id' => $request->user()->id,
+                    'account_id' => $fromAccountId,
+                    'to_account_id' => $toAccountId,
+                    'category_id' => $request->category_id,
+                    'type' => 'transfer',
+                    'amount' => $request->amount,
+                    'description' => $request->description,
+                    'date' => $dateOnly,
+                    'is_source' => true, // Mark as source transaction
+                ]);
+
+                // Create transaction for destination account (income)
+                $toTransaction = Transaction::create([
+                    'user_id' => $request->user()->id,
+                    'account_id' => $toAccountId,
+                    'to_account_id' => $fromAccountId,
+                    'category_id' => $request->category_id,
+                    'type' => 'transfer',
+                    'amount' => $request->amount,
+                    'description' => $request->description,
+                    'date' => $dateOnly,
+                    'is_source' => false, // Mark as destination transaction
+                ]);
+
+                ActivityLog::log($request->user()->id, 'create_transfer', ['transaction_id' => $fromTransaction->id, 'amount' => $fromTransaction->amount], $request);
+
+                try {
+                    $this->recalculateBalance($request->user()->id);
+                } catch (\Exception $e) {
+                    Log::error('recalculateBalance failed: ' . $e->getMessage());
+                }
+
+                return response()->json(['success' => true, 'transaction' => $fromTransaction->load('account:id,name', 'category:id,name')]);
+            }
+
+            // Regular income/expense transaction
             $transaction = Transaction::create([
                 'user_id' => $request->user()->id,
                 'account_id' => $request->account_id,
@@ -146,15 +198,41 @@ class TransactionController extends Controller
         }
     }
 
-    protected function recalculateBalance($userId)
+    public function recalculateBalance($userId)
     {
         $accounts = Account::where('user_id', $userId)->get();
         foreach ($accounts as $account) {
             $balance = (float)$account->initial_balance;
-            $incomes = Transaction::where('user_id', $userId)->where('account_id', $account->id)->where('type', 'income')->sum('amount');
-            $expenses = Transaction::where('user_id', $userId)->where('account_id', $account->id)->where('type', 'expense')->sum('amount');
-            $transferOuts = Transaction::where('user_id', $userId)->where('account_id', $account->id)->where('type', 'transfer')->sum('amount');
-            $balance += $incomes - $expenses - $transferOuts;
+            
+            // Income adds to balance
+            $incomes = Transaction::where('user_id', $userId)
+                ->where('account_id', $account->id)
+                ->where('type', 'income')
+                ->sum('amount');
+            
+            // Expense subtracts from balance
+            $expenses = Transaction::where('user_id', $userId)
+                ->where('account_id', $account->id)
+                ->where('type', 'expense')
+                ->sum('amount');
+            
+            // Transfers OUT (this account is the source) subtract from balance
+            // Only count source transactions (is_source = true)
+            $transferOuts = Transaction::where('user_id', $userId)
+                ->where('account_id', $account->id)
+                ->where('type', 'transfer')
+                ->where('is_source', true)
+                ->sum('amount');
+            
+            // Transfers IN (this account is the destination) add to balance
+            // Only count destination transactions (is_source = false)
+            $transferIns = Transaction::where('user_id', $userId)
+                ->where('account_id', $account->id)
+                ->where('type', 'transfer')
+                ->where('is_source', false)
+                ->sum('amount');
+            
+            $balance += $incomes - $expenses - $transferOuts + $transferIns;
             $account->update(['balance' => max($balance, 0)]);
         }
     }

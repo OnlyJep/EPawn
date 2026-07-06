@@ -125,6 +125,17 @@ export async function updateProfile(payload) {
     return data;
 }
 
+export async function updateProfileWithAvatar(formData) {
+    await ensureCsrf();
+    const { data } = await axios.post(`${API_BASE}/settings/profile`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    setEpawn({ user: data.user });
+
+    return data;
+}
+
 export async function updatePassword(payload) {
     await ensureCsrf();
     const { data } = await axios.post(`${API_BASE}/settings/password`, payload);

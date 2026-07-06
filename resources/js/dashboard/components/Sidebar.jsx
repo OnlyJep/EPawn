@@ -19,6 +19,8 @@ function NavIcon({ type }) {
 
 export default function Sidebar({
     logo,
+    user,
+    defaultAvatar,
     activeNav,
     onNavChange,
     routes,

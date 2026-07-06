@@ -32,6 +32,8 @@ class BudgetPlanController extends Controller
             'year' => 'required|integer',
             'month' => 'required|integer|min:1|max:12',
             'day' => 'sometimes|integer|min:1|max:31',
+            'box_color' => 'nullable|string|max:20',
+            'text_color' => 'nullable|string|max:20',
         ]);
 
         $totalBalance = Account::where('user_id', $request->user()->id)->sum('balance');
@@ -50,6 +52,8 @@ class BudgetPlanController extends Controller
             'year' => $validated['year'],
             'month' => $validated['month'],
             'day' => $validated['day'] ?? 1,
+            'box_color' => $validated['box_color'] ?? null,
+            'text_color' => $validated['text_color'] ?? null,
         ]);
 
         ActivityLog::log($request->user()->id, 'create_budget_plan', ['plan_id' => $plan->id, 'name' => $plan->name], $request);
@@ -85,6 +89,8 @@ class BudgetPlanController extends Controller
             'year' => 'sometimes|integer',
             'month' => 'sometimes|integer|min:1|max:12',
             'day' => 'sometimes|integer|min:1|max:31',
+            'box_color' => 'nullable|string|max:20',
+            'text_color' => 'nullable|string|max:20',
         ]);
 
         if (isset($validated['budget'])) {

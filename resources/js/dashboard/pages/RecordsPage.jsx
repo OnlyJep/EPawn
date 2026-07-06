@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { message, Modal } from 'antd';
+import ClockPicker from '../components/ClockPicker';
 import {
     fetchTransactions,
     createTransaction,
@@ -11,6 +12,13 @@ import {
     createAccount,
 } from '../../services/epawnApi';
 import { formatCurrency } from '../../constants/sheetDefaults';
+
+const formatNumberWithCommas = (num) => {
+    if (num === null || num === undefined) return '';
+    const parts = num.toString().split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.join('.');
+};
 
 const evaluateExpr = (expr) => {
     try {
@@ -30,7 +38,6 @@ const formatFriendlyDateTime = (dateTimeStr) => {
     try {
         const parts = dateTimeStr.split(' ');
         const datePart = parts[0];
-        const timePart = parts[1] || '00:00';
         
         const dateParts = datePart.split('-');
         if (dateParts.length < 3) return dateTimeStr;
@@ -39,22 +46,13 @@ const formatFriendlyDateTime = (dateTimeStr) => {
         const monthIndex = parseInt(dateParts[1]) - 1;
         const day = parseInt(dateParts[2]);
 
-        const timeParts = timePart.split(':');
-        const hour = parseInt(timeParts[0]);
-        const minute = parseInt(timeParts[1] || '00');
-
         const months = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
         const month = months[monthIndex];
 
-        let displayHour = hour % 12;
-        displayHour = displayHour === 0 ? 12 : displayHour;
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const displayMinute = String(minute).padStart(2, '0');
-
-        return `${month} ${day}, ${year} ${displayHour}:${displayMinute}${ampm}`;
+        return `${month} ${day}, ${year}`;
     } catch (e) {
         return dateTimeStr;
     }
@@ -111,6 +109,12 @@ export default function RecordsPage({
     const [activeYear, setActiveYear] = useState(() => new Date().getFullYear());
     const [activePeriod, setActivePeriod] = useState('Daily');
     const [selectedDay, setSelectedDay] = useState(() => new Date().getDate());
+
+    const [datePickerOpen, setDatePickerOpen] = useState(false);
+    const [pickerYear, setPickerYear] = useState(() => new Date().getFullYear());
+    const [pickerMonth, setPickerMonth] = useState(() => new Date().getMonth());
+    const [pickerDay, setPickerDay] = useState(() => new Date().getDate());
+    const [pickerView, setPickerView] = useState('day'); // 'day', 'month', or 'year'
 
     // Build lookup maps
     const categoryNameToId = {};
@@ -519,7 +523,11 @@ export default function RecordsPage({
 
             if (month !== activeMonth || year !== activeYear) return false;
 
-            if (activePeriod === 'Daily') return true;
+            if (activePeriod === 'Daily') {
+                // Filter by specific day if selectedDay is set
+                if (selectedDay && day !== selectedDay) return false;
+                return true;
+            }
             if (activePeriod === '1st-15th') return day >= 1 && day <= 15;
             if (activePeriod === '16th-End') return day >= 16;
             if (activePeriod === 'Weekly') return true;
@@ -545,7 +553,9 @@ export default function RecordsPage({
             description: row.description || 'No description',
             type: row.type === 'income' ? 'Income' : row.type === 'expense' ? 'Expense' : 'Transfer',
             category: row.category?.name || 'General',
-            account: row.account?.name || 'Unknown',
+            account: row.account,
+            to_account: row.to_account,
+            is_source: row.is_source,
             amount: parseFloat(row.amount) || 0,
             isBudget: false
         }))
@@ -580,15 +590,32 @@ export default function RecordsPage({
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem', justifyContent: 'center' }}>
                 <button
                     type="button"
-                    onClick={() => setActiveYear(activeYear - 1)}
+                    onClick={() => {
+                        const newDate = new Date(activeYear, activeMonth, selectedDay);
+                        newDate.setMonth(newDate.getMonth() - 1);
+                        setActiveYear(newDate.getFullYear());
+                        setActiveMonth(newDate.getMonth());
+                        setSelectedDay(newDate.getDate());
+                    }}
                     style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}
                 >
                     &lsaquo;
                 </button>
-                <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--gray-800)' }}>{activeYear}</span>
+                <span 
+                    style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--gray-800)', cursor: 'pointer' }}
+                    onClick={() => setDatePickerOpen(true)}
+                >
+                    {selectedDay ? `${selectedDay}, ${months[activeMonth]} ${activeYear}` : `${months[activeMonth]} ${activeYear}`}
+                </span>
                 <button
                     type="button"
-                    onClick={() => setActiveYear(activeYear + 1)}
+                    onClick={() => {
+                        const newDate = new Date(activeYear, activeMonth, selectedDay);
+                        newDate.setMonth(newDate.getMonth() + 1);
+                        setActiveYear(newDate.getFullYear());
+                        setActiveMonth(newDate.getMonth());
+                        setSelectedDay(newDate.getDate());
+                    }}
                     style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}
                 >
                     &rsaquo;
@@ -818,6 +845,8 @@ export default function RecordsPage({
                                 {paginatedRows.map((row) => {
                                 const isExpense = (row.type || '').toLowerCase().includes('expense');
                                 const isTransfer = (row.type || '').toLowerCase().includes('transfer');
+                                const isTransferSource = isTransfer && (row.is_source === true || row.is_source === 1 || row.is_source === '1');
+                                const isTransferDest = isTransfer && (row.is_source === false || row.is_source === 0 || row.is_source === '0');
                                 return (
                                     <tr key={row.id} style={{ borderBottom: '1px solid var(--gray-200)', opacity: row.isBudget ? 0.8 : 1 }}>
                                         <td style={{ padding: '0.75rem 1rem' }}>
@@ -900,22 +929,26 @@ export default function RecordsPage({
                                             </span>
                                         </td>
                                         <td style={{ padding: '0.75rem 1rem' }}>
-                                            {isTransfer ? (
-                                                <div style={{ fontSize: '0.85rem', color: 'var(--gray-600)' }}>
-                                                    From <strong>{row.account}</strong> to <strong>{row.category}</strong>
-                                                </div>
+                                        {isTransfer ? (
+                                            <div style={{ fontSize: '0.85rem', color: 'var(--gray-600)' }}>
+                                                {isTransferSource ? (
+                                                    <span style={{ color: 'var(--red)' }}>Transferred to <strong>{row.to_account?.name || 'another account'}</strong></span>
+                                                ) : (
+                                                    <span style={{ color: 'var(--green, #10b981)' }}>Transferred from <strong>{row.to_account?.name || 'another account'}</strong></span>
+                                                )}
+                                            </div>
                                             ) : (
                                                 <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                                     <span style={{ padding: '0.25rem 0.5rem', borderRadius: '4px', background: 'var(--gray-100)', fontSize: '0.8rem', color: 'var(--gray-600)' }}>
-                                                        {row.category}
+                                                        {row.category?.name || row.category}
                                                     </span>
                                                     <span style={{ color: 'var(--gray-400)' }}>in</span>
-                                                    <strong style={{ color: 'var(--gray-700)', fontSize: '0.85rem' }}>{row.account}</strong>
+                                                    <strong style={{ color: 'var(--gray-700)', fontSize: '0.85rem' }}>{row.account?.name || row.account}</strong>
                                                 </div>
                                             )}
                                         </td>
-                                        <td style={{ padding: '0.75rem 1rem', fontWeight: 800, color: isTransfer ? 'var(--gray-900)' : (isExpense ? 'var(--red)' : 'var(--gray-900)') }}>
-                                            {isTransfer ? '' : (isExpense ? '-' : '+')}{formatCurrency(row.amount)}
+                                        <td style={{ padding: '0.75rem 1rem', fontWeight: 800, color: isTransferSource ? 'var(--red)' : (isTransferDest ? 'var(--green, #10b981)' : (isExpense ? 'var(--red)' : 'var(--gray-900)')) }}>
+                                            {isTransferSource ? '-' : (isTransferDest ? '+' : (isExpense ? '-' : '+'))}{formatCurrency(row.amount)}
                                         </td>
                                     </tr>
                                 );
@@ -947,7 +980,7 @@ export default function RecordsPage({
                             type="submit" 
                             style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                         >
-                            ✓ SAVE
+                            SAVE
                         </button>
                     </div>
 
@@ -991,20 +1024,6 @@ export default function RecordsPage({
                                         userSelect: 'none'
                                     }}
                                 >
-                                    {isSelected && (
-                                        <span style={{
-                                            width: '18px',
-                                            height: '18px',
-                                            borderRadius: '50%',
-                                            background: 'var(--red)',
-                                            color: '#ffffff',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: '11px',
-                                            fontWeight: 'bold'
-                                        }}>✓</span>
-                                    )}
                                     {t.toUpperCase()}
                                 </div>
                             );
@@ -1141,7 +1160,7 @@ export default function RecordsPage({
                             justifyContent: 'space-between'
                         }}>
                             <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>
-                                {calcExpression}
+                                {formatNumberWithCommas(calcExpression)}
                             </div>
                             <button
                                 type="button"
@@ -1178,7 +1197,7 @@ export default function RecordsPage({
                                 marginTop: '0.5rem',
                                 textAlign: 'right'
                             }}>
-                                = {calcResult}
+                                = {formatNumberWithCommas(calcResult)}
                             </div>
                         )}
                     </div>
@@ -1226,10 +1245,9 @@ export default function RecordsPage({
                             />
                         </div>
                         <div style={{ position: 'relative' }}>
-                            <input 
-                                type="time" 
+                            <ClockPicker 
                                 value={time} 
-                                onChange={(e) => setTime(e.target.value)} 
+                                onChange={setTime}
                                 style={{ 
                                     border: 'none', 
                                     background: 'transparent', 
@@ -1389,6 +1407,191 @@ export default function RecordsPage({
                     >
                         + Create New Category
                     </button>
+                </div>
+            </Modal>
+
+            <Modal
+                title="Select Date"
+                open={datePickerOpen}
+                onCancel={() => setDatePickerOpen(false)}
+                footer={null}
+                styles={{ body: { padding: '1rem' } }}
+                classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (pickerView === 'day') {
+                                    const newDate = new Date(pickerYear, pickerMonth - 1, 1);
+                                    setPickerYear(newDate.getFullYear());
+                                    setPickerMonth(newDate.getMonth());
+                                } else if (pickerView === 'month') {
+                                    setPickerYear(pickerYear - 1);
+                                } else if (pickerView === 'year') {
+                                    setPickerYear(pickerYear - 12);
+                                }
+                            }}
+                            style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}
+                        >
+                            &lsaquo;
+                        </button>
+                        <span 
+                            style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--gray-800)', cursor: 'pointer' }}
+                            onClick={() => {
+                                if (pickerView === 'day') setPickerView('month');
+                                else if (pickerView === 'month') setPickerView('year');
+                            }}
+                        >
+                            {pickerView === 'day' ? `${months[pickerMonth]} ${pickerYear}` : pickerView === 'month' ? pickerYear : `${Math.floor(pickerYear / 10) * 10}s`}
+                        </span>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (pickerView === 'day') {
+                                    const newDate = new Date(pickerYear, pickerMonth + 1, 1);
+                                    setPickerYear(newDate.getFullYear());
+                                    setPickerMonth(newDate.getMonth());
+                                } else if (pickerView === 'month') {
+                                    setPickerYear(pickerYear + 1);
+                                } else if (pickerView === 'year') {
+                                    setPickerYear(pickerYear + 12);
+                                }
+                            }}
+                            style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}
+                        >
+                            &rsaquo;
+                        </button>
+                    </div>
+                    
+                    {pickerView === 'day' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.25rem', textAlign: 'center' }}>
+                            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                                <div key={day} style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--gray-500)', padding: '0.25rem' }}>{day}</div>
+                            ))}
+                            {Array.from({ length: new Date(pickerYear, pickerMonth, 0).getDay() }, (_, i) => (
+                                <div key={`empty-${i}`} />
+                            ))}
+                            {Array.from({ length: new Date(pickerYear, pickerMonth + 1, 0).getDate() }, (_, i) => i + 1).map(day => {
+                                const isSelected = day === pickerDay;
+                                const isToday = day === new Date().getDate() && pickerMonth === new Date().getMonth() && pickerYear === new Date().getFullYear();
+                                return (
+                                    <button
+                                        key={day}
+                                        type="button"
+                                        onClick={() => setPickerDay(day)}
+                                        style={{
+                                            padding: '0.5rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : isToday ? 'var(--red-light)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {day}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    {pickerView === 'month' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                            {months.map((month, index) => {
+                                const isSelected = index === pickerMonth;
+                                return (
+                                    <button
+                                        key={month}
+                                        type="button"
+                                        onClick={() => {
+                                            setPickerMonth(index);
+                                            setPickerView('day');
+                                        }}
+                                        style={{
+                                            padding: '1rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {month}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    {pickerView === 'year' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                            {Array.from({ length: 12 }, (_, i) => {
+                                const year = Math.floor(pickerYear / 10) * 10 + i;
+                                const isSelected = year === pickerYear;
+                                return (
+                                    <button
+                                        key={year}
+                                        type="button"
+                                        onClick={() => {
+                                            setPickerYear(year);
+                                            setPickerView('month');
+                                        }}
+                                        style={{
+                                            padding: '1rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {year}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    <div style={{ padding: '0.75rem', background: 'var(--gray-100)', borderRadius: '8px', textAlign: 'center', fontWeight: 700, color: 'var(--red)' }}>
+                        {pickerDay}, {months[pickerMonth]} {pickerYear}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                        <button 
+                            type="button" 
+                            className="btn btn-outline" 
+                            onClick={() => {
+                                setDatePickerOpen(false);
+                                setPickerView('day');
+                            }}
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="button" 
+                            className="btn btn-primary" 
+                            style={{ background: 'var(--red)', borderColor: 'var(--red)' }}
+                            onClick={() => {
+                                setActiveYear(pickerYear);
+                                setActiveMonth(pickerMonth);
+                                setSelectedDay(pickerDay);
+                                setDatePickerOpen(false);
+                                setPickerView('day');
+                            }}
+                        >
+                            Confirm
+                        </button>
+                    </div>
                 </div>
             </Modal>
 

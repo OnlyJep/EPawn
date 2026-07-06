@@ -38321,6 +38321,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   updateCategory: () => (/* binding */ updateCategory),
 /* harmony export */   updatePassword: () => (/* binding */ updatePassword),
 /* harmony export */   updateProfile: () => (/* binding */ updateProfile),
+/* harmony export */   updateProfileWithAvatar: () => (/* binding */ updateProfileWithAvatar),
 /* harmony export */   updateTransaction: () => (/* binding */ updateTransaction)
 /* harmony export */ });
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -38640,11 +38641,11 @@ function _updateProfile() {
   }));
   return _updateProfile.apply(this, arguments);
 }
-function updatePassword(_x9) {
-  return _updatePassword.apply(this, arguments);
+function updateProfileWithAvatar(_x9) {
+  return _updateProfileWithAvatar.apply(this, arguments);
 }
-function _updatePassword() {
-  _updatePassword = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(payload) {
+function _updateProfileWithAvatar() {
+  _updateProfileWithAvatar = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee10(formData) {
     var _yield$axios$post8, data;
     return _regenerator().w(function (_context10) {
       while (1) switch (_context10.n) {
@@ -38653,21 +38654,28 @@ function _updatePassword() {
           return ensureCsrf();
         case 1:
           _context10.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/settings/password"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/settings/profile"), formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
         case 2:
           _yield$axios$post8 = _context10.v;
           data = _yield$axios$post8.data;
+          (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
+            user: data.user
+          });
           return _context10.a(2, data);
       }
     }, _callee10);
   }));
+  return _updateProfileWithAvatar.apply(this, arguments);
+}
+function updatePassword(_x0) {
   return _updatePassword.apply(this, arguments);
 }
-function resetPasswordSurvey(_x0) {
-  return _resetPasswordSurvey.apply(this, arguments);
-}
-function _resetPasswordSurvey() {
-  _resetPasswordSurvey = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11(payload) {
+function _updatePassword() {
+  _updatePassword = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee11(payload) {
     var _yield$axios$post9, data;
     return _regenerator().w(function (_context11) {
       while (1) switch (_context11.n) {
@@ -38676,7 +38684,7 @@ function _resetPasswordSurvey() {
           return ensureCsrf();
         case 1:
           _context11.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/forgot-password/reset"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/settings/password"), payload);
         case 2:
           _yield$axios$post9 = _context11.v;
           data = _yield$axios$post9.data;
@@ -38684,13 +38692,13 @@ function _resetPasswordSurvey() {
       }
     }, _callee11);
   }));
+  return _updatePassword.apply(this, arguments);
+}
+function resetPasswordSurvey(_x1) {
   return _resetPasswordSurvey.apply(this, arguments);
 }
-function deleteAccount(_x1) {
-  return _deleteAccount.apply(this, arguments);
-}
-function _deleteAccount() {
-  _deleteAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(payload) {
+function _resetPasswordSurvey() {
+  _resetPasswordSurvey = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee12(payload) {
     var _yield$axios$post0, data;
     return _regenerator().w(function (_context12) {
       while (1) switch (_context12.n) {
@@ -38699,23 +38707,22 @@ function _deleteAccount() {
           return ensureCsrf();
         case 1:
           _context12.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/user/delete"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/forgot-password/reset"), payload);
         case 2:
           _yield$axios$post0 = _context12.v;
           data = _yield$axios$post0.data;
-          (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.clearEpawn)();
           return _context12.a(2, data);
       }
     }, _callee12);
   }));
+  return _resetPasswordSurvey.apply(this, arguments);
+}
+function deleteAccount(_x10) {
   return _deleteAccount.apply(this, arguments);
 }
-function fetchBudgetPlans() {
-  return _fetchBudgetPlans.apply(this, arguments);
-}
-function _fetchBudgetPlans() {
-  _fetchBudgetPlans = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13() {
-    var _yield$axios$get4, data;
+function _deleteAccount() {
+  _deleteAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee13(payload) {
+    var _yield$axios$post1, data;
     return _regenerator().w(function (_context13) {
       while (1) switch (_context13.n) {
         case 0:
@@ -38723,22 +38730,23 @@ function _fetchBudgetPlans() {
           return ensureCsrf();
         case 1:
           _context13.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/budget-plans"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/user/delete"), payload);
         case 2:
-          _yield$axios$get4 = _context13.v;
-          data = _yield$axios$get4.data;
+          _yield$axios$post1 = _context13.v;
+          data = _yield$axios$post1.data;
+          (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.clearEpawn)();
           return _context13.a(2, data);
       }
     }, _callee13);
   }));
+  return _deleteAccount.apply(this, arguments);
+}
+function fetchBudgetPlans() {
   return _fetchBudgetPlans.apply(this, arguments);
 }
-function createBudgetPlan(_x10) {
-  return _createBudgetPlan.apply(this, arguments);
-}
-function _createBudgetPlan() {
-  _createBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14(payload) {
-    var _yield$axios$post1, data;
+function _fetchBudgetPlans() {
+  _fetchBudgetPlans = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee14() {
+    var _yield$axios$get4, data;
     return _regenerator().w(function (_context14) {
       while (1) switch (_context14.n) {
         case 0:
@@ -38746,22 +38754,22 @@ function _createBudgetPlan() {
           return ensureCsrf();
         case 1:
           _context14.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budget-plans"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/budget-plans"));
         case 2:
-          _yield$axios$post1 = _context14.v;
-          data = _yield$axios$post1.data;
+          _yield$axios$get4 = _context14.v;
+          data = _yield$axios$get4.data;
           return _context14.a(2, data);
       }
     }, _callee14);
   }));
+  return _fetchBudgetPlans.apply(this, arguments);
+}
+function createBudgetPlan(_x11) {
   return _createBudgetPlan.apply(this, arguments);
 }
-function updateBudgetPlan(_x11, _x12) {
-  return _updateBudgetPlan.apply(this, arguments);
-}
-function _updateBudgetPlan() {
-  _updateBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(id, payload) {
-    var _yield$axios$put, data;
+function _createBudgetPlan() {
+  _createBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee15(payload) {
+    var _yield$axios$post10, data;
     return _regenerator().w(function (_context15) {
       while (1) switch (_context15.n) {
         case 0:
@@ -38769,22 +38777,22 @@ function _updateBudgetPlan() {
           return ensureCsrf();
         case 1:
           _context15.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budget-plans/").concat(id), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budget-plans"), payload);
         case 2:
-          _yield$axios$put = _context15.v;
-          data = _yield$axios$put.data;
+          _yield$axios$post10 = _context15.v;
+          data = _yield$axios$post10.data;
           return _context15.a(2, data);
       }
     }, _callee15);
   }));
+  return _createBudgetPlan.apply(this, arguments);
+}
+function updateBudgetPlan(_x12, _x13) {
   return _updateBudgetPlan.apply(this, arguments);
 }
-function deleteBudgetPlan(_x13) {
-  return _deleteBudgetPlan.apply(this, arguments);
-}
-function _deleteBudgetPlan() {
-  _deleteBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(id) {
-    var _yield$axios$delete, data;
+function _updateBudgetPlan() {
+  _updateBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee16(id, payload) {
+    var _yield$axios$put, data;
     return _regenerator().w(function (_context16) {
       while (1) switch (_context16.n) {
         case 0:
@@ -38792,22 +38800,22 @@ function _deleteBudgetPlan() {
           return ensureCsrf();
         case 1:
           _context16.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budget-plans/").concat(id));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budget-plans/").concat(id), payload);
         case 2:
-          _yield$axios$delete = _context16.v;
-          data = _yield$axios$delete.data;
+          _yield$axios$put = _context16.v;
+          data = _yield$axios$put.data;
           return _context16.a(2, data);
       }
     }, _callee16);
   }));
+  return _updateBudgetPlan.apply(this, arguments);
+}
+function deleteBudgetPlan(_x14) {
   return _deleteBudgetPlan.apply(this, arguments);
 }
-function createBudgetPlanItem(_x14, _x15) {
-  return _createBudgetPlanItem.apply(this, arguments);
-}
-function _createBudgetPlanItem() {
-  _createBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17(planId, payload) {
-    var _yield$axios$post10, data;
+function _deleteBudgetPlan() {
+  _deleteBudgetPlan = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee17(id) {
+    var _yield$axios$delete, data;
     return _regenerator().w(function (_context17) {
       while (1) switch (_context17.n) {
         case 0:
@@ -38815,22 +38823,22 @@ function _createBudgetPlanItem() {
           return ensureCsrf();
         case 1:
           _context17.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budget-plans/").concat(planId, "/items"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budget-plans/").concat(id));
         case 2:
-          _yield$axios$post10 = _context17.v;
-          data = _yield$axios$post10.data;
+          _yield$axios$delete = _context17.v;
+          data = _yield$axios$delete.data;
           return _context17.a(2, data);
       }
     }, _callee17);
   }));
+  return _deleteBudgetPlan.apply(this, arguments);
+}
+function createBudgetPlanItem(_x15, _x16) {
   return _createBudgetPlanItem.apply(this, arguments);
 }
-function updateBudgetPlanItem(_x16, _x17, _x18) {
-  return _updateBudgetPlanItem.apply(this, arguments);
-}
-function _updateBudgetPlanItem() {
-  _updateBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18(planId, itemId, payload) {
-    var _yield$axios$put2, data;
+function _createBudgetPlanItem() {
+  _createBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee18(planId, payload) {
+    var _yield$axios$post11, data;
     return _regenerator().w(function (_context18) {
       while (1) switch (_context18.n) {
         case 0:
@@ -38838,22 +38846,22 @@ function _updateBudgetPlanItem() {
           return ensureCsrf();
         case 1:
           _context18.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budget-plans/").concat(planId, "/items/").concat(itemId), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budget-plans/").concat(planId, "/items"), payload);
         case 2:
-          _yield$axios$put2 = _context18.v;
-          data = _yield$axios$put2.data;
+          _yield$axios$post11 = _context18.v;
+          data = _yield$axios$post11.data;
           return _context18.a(2, data);
       }
     }, _callee18);
   }));
+  return _createBudgetPlanItem.apply(this, arguments);
+}
+function updateBudgetPlanItem(_x17, _x18, _x19) {
   return _updateBudgetPlanItem.apply(this, arguments);
 }
-function deleteBudgetPlanItem(_x19, _x20) {
-  return _deleteBudgetPlanItem.apply(this, arguments);
-}
-function _deleteBudgetPlanItem() {
-  _deleteBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19(planId, itemId) {
-    var _yield$axios$delete2, data;
+function _updateBudgetPlanItem() {
+  _updateBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee19(planId, itemId, payload) {
+    var _yield$axios$put2, data;
     return _regenerator().w(function (_context19) {
       while (1) switch (_context19.n) {
         case 0:
@@ -38861,22 +38869,22 @@ function _deleteBudgetPlanItem() {
           return ensureCsrf();
         case 1:
           _context19.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budget-plans/").concat(planId, "/items/").concat(itemId));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budget-plans/").concat(planId, "/items/").concat(itemId), payload);
         case 2:
-          _yield$axios$delete2 = _context19.v;
-          data = _yield$axios$delete2.data;
+          _yield$axios$put2 = _context19.v;
+          data = _yield$axios$put2.data;
           return _context19.a(2, data);
       }
     }, _callee19);
   }));
+  return _updateBudgetPlanItem.apply(this, arguments);
+}
+function deleteBudgetPlanItem(_x20, _x21) {
   return _deleteBudgetPlanItem.apply(this, arguments);
 }
-function fetchDashboardData() {
-  return _fetchDashboardData.apply(this, arguments);
-}
-function _fetchDashboardData() {
-  _fetchDashboardData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20() {
-    var _yield$axios$get5, data;
+function _deleteBudgetPlanItem() {
+  _deleteBudgetPlanItem = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee20(planId, itemId) {
+    var _yield$axios$delete2, data;
     return _regenerator().w(function (_context20) {
       while (1) switch (_context20.n) {
         case 0:
@@ -38884,22 +38892,22 @@ function _fetchDashboardData() {
           return ensureCsrf();
         case 1:
           _context20.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard-data"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budget-plans/").concat(planId, "/items/").concat(itemId));
         case 2:
-          _yield$axios$get5 = _context20.v;
-          data = _yield$axios$get5.data;
+          _yield$axios$delete2 = _context20.v;
+          data = _yield$axios$delete2.data;
           return _context20.a(2, data);
       }
     }, _callee20);
   }));
+  return _deleteBudgetPlanItem.apply(this, arguments);
+}
+function fetchDashboardData() {
   return _fetchDashboardData.apply(this, arguments);
 }
-function fetchCategories() {
-  return _fetchCategories.apply(this, arguments);
-}
-function _fetchCategories() {
-  _fetchCategories = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21() {
-    var _yield$axios$get6, data;
+function _fetchDashboardData() {
+  _fetchDashboardData = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee21() {
+    var _yield$axios$get5, data;
     return _regenerator().w(function (_context21) {
       while (1) switch (_context21.n) {
         case 0:
@@ -38907,22 +38915,22 @@ function _fetchCategories() {
           return ensureCsrf();
         case 1:
           _context21.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/categories"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/dashboard-data"));
         case 2:
-          _yield$axios$get6 = _context21.v;
-          data = _yield$axios$get6.data;
+          _yield$axios$get5 = _context21.v;
+          data = _yield$axios$get5.data;
           return _context21.a(2, data);
       }
     }, _callee21);
   }));
+  return _fetchDashboardData.apply(this, arguments);
+}
+function fetchCategories() {
   return _fetchCategories.apply(this, arguments);
 }
-function createCategory(_x21) {
-  return _createCategory.apply(this, arguments);
-}
-function _createCategory() {
-  _createCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22(payload) {
-    var _yield$axios$post11, data;
+function _fetchCategories() {
+  _fetchCategories = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee22() {
+    var _yield$axios$get6, data;
     return _regenerator().w(function (_context22) {
       while (1) switch (_context22.n) {
         case 0:
@@ -38930,22 +38938,22 @@ function _createCategory() {
           return ensureCsrf();
         case 1:
           _context22.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/categories"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/categories"));
         case 2:
-          _yield$axios$post11 = _context22.v;
-          data = _yield$axios$post11.data;
+          _yield$axios$get6 = _context22.v;
+          data = _yield$axios$get6.data;
           return _context22.a(2, data);
       }
     }, _callee22);
   }));
+  return _fetchCategories.apply(this, arguments);
+}
+function createCategory(_x22) {
   return _createCategory.apply(this, arguments);
 }
-function updateCategory(_x22, _x23) {
-  return _updateCategory.apply(this, arguments);
-}
-function _updateCategory() {
-  _updateCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23(id, payload) {
-    var _yield$axios$put3, data;
+function _createCategory() {
+  _createCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee23(payload) {
+    var _yield$axios$post12, data;
     return _regenerator().w(function (_context23) {
       while (1) switch (_context23.n) {
         case 0:
@@ -38953,22 +38961,22 @@ function _updateCategory() {
           return ensureCsrf();
         case 1:
           _context23.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/categories/").concat(id), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/categories"), payload);
         case 2:
-          _yield$axios$put3 = _context23.v;
-          data = _yield$axios$put3.data;
+          _yield$axios$post12 = _context23.v;
+          data = _yield$axios$post12.data;
           return _context23.a(2, data);
       }
     }, _callee23);
   }));
+  return _createCategory.apply(this, arguments);
+}
+function updateCategory(_x23, _x24) {
   return _updateCategory.apply(this, arguments);
 }
-function deleteCategory(_x24) {
-  return _deleteCategory.apply(this, arguments);
-}
-function _deleteCategory() {
-  _deleteCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(id) {
-    var _yield$axios$delete3, data;
+function _updateCategory() {
+  _updateCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee24(id, payload) {
+    var _yield$axios$put3, data;
     return _regenerator().w(function (_context24) {
       while (1) switch (_context24.n) {
         case 0:
@@ -38976,22 +38984,22 @@ function _deleteCategory() {
           return ensureCsrf();
         case 1:
           _context24.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/categories/").concat(id));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/categories/").concat(id), payload);
         case 2:
-          _yield$axios$delete3 = _context24.v;
-          data = _yield$axios$delete3.data;
+          _yield$axios$put3 = _context24.v;
+          data = _yield$axios$put3.data;
           return _context24.a(2, data);
       }
     }, _callee24);
   }));
+  return _updateCategory.apply(this, arguments);
+}
+function deleteCategory(_x25) {
   return _deleteCategory.apply(this, arguments);
 }
-function fetchAccounts() {
-  return _fetchAccounts.apply(this, arguments);
-}
-function _fetchAccounts() {
-  _fetchAccounts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25() {
-    var _yield$axios$get7, data;
+function _deleteCategory() {
+  _deleteCategory = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee25(id) {
+    var _yield$axios$delete3, data;
     return _regenerator().w(function (_context25) {
       while (1) switch (_context25.n) {
         case 0:
@@ -38999,22 +39007,22 @@ function _fetchAccounts() {
           return ensureCsrf();
         case 1:
           _context25.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/accounts"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/categories/").concat(id));
         case 2:
-          _yield$axios$get7 = _context25.v;
-          data = _yield$axios$get7.data;
+          _yield$axios$delete3 = _context25.v;
+          data = _yield$axios$delete3.data;
           return _context25.a(2, data);
       }
     }, _callee25);
   }));
+  return _deleteCategory.apply(this, arguments);
+}
+function fetchAccounts() {
   return _fetchAccounts.apply(this, arguments);
 }
-function createAccount(_x25) {
-  return _createAccount.apply(this, arguments);
-}
-function _createAccount() {
-  _createAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26(payload) {
-    var _yield$axios$post12, data;
+function _fetchAccounts() {
+  _fetchAccounts = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee26() {
+    var _yield$axios$get7, data;
     return _regenerator().w(function (_context26) {
       while (1) switch (_context26.n) {
         case 0:
@@ -39022,22 +39030,22 @@ function _createAccount() {
           return ensureCsrf();
         case 1:
           _context26.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/accounts"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/accounts"));
         case 2:
-          _yield$axios$post12 = _context26.v;
-          data = _yield$axios$post12.data;
+          _yield$axios$get7 = _context26.v;
+          data = _yield$axios$get7.data;
           return _context26.a(2, data);
       }
     }, _callee26);
   }));
+  return _fetchAccounts.apply(this, arguments);
+}
+function createAccount(_x26) {
   return _createAccount.apply(this, arguments);
 }
-function updateAccount(_x26, _x27) {
-  return _updateAccount.apply(this, arguments);
-}
-function _updateAccount() {
-  _updateAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27(id, payload) {
-    var _yield$axios$put4, data;
+function _createAccount() {
+  _createAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee27(payload) {
+    var _yield$axios$post13, data;
     return _regenerator().w(function (_context27) {
       while (1) switch (_context27.n) {
         case 0:
@@ -39045,22 +39053,22 @@ function _updateAccount() {
           return ensureCsrf();
         case 1:
           _context27.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/accounts/").concat(id), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/accounts"), payload);
         case 2:
-          _yield$axios$put4 = _context27.v;
-          data = _yield$axios$put4.data;
+          _yield$axios$post13 = _context27.v;
+          data = _yield$axios$post13.data;
           return _context27.a(2, data);
       }
     }, _callee27);
   }));
+  return _createAccount.apply(this, arguments);
+}
+function updateAccount(_x27, _x28) {
   return _updateAccount.apply(this, arguments);
 }
-function deleteAccountApi(_x28) {
-  return _deleteAccountApi.apply(this, arguments);
-}
-function _deleteAccountApi() {
-  _deleteAccountApi = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(id) {
-    var _yield$axios$delete4, data;
+function _updateAccount() {
+  _updateAccount = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee28(id, payload) {
+    var _yield$axios$put4, data;
     return _regenerator().w(function (_context28) {
       while (1) switch (_context28.n) {
         case 0:
@@ -39068,22 +39076,22 @@ function _deleteAccountApi() {
           return ensureCsrf();
         case 1:
           _context28.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/accounts/").concat(id));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/accounts/").concat(id), payload);
         case 2:
-          _yield$axios$delete4 = _context28.v;
-          data = _yield$axios$delete4.data;
+          _yield$axios$put4 = _context28.v;
+          data = _yield$axios$put4.data;
           return _context28.a(2, data);
       }
     }, _callee28);
   }));
+  return _updateAccount.apply(this, arguments);
+}
+function deleteAccountApi(_x29) {
   return _deleteAccountApi.apply(this, arguments);
 }
-function fetchTransactions() {
-  return _fetchTransactions.apply(this, arguments);
-}
-function _fetchTransactions() {
-  _fetchTransactions = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29() {
-    var _yield$axios$get8, data;
+function _deleteAccountApi() {
+  _deleteAccountApi = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee29(id) {
+    var _yield$axios$delete4, data;
     return _regenerator().w(function (_context29) {
       while (1) switch (_context29.n) {
         case 0:
@@ -39091,22 +39099,22 @@ function _fetchTransactions() {
           return ensureCsrf();
         case 1:
           _context29.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/transactions"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/accounts/").concat(id));
         case 2:
-          _yield$axios$get8 = _context29.v;
-          data = _yield$axios$get8.data;
+          _yield$axios$delete4 = _context29.v;
+          data = _yield$axios$delete4.data;
           return _context29.a(2, data);
       }
     }, _callee29);
   }));
+  return _deleteAccountApi.apply(this, arguments);
+}
+function fetchTransactions() {
   return _fetchTransactions.apply(this, arguments);
 }
-function createTransaction(_x29) {
-  return _createTransaction.apply(this, arguments);
-}
-function _createTransaction() {
-  _createTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30(payload) {
-    var _yield$axios$post13, data;
+function _fetchTransactions() {
+  _fetchTransactions = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee30() {
+    var _yield$axios$get8, data;
     return _regenerator().w(function (_context30) {
       while (1) switch (_context30.n) {
         case 0:
@@ -39114,22 +39122,22 @@ function _createTransaction() {
           return ensureCsrf();
         case 1:
           _context30.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/transactions"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/transactions"));
         case 2:
-          _yield$axios$post13 = _context30.v;
-          data = _yield$axios$post13.data;
+          _yield$axios$get8 = _context30.v;
+          data = _yield$axios$get8.data;
           return _context30.a(2, data);
       }
     }, _callee30);
   }));
+  return _fetchTransactions.apply(this, arguments);
+}
+function createTransaction(_x30) {
   return _createTransaction.apply(this, arguments);
 }
-function updateTransaction(_x30, _x31) {
-  return _updateTransaction.apply(this, arguments);
-}
-function _updateTransaction() {
-  _updateTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31(id, payload) {
-    var _yield$axios$put5, data;
+function _createTransaction() {
+  _createTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee31(payload) {
+    var _yield$axios$post14, data;
     return _regenerator().w(function (_context31) {
       while (1) switch (_context31.n) {
         case 0:
@@ -39137,22 +39145,22 @@ function _updateTransaction() {
           return ensureCsrf();
         case 1:
           _context31.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/transactions/").concat(id), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/transactions"), payload);
         case 2:
-          _yield$axios$put5 = _context31.v;
-          data = _yield$axios$put5.data;
+          _yield$axios$post14 = _context31.v;
+          data = _yield$axios$post14.data;
           return _context31.a(2, data);
       }
     }, _callee31);
   }));
+  return _createTransaction.apply(this, arguments);
+}
+function updateTransaction(_x31, _x32) {
   return _updateTransaction.apply(this, arguments);
 }
-function deleteTransaction(_x32) {
-  return _deleteTransaction.apply(this, arguments);
-}
-function _deleteTransaction() {
-  _deleteTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32(id) {
-    var _yield$axios$delete5, data;
+function _updateTransaction() {
+  _updateTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee32(id, payload) {
+    var _yield$axios$put5, data;
     return _regenerator().w(function (_context32) {
       while (1) switch (_context32.n) {
         case 0:
@@ -39160,22 +39168,22 @@ function _deleteTransaction() {
           return ensureCsrf();
         case 1:
           _context32.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/transactions/").concat(id));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/transactions/").concat(id), payload);
         case 2:
-          _yield$axios$delete5 = _context32.v;
-          data = _yield$axios$delete5.data;
+          _yield$axios$put5 = _context32.v;
+          data = _yield$axios$put5.data;
           return _context32.a(2, data);
       }
     }, _callee32);
   }));
+  return _updateTransaction.apply(this, arguments);
+}
+function deleteTransaction(_x33) {
   return _deleteTransaction.apply(this, arguments);
 }
-function fetchBudgets() {
-  return _fetchBudgets.apply(this, arguments);
-}
-function _fetchBudgets() {
-  _fetchBudgets = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee33() {
-    var _yield$axios$get9, data;
+function _deleteTransaction() {
+  _deleteTransaction = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee33(id) {
+    var _yield$axios$delete5, data;
     return _regenerator().w(function (_context33) {
       while (1) switch (_context33.n) {
         case 0:
@@ -39183,22 +39191,22 @@ function _fetchBudgets() {
           return ensureCsrf();
         case 1:
           _context33.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/budgets"));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/transactions/").concat(id));
         case 2:
-          _yield$axios$get9 = _context33.v;
-          data = _yield$axios$get9.data;
+          _yield$axios$delete5 = _context33.v;
+          data = _yield$axios$delete5.data;
           return _context33.a(2, data);
       }
     }, _callee33);
   }));
+  return _deleteTransaction.apply(this, arguments);
+}
+function fetchBudgets() {
   return _fetchBudgets.apply(this, arguments);
 }
-function createBudget(_x33) {
-  return _createBudget.apply(this, arguments);
-}
-function _createBudget() {
-  _createBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34(payload) {
-    var _yield$axios$post14, data;
+function _fetchBudgets() {
+  _fetchBudgets = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee34() {
+    var _yield$axios$get9, data;
     return _regenerator().w(function (_context34) {
       while (1) switch (_context34.n) {
         case 0:
@@ -39206,22 +39214,22 @@ function _createBudget() {
           return ensureCsrf();
         case 1:
           _context34.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budgets"), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/budgets"));
         case 2:
-          _yield$axios$post14 = _context34.v;
-          data = _yield$axios$post14.data;
+          _yield$axios$get9 = _context34.v;
+          data = _yield$axios$get9.data;
           return _context34.a(2, data);
       }
     }, _callee34);
   }));
+  return _fetchBudgets.apply(this, arguments);
+}
+function createBudget(_x34) {
   return _createBudget.apply(this, arguments);
 }
-function updateBudget(_x34, _x35) {
-  return _updateBudget.apply(this, arguments);
-}
-function _updateBudget() {
-  _updateBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee35(id, payload) {
-    var _yield$axios$put6, data;
+function _createBudget() {
+  _createBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee35(payload) {
+    var _yield$axios$post15, data;
     return _regenerator().w(function (_context35) {
       while (1) switch (_context35.n) {
         case 0:
@@ -39229,22 +39237,22 @@ function _updateBudget() {
           return ensureCsrf();
         case 1:
           _context35.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budgets/").concat(id), payload);
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(API_BASE, "/budgets"), payload);
         case 2:
-          _yield$axios$put6 = _context35.v;
-          data = _yield$axios$put6.data;
+          _yield$axios$post15 = _context35.v;
+          data = _yield$axios$post15.data;
           return _context35.a(2, data);
       }
     }, _callee35);
   }));
+  return _createBudget.apply(this, arguments);
+}
+function updateBudget(_x35, _x36) {
   return _updateBudget.apply(this, arguments);
 }
-function deleteBudget(_x36) {
-  return _deleteBudget.apply(this, arguments);
-}
-function _deleteBudget() {
-  _deleteBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee36(id) {
-    var _yield$axios$delete6, data;
+function _updateBudget() {
+  _updateBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee36(id, payload) {
+    var _yield$axios$put6, data;
     return _regenerator().w(function (_context36) {
       while (1) switch (_context36.n) {
         case 0:
@@ -39252,22 +39260,22 @@ function _deleteBudget() {
           return ensureCsrf();
         case 1:
           _context36.n = 2;
-          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budgets/").concat(id));
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().put("".concat(API_BASE, "/budgets/").concat(id), payload);
         case 2:
-          _yield$axios$delete6 = _context36.v;
-          data = _yield$axios$delete6.data;
+          _yield$axios$put6 = _context36.v;
+          data = _yield$axios$put6.data;
           return _context36.a(2, data);
       }
     }, _callee36);
   }));
+  return _updateBudget.apply(this, arguments);
+}
+function deleteBudget(_x37) {
   return _deleteBudget.apply(this, arguments);
 }
-function fetchUser() {
-  return _fetchUser.apply(this, arguments);
-}
-function _fetchUser() {
-  _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee37() {
-    var _yield$axios$get0, data;
+function _deleteBudget() {
+  _deleteBudget = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee37(id) {
+    var _yield$axios$delete6, data;
     return _regenerator().w(function (_context37) {
       while (1) switch (_context37.n) {
         case 0:
@@ -39275,16 +39283,39 @@ function _fetchUser() {
           return ensureCsrf();
         case 1:
           _context37.n = 2;
+          return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("".concat(API_BASE, "/budgets/").concat(id));
+        case 2:
+          _yield$axios$delete6 = _context37.v;
+          data = _yield$axios$delete6.data;
+          return _context37.a(2, data);
+      }
+    }, _callee37);
+  }));
+  return _deleteBudget.apply(this, arguments);
+}
+function fetchUser() {
+  return _fetchUser.apply(this, arguments);
+}
+function _fetchUser() {
+  _fetchUser = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee38() {
+    var _yield$axios$get0, data;
+    return _regenerator().w(function (_context38) {
+      while (1) switch (_context38.n) {
+        case 0:
+          _context38.n = 1;
+          return ensureCsrf();
+        case 1:
+          _context38.n = 2;
           return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(API_BASE, "/user"));
         case 2:
-          _yield$axios$get0 = _context37.v;
+          _yield$axios$get0 = _context38.v;
           data = _yield$axios$get0.data;
           (0,_epawnStorage__WEBPACK_IMPORTED_MODULE_1__.setEpawn)({
             user: data.user
           });
-          return _context37.a(2, data);
+          return _context38.a(2, data);
       }
-    }, _callee37);
+    }, _callee38);
   }));
   return _fetchUser.apply(this, arguments);
 }

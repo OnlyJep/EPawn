@@ -42,6 +42,8 @@ export default function DashboardApp(props) {
                 {!isMobile && (
                     <Sidebar
                         logo={props.logo}
+                        user={user}
+                        defaultAvatar={props.defaultAvatar}
                         activeNav={activeNav}
                         onNavChange={setActiveNav}
                         routes={props.routes}
@@ -96,6 +98,7 @@ export default function DashboardApp(props) {
                     open={settingsOpen}
                     onClose={() => setSettingsOpen(false)}
                     user={user}
+                    defaultAvatar={props.defaultAvatar}
                     routes={props.routes}
                     errors={props.errors}
                     old={props.old}

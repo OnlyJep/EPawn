@@ -35,6 +35,7 @@ class SettingsController extends Controller
                 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $user->update([
@@ -54,6 +55,11 @@ class SettingsController extends Controller
             'suffix' => $request->suffix ?: null,
             'fullname' => $fullname,
         ]);
+
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $profile->update(['avatar' => $path]);
+        }
 
         $user->refresh();
 

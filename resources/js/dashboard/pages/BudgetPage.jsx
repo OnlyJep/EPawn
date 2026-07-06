@@ -14,17 +14,31 @@ import {
     createAccount,
 } from '../../services/epawnApi';
 import { formatCurrency } from '../../constants/sheetDefaults';
+import ClockPicker from '../components/ClockPicker';
+
+const formatNumberWithCommas = (num) => {
+    if (num === null || num === undefined) return '';
+    const parts = num.toString().split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.join('.');
+};
+
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const formatDateDisplay = (year, month, day) => `${day}, ${months[month]} ${year}`;
+
+const formatDateForStorage = (year, month, day) => {
+    const monthStr = String(month + 1).padStart(2, '0');
+    const dayStr = String(day).padStart(2, '0');
+    return `${year}-${monthStr}-${dayStr}`;
+};
 
 const evaluateExpr = (expr) => {
     try {
-        const sanitized = expr.replace(/x/g, '*').replace(/÷/g, '/');
+        const sanitized = expr.replace(/x/g, '*').replace(/\u00F7/g, '/');
         if (/^[0-9.+\-*/\s()]+$/.test(sanitized)) {
-            const val = eval(sanitized);
-            return Number(val.toFixed(2));
+            return Number((eval(sanitized)).toFixed(2));
         }
-    } catch (e) {
-        console.error(e);
-    }
+    } catch (e) { /* ignore */ }
     return null;
 };
 
@@ -34,6 +48,39 @@ const ACC_ICONS = [
     { name: 'Cash', src: '/img/accicons/cashicon.png' },
     { name: 'Coin', src: '/img/accicons/coinicon.png' },
     { name: 'Piggy', src: '/img/accicons/piggyicon.png' }
+];
+
+const CAT_ICONS = [
+    { name: 'Piggy', src: '/img/caticons/Piggy.png' },
+    { name: 'Lot', src: '/img/caticons/Lot.png' },
+    { name: 'House', src: '/img/caticons/house.png' },
+    { name: 'Baby', src: '/img/caticons/baby.png' },
+    { name: 'Mastercard', src: '/img/caticons/Mastercard.png' },
+    { name: 'Card', src: '/img/caticons/card.png' },
+    { name: 'Money', src: '/img/caticons/money.png' },
+    { name: 'Loan', src: '/img/caticons/Loan.png' },
+    { name: 'Food', src: '/img/caticons/Food.svg' },
+    { name: 'Transport', src: '/img/caticons/Transport.svg' },
+    { name: 'Shopping', src: '/img/caticons/Shopping.svg' },
+    { name: 'Health', src: '/img/caticons/Health.svg' },
+    { name: 'Education', src: '/img/caticons/Education.svg' },
+    { name: 'Entertainment', src: '/img/caticons/Entertainment.svg' },
+    { name: 'Bills', src: '/img/caticons/Bills.svg' },
+    { name: 'Savings', src: '/img/caticons/Savings.svg' },
+    { name: 'Investment', src: '/img/caticons/Investment.svg' },
+    { name: 'Salary', src: '/img/caticons/Salary.svg' },
+    { name: 'Rent', src: '/img/caticons/Rent.svg' },
+    { name: 'Insurance', src: '/img/caticons/Insurance.svg' },
+    { name: 'Grocery', src: '/img/caticons/Grocery.svg' },
+    { name: 'Travel', src: '/img/caticons/Travel.svg' },
+    { name: 'Dining', src: '/img/caticons/Dining.svg' },
+    { name: 'Gift', src: '/img/caticons/Gift.svg' },
+    { name: 'Utilities', src: '/img/caticons/Utilities.svg' },
+    { name: 'Coffee', src: '/img/caticons/Coffee.svg' },
+    { name: 'Clothing', src: '/img/caticons/Clothing.svg' },
+    { name: 'Phone', src: '/img/caticons/Phone.svg' },
+    { name: 'Internet', src: '/img/caticons/Internet.svg' },
+    { name: 'Freelance', src: '/img/caticons/Freelance.svg' },
 ];
 
 export default function BudgetPage({
@@ -58,9 +105,19 @@ export default function BudgetPage({
     const [txDescription, setTxDescription] = useState('');
     const [txCategory, setTxCategory] = useState('');
     const [txAccount, setTxAccount] = useState('');
+    const [txToAccount, setTxToAccount] = useState('');
     const [txType, setTxType] = useState('Expense');
     const [txCalcExpression, setTxCalcExpression] = useState('0');
     const [txCalcResult, setTxCalcResult] = useState(null);
+
+    const [datePickerOpen, setDatePickerOpen] = useState(false);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+    const [selectedDay, setSelectedDay] = useState(new Date().getDate());
+    const [pickerYear, setPickerYear] = useState(new Date().getFullYear());
+    const [pickerMonth, setPickerMonth] = useState(new Date().getMonth());
+    const [pickerDay, setPickerDay] = useState(new Date().getDate());
+    const [pickerView, setPickerView] = useState('day');
 
     const [selectingAccountFor, setSelectingAccountFor] = useState(null);
     const [selectingCategory, setSelectingCategory] = useState(false);
@@ -72,6 +129,8 @@ export default function BudgetPage({
 
     const [createCatModalOpen, setCreateCatModalOpen] = useState(false);
     const [newCatName, setNewCatName] = useState('');
+    const [newCatIcon, setNewCatIcon] = useState('/img/accicons/walleticon.png');
+    const [catIconPage, setCatIconPage] = useState(0);
 
     const [txBtnHover, setTxBtnHover] = useState(false);
 
@@ -247,7 +306,7 @@ export default function BudgetPage({
             if (selectingAccountFor === 'account' || selectingAccountFor === 'fromAccount') {
                 setTxAccount(newAccName);
             } else if (selectingAccountFor === 'toAccount') {
-                setTxCategory(newAccName);
+                setTxToAccount(newAccName);
             }
             
             setCreateAccModalOpen(false);
@@ -267,7 +326,8 @@ export default function BudgetPage({
 
         const payload = {
             name: newCatName,
-            type: txType.toLowerCase()
+            type: txType.toLowerCase(),
+            icon: newCatIcon
         };
 
         try {
@@ -277,7 +337,8 @@ export default function BudgetPage({
             
             setTxCategory(newCatName);
             setCreateCatModalOpen(false);
-            setSelectingCategory(false);
+            setSelectingCategory(true);
+            setCatIconPage(0);
             if (onRefreshSheets) onRefreshSheets();
         } catch (error) {
             message.error('Failed to save category.');
@@ -285,9 +346,16 @@ export default function BudgetPage({
     };
 
     const openTxModal = () => {
-        setTxDate(new Date().toISOString().split('T')[0]);
-        
         const now = new Date();
+        setSelectedYear(now.getFullYear());
+        setSelectedMonth(now.getMonth());
+        setSelectedDay(now.getDate());
+        setPickerYear(now.getFullYear());
+        setPickerMonth(now.getMonth());
+        setPickerDay(now.getDate());
+        setPickerView('day');
+        setTxDate(formatDateForStorage(now.getFullYear(), now.getMonth(), now.getDate()));
+        
         const hrs = String(now.getHours()).padStart(2, '0');
         const mins = String(now.getMinutes()).padStart(2, '0');
         setTxTime(`${hrs}:${mins}`);
@@ -297,6 +365,7 @@ export default function BudgetPage({
         const expCats = categories.filter(c => (c.type || '').toLowerCase().includes('expense'));
         setTxCategory(expCats[0]?.name || 'General');
         setTxAccount(accounts[0]?.name || 'Cash');
+        setTxToAccount('');
         
         setTxCalcExpression('0');
         setTxType('Expense');
@@ -331,6 +400,16 @@ export default function BudgetPage({
             return;
         }
 
+        if (txType === 'Transfer' && (!txToAccount || txToAccount === 'Choose an Account')) {
+            message.error('Please select a destination account for the transfer.');
+            return;
+        }
+
+        if (txType === 'Transfer' && txAccount === txToAccount) {
+            message.error('Cannot transfer to the same account.');
+            return;
+        }
+
         if (txType === 'Expense' || txType === 'Transfer') {
             const account = accounts.find(acc => acc.name === txAccount);
             const accountBalance = account ? parseFloat(account.balance) || 0 : 0;
@@ -345,7 +424,8 @@ export default function BudgetPage({
 
         const payload = {
             account_id: accountNameToId[txAccount] || null,
-            category_id: categoryNameToId[txCategory] || null,
+            to_account_id: txType === 'Transfer' ? accountNameToId[txToAccount] || null : null,
+            category_id: txType === 'Transfer' ? null : categoryNameToId[txCategory] || null,
             type: txType.toLowerCase(),
             amount: amtVal,
             description: txDescription,
@@ -422,40 +502,28 @@ export default function BudgetPage({
         setTxCalcExpression(prev => prev + char);
     };
 
-    const calcKeyStyle = (keyType) => {
-        let bg = '#f3f4f6';
-        let color = '#1f2937';
-        if (keyType === 'op') {
-            bg = 'var(--red-light)';
-            color = 'var(--red)';
-        } else if (keyType === 'equals') {
-            bg = 'var(--red)';
-            color = 'var(--white)';
-        }
-        return {
-            width: '100%',
-            padding: '0.85rem',
-            fontSize: '1.25rem',
-            fontWeight: 700,
-            borderRadius: '8px',
-            border: '1px solid var(--gray-300)',
-            cursor: 'pointer',
-            transition: 'all 0.1s ease',
-            background: bg,
-            color: color,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            userSelect: 'none',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
-        };
-    };
+    const calcKeyStyle = (type) => ({
+        width: '100%', padding: '0.85rem', fontSize: '1.25rem', fontWeight: 700,
+        borderRadius: '8px', border: '1px solid var(--gray-300)', cursor: 'pointer',
+        transition: 'all 0.1s ease',
+        background: type === 'op' ? 'var(--red-light)' : type === 'equals' ? 'var(--red)' : '#f3f4f6',
+        color: type === 'op' ? 'var(--red)' : type === 'equals' ? '#ffffff' : '#1f2937',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+    });
 
     const openTxModalWithCategory = (categoryName, categoryType) => {
         setEditingRow(null);
-        setTxDate(new Date().toISOString().split('T')[0]);
-        
         const now = new Date();
+        setSelectedYear(now.getFullYear());
+        setSelectedMonth(now.getMonth());
+        setSelectedDay(now.getDate());
+        setPickerYear(now.getFullYear());
+        setPickerMonth(now.getMonth());
+        setPickerDay(now.getDate());
+        setPickerView('day');
+        setTxDate(formatDateForStorage(now.getFullYear(), now.getMonth(), now.getDate()));
+        
         const hrs = String(now.getHours()).padStart(2, '0');
         const mins = String(now.getMinutes()).padStart(2, '0');
         setTxTime(`${hrs}:${mins}`);
@@ -463,6 +531,7 @@ export default function BudgetPage({
         setTxDescription('');
         setTxCategory(categoryName);
         setTxAccount(accounts[0]?.name || 'Cash');
+        setTxToAccount('');
         setTxCalcExpression('0');
         setTxType(categoryType);
         setTxModalOpen(true);
@@ -666,9 +735,12 @@ export default function BudgetPage({
                                 borderRadius: '12px',
                                 background: 'var(--white)'
                             }}>
-                                <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--gray-900)' }}>
-                                    {cat.name || 'Unnamed'}
-                                </span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <img src={cat.icon || '/img/caticons/Piggy.png'} alt={cat.name} style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'contain', background: 'var(--gray-100)', padding: '4px', border: '1px solid var(--gray-200)' }} />
+                                    <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--gray-900)' }}>
+                                        {cat.name || 'Unnamed'}
+                                    </span>
+                                </div>
                                 <button
                                     type="button"
                                     onClick={() => openTxModalWithCategory(cat.name, 'Income')}
@@ -720,9 +792,12 @@ export default function BudgetPage({
                                 borderRadius: '12px',
                                 background: 'var(--white)'
                             }}>
-                                <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--gray-900)' }}>
-                                    {cat.name || 'Unnamed'}
-                                </span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <img src={cat.icon || '/img/caticons/Piggy.png'} alt={cat.name} style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'contain', background: 'var(--gray-100)', padding: '4px', border: '1px solid var(--gray-200)' }} />
+                                    <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--gray-900)' }}>
+                                        {cat.name || 'Unnamed'}
+                                    </span>
+                                </div>
                                 <button
                                     type="button"
                                     onClick={() => openTxModalWithCategory(cat.name, 'Expense')}
@@ -749,6 +824,7 @@ export default function BudgetPage({
             </div>
 
             <Modal
+                mask={false}
                 title={editingRow ? 'Edit Budget Limit' : 'Set Budget Limit'}
                 open={modalOpen}
                 onCancel={() => setModalOpen(false)}
@@ -793,6 +869,7 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                mask={false}
                 classNames={{ wrapper: 'tx-modal-wrap', body: 'tx-modal-body' }}
                 open={txModalOpen}
                 onCancel={() => setTxModalOpen(false)}
@@ -807,13 +884,13 @@ export default function BudgetPage({
                             onClick={() => setTxModalOpen(false)}
                             style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                         >
-                            ✕ CANCEL
+                            CANCEL
                         </button>
                         <button 
-                            type="submit" 
+                            type="submit"
                             style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                         >
-                            ✓ SAVE
+                            SUBMIT
                         </button>
                     </div>
 
@@ -857,20 +934,6 @@ export default function BudgetPage({
                                         userSelect: 'none'
                                     }}
                                 >
-                                    {isSelected && (
-                                        <span style={{
-                                            width: '18px',
-                                            height: '18px',
-                                            borderRadius: '50%',
-                                            background: 'var(--red)',
-                                            color: '#ffffff',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: '11px',
-                                            fontWeight: 'bold'
-                                        }}>✓</span>
-                                    )}
                                     {t.toUpperCase()}
                                 </div>
                             );
@@ -949,7 +1012,7 @@ export default function BudgetPage({
                                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--gray-500)', marginBottom: '0.25rem', textAlign: 'center' }}>To</div>
                                 <input
                                     type="text"
-                                    value={txCategory || ''}
+                                    value={txToAccount || ''}
                                     placeholder="Choose an Account"
                                     readOnly
                                     onClick={() => setSelectingAccountFor('toAccount')}
@@ -1007,7 +1070,7 @@ export default function BudgetPage({
                             justifyContent: 'space-between'
                         }}>
                             <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>
-                                {txCalcExpression}
+                                {formatNumberWithCommas(txCalcExpression)}
                             </div>
                             <button
                                 type="button"
@@ -1044,7 +1107,7 @@ export default function BudgetPage({
                                 marginTop: '0.5rem',
                                 textAlign: 'right'
                             }}>
-                                = {txCalcResult}
+                                = {formatNumberWithCommas(txCalcResult)}
                             </div>
                         )}
                     </div>
@@ -1074,44 +1137,226 @@ export default function BudgetPage({
                         <button type="button" onClick={() => handleKeypadPress('=')} style={calcKeyStyle('equals')}>=</button>
                     </div>
 
-                    <div style={{ display: 'flex', width: '100%', borderTop: '1px solid var(--gray-300)', padding: '0.75rem 0 0 0', marginTop: '0.5rem', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', width: '100%', borderTop: '1px solid var(--gray-300)', padding: '0.75rem 0 0', marginTop: '0.5rem', justifyContent: 'center', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                         <div style={{ position: 'relative' }}>
-                            <input 
-                                type="date" 
-                                value={txDate} 
-                                onChange={(e) => setTxDate(e.target.value)} 
-                                style={{ 
-                                    border: 'none', 
-                                    background: 'transparent', 
-                                    fontFamily: 'inherit', 
-                                    fontSize: '0.95rem', 
-                                    fontWeight: 700, 
+                            <div
+                                onClick={() => {
+                                    const d = txDate ? new Date(txDate + 'T12:00:00') : new Date();
+                                    setPickerYear(d.getFullYear());
+                                    setPickerMonth(d.getMonth());
+                                    setPickerDay(d.getDate());
+                                    setPickerView('day');
+                                    setDatePickerOpen(true);
+                                }}
+                                style={{
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontFamily: 'inherit',
+                                    fontSize: '0.95rem',
+                                    fontWeight: 700,
                                     color: 'var(--red)',
-                                    cursor: 'pointer' 
-                                }} 
-                            />
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {formatDateDisplay(selectedYear, selectedMonth, selectedDay)}
+                            </div>
                         </div>
                         <div style={{ position: 'relative' }}>
-                            <input 
-                                type="time" 
-                                value={txTime} 
-                                onChange={(e) => setTxTime(e.target.value)} 
-                                style={{ 
-                                    border: 'none', 
-                                    background: 'transparent', 
-                                    fontFamily: 'inherit', 
-                                    fontSize: '0.95rem', 
-                                    fontWeight: 700, 
-                                    color: 'var(--red)',
-                                    cursor: 'pointer' 
-                                }} 
-                            />
+                            <ClockPicker value={txTime} onChange={setTxTime} />
                         </div>
                     </div>
                 </form>
             </Modal>
 
             <Modal
+                mask={false}
+                title="Select Date"
+                open={datePickerOpen}
+                onCancel={() => setDatePickerOpen(false)}
+                footer={null}
+                styles={{ body: { padding: '1rem' } }}
+                classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (pickerView === 'day') {
+                                    const newDate = new Date(pickerYear, pickerMonth - 1, 1);
+                                    setPickerYear(newDate.getFullYear());
+                                    setPickerMonth(newDate.getMonth());
+                                } else if (pickerView === 'month') {
+                                    setPickerYear(pickerYear - 1);
+                                } else if (pickerView === 'year') {
+                                    setPickerYear(pickerYear - 12);
+                                }
+                            }}
+                            style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}
+                        >
+                            &lsaquo;
+                        </button>
+                        <span 
+                            style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--gray-800)', cursor: 'pointer' }}
+                            onClick={() => {
+                                if (pickerView === 'day') setPickerView('month');
+                                else if (pickerView === 'month') setPickerView('year');
+                            }}
+                        >
+                            {pickerView === 'day' ? `${months[pickerMonth]} ${pickerYear}` : pickerView === 'month' ? pickerYear : `${Math.floor(pickerYear / 10) * 10}s`}
+                        </span>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (pickerView === 'day') {
+                                    const newDate = new Date(pickerYear, pickerMonth + 1, 1);
+                                    setPickerYear(newDate.getFullYear());
+                                    setPickerMonth(newDate.getMonth());
+                                } else if (pickerView === 'month') {
+                                    setPickerYear(pickerYear + 1);
+                                } else if (pickerView === 'year') {
+                                    setPickerYear(pickerYear + 12);
+                                }
+                            }}
+                            style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}
+                        >
+                            &rsaquo;
+                        </button>
+                    </div>
+                    
+                    {pickerView === 'day' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.25rem', textAlign: 'center' }}>
+                            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                                <div key={day} style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--gray-500)', padding: '0.25rem' }}>{day}</div>
+                            ))}
+                            {Array.from({ length: new Date(pickerYear, pickerMonth, 0).getDay() }, (_, i) => (
+                                <div key={`empty-${i}`} />
+                            ))}
+                            {Array.from({ length: new Date(pickerYear, pickerMonth + 1, 0).getDate() }, (_, i) => i + 1).map(day => {
+                                const isSelected = day === pickerDay;
+                                const isToday = day === new Date().getDate() && pickerMonth === new Date().getMonth() && pickerYear === new Date().getFullYear();
+                                return (
+                                    <button
+                                        key={day}
+                                        type="button"
+                                        onClick={() => setPickerDay(day)}
+                                        style={{
+                                            padding: '0.5rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : isToday ? 'var(--red-light)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {day}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    {pickerView === 'month' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                            {months.map((month, index) => {
+                                const isSelected = index === pickerMonth;
+                                return (
+                                    <button
+                                        key={month}
+                                        type="button"
+                                        onClick={() => {
+                                            setPickerMonth(index);
+                                            setPickerView('day');
+                                        }}
+                                        style={{
+                                            padding: '1rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {month}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    {pickerView === 'year' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                            {Array.from({ length: 12 }, (_, i) => {
+                                const year = Math.floor(pickerYear / 10) * 10 + i;
+                                const isSelected = year === pickerYear;
+                                return (
+                                    <button
+                                        key={year}
+                                        type="button"
+                                        onClick={() => {
+                                            setPickerYear(year);
+                                            setPickerView('month');
+                                        }}
+                                        style={{
+                                            padding: '1rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {year}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    <div style={{ padding: '0.75rem', background: 'var(--gray-100)', borderRadius: '8px', textAlign: 'center', fontWeight: 700, color: 'var(--red)' }}>
+                        {pickerDay}, {months[pickerMonth]} {pickerYear}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                        <button 
+                            type="button" 
+                            className="btn btn-outline" 
+                            onClick={() => {
+                                setDatePickerOpen(false);
+                                setPickerView('day');
+                            }}
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="button" 
+                            className="btn btn-primary" 
+                            style={{ background: 'var(--red)', borderColor: 'var(--red)' }}
+                            onClick={() => {
+                                setSelectedYear(pickerYear);
+                                setSelectedMonth(pickerMonth);
+                                setSelectedDay(pickerDay);
+                                setTxDate(formatDateForStorage(pickerYear, pickerMonth, pickerDay));
+                                setDatePickerOpen(false);
+                                setPickerView('day');
+                            }}
+                        >
+                            Confirm
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal
+                mask={false}
                 classNames={{ wrapper: 'tx-select-wrap' }}
                 title="Select an account"
                 open={selectingAccountFor !== null}
@@ -1129,7 +1374,7 @@ export default function BudgetPage({
                                     if (selectingAccountFor === 'account' || selectingAccountFor === 'fromAccount') {
                                         setTxAccount(name);
                                     } else if (selectingAccountFor === 'toAccount') {
-                                        setTxCategory(name);
+                                        setTxToAccount(name);
                                     }
                                     setSelectingAccountFor(null);
                                 }}
@@ -1174,7 +1419,23 @@ export default function BudgetPage({
                             setNewAccName('');
                             setNewAccInitial('');
                             setNewAccIcon('/img/accicons/walleticon.png');
+                            // Hide selection modal temporarily
+                            const selectModal = document.querySelector('.tx-select-wrap.ant-modal-wrap');
+                            if (selectModal) selectModal.style.display = 'none';
                             setCreateAccModalOpen(true);
+                            // Ensure creation modal appears above everything - use multiple approaches
+                            setTimeout(() => {
+                                const createModal = document.querySelector('.add-account-modal.ant-modal-wrap');
+                                if (createModal) {
+                                    createModal.style.zIndex = '2147483647';
+                                    createModal.style.position = 'fixed';
+                                }
+                                // Also try to find and set the mask z-index
+                                const createMask = document.querySelector('.add-account-modal.ant-modal-wrap + .ant-modal-mask, .ant-modal-mask:last-child');
+                                if (createMask) {
+                                    createMask.style.zIndex = '2147483646';
+                                }
+                            }, 50);
                         }}
                         style={{
                             padding: '0.75rem',
@@ -1194,6 +1455,7 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                mask={false}
                 classNames={{ wrapper: 'tx-select-wrap' }}
                 title="Select a category"
                 open={selectingCategory}
@@ -1226,10 +1488,13 @@ export default function BudgetPage({
                                 onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--red)'}
                                 onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--gray-300)'}
                             >
-                                <div>
-                                    <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{cat.name}</div>
-                                    <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>
-                                        {isIncome ? 'Income' : 'Expense'}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <img src={cat.icon || '/img/caticons/Piggy.png'} alt={cat.name} style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'contain', background: 'var(--gray-100)', padding: '4px', border: '1px solid var(--gray-200)' }} />
+                                    <div>
+                                        <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>{cat.name}</div>
+                                        <div style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>
+                                            {isIncome ? 'Income' : 'Expense'}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1239,7 +1504,25 @@ export default function BudgetPage({
                         type="button"
                         onClick={() => {
                             setNewCatName('');
+                            setNewCatIcon('/img/caticons/Piggy.png');
+                            setCatIconPage(0);
+                            // Hide selection modal temporarily
+                            const selectModal = document.querySelector('.tx-select-wrap.ant-modal-wrap');
+                            if (selectModal) selectModal.style.display = 'none';
                             setCreateCatModalOpen(true);
+                            // Ensure creation modal appears above everything - use multiple approaches
+                            setTimeout(() => {
+                                const createModal = document.querySelector('.add-category-modal.ant-modal-wrap');
+                                if (createModal) {
+                                    createModal.style.zIndex = '2147483647';
+                                    createModal.style.position = 'fixed';
+                                }
+                                // Also try to find and set the mask z-index
+                                const createMask = document.querySelector('.add-category-modal.ant-modal-wrap + .ant-modal-mask, .ant-modal-mask:last-child');
+                                if (createMask) {
+                                    createMask.style.zIndex = '2147483646';
+                                }
+                            }, 50);
                         }}
                         style={{
                             padding: '0.75rem',
@@ -1259,11 +1542,18 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                mask={false}
                 classNames={{ wrapper: 'add-account-modal', header: 'add-account-header', body: 'add-account-body' }}
                 title="Add Account"
                 open={createAccModalOpen}
-                onCancel={() => setCreateAccModalOpen(false)}
+                onCancel={() => {
+                    // Restore selection modal when closing
+                    const selectModal = document.querySelector('.tx-select-wrap.ant-modal-wrap');
+                    if (selectModal) selectModal.style.display = '';
+                    setCreateAccModalOpen(false);
+                }}
                 footer={null}
+                zIndex={2147483647}
                 styles={{ body: { padding: '1rem' } }}
             >
                 <form className="account-form" onSubmit={handleCreateAccSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -1308,11 +1598,18 @@ export default function BudgetPage({
             </Modal>
 
             <Modal
+                mask={false}
                 classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }}
                 title="Add Category"
                 open={createCatModalOpen}
-                onCancel={() => setCreateCatModalOpen(false)}
+                onCancel={() => {
+                    // Restore selection modal when closing
+                    const selectModal = document.querySelector('.tx-select-wrap.ant-modal-wrap');
+                    if (selectModal) selectModal.style.display = '';
+                    setCreateCatModalOpen(false);
+                }}
                 footer={null}
+                zIndex={2147483647}
                 styles={{ body: { padding: '1rem' } }}
             >
                 <form className="category-form" onSubmit={handleCreateCatSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -1324,8 +1621,65 @@ export default function BudgetPage({
                         required
                         className="form-control"
                     />
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            {CAT_ICONS.slice(catIconPage * 5, (catIconPage + 1) * 5).map(ico => (
+                                <div key={ico.name}
+                                    onClick={() => setNewCatIcon(ico.src)}
+                                    style={{
+                                        width: '44px', height: '44px', borderRadius: '50%',
+                                        border: newCatIcon === ico.src ? '3px solid var(--red)' : '1px solid var(--gray-300)',
+                                        padding: '4px', cursor: 'pointer', display: 'flex',
+                                        alignItems: 'center', justifyContent: 'center',
+                                        background: 'var(--gray-100)'
+                                    }}
+                                >
+                                    <img src={ico.src} alt={ico.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                </div>
+                            ))}
+                        </div>
+                        {CAT_ICONS.length > 5 && (
+                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setCatIconPage(Math.max(0, catIconPage - 1))}
+                                    disabled={catIconPage === 0}
+                                    style={{
+                                        padding: '0.25rem 0.75rem',
+                                        borderRadius: '6px',
+                                        border: '1px solid var(--gray-300)',
+                                        background: catIconPage === 0 ? 'var(--gray-100)' : 'var(--white)',
+                                        cursor: catIconPage === 0 ? 'not-allowed' : 'pointer',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 700
+                                    }}
+                                >
+                                    Prev
+                                </button>
+                                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--gray-500)' }}>
+                                    {catIconPage + 1} / {Math.ceil(CAT_ICONS.length / 5)}
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={() => setCatIconPage(Math.min(Math.ceil(CAT_ICONS.length / 5) - 1, catIconPage + 1))}
+                                    disabled={catIconPage === Math.ceil(CAT_ICONS.length / 5) - 1}
+                                    style={{
+                                        padding: '0.25rem 0.75rem',
+                                        borderRadius: '6px',
+                                        border: '1px solid var(--gray-300)',
+                                        background: catIconPage === Math.ceil(CAT_ICONS.length / 5) - 1 ? 'var(--gray-100)' : 'var(--white)',
+                                        cursor: catIconPage === Math.ceil(CAT_ICONS.length / 5) - 1 ? 'not-allowed' : 'pointer',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 700
+                                    }}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-                        <button type="button" className="btn btn-outline" onClick={() => setCreateCatModalOpen(false)}>Cancel</button>
+                        <button type="button" className="btn btn-outline" onClick={() => { setCreateCatModalOpen(false); setSelectingCategory(true); }}>Cancel</button>
                         <button type="submit" className="btn btn-primary" style={{ background: 'var(--red)', borderColor: 'var(--red)' }}>Save</button>
                     </div>
                 </form>

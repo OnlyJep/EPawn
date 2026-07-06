@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { message, Modal } from 'antd';
+import { message, Modal, Dropdown } from 'antd';
 import { EditOutlined, InboxOutlined, DeleteOutlined } from '@ant-design/icons';
 import { fetchBudgetPlans, createBudgetPlan, updateBudgetPlan, deleteBudgetPlan, createBudgetPlanItem, updateBudgetPlanItem, deleteBudgetPlanItem, fetchCategories, createCategory } from '../../services/epawnApi';
 import { formatCurrency } from '../../constants/sheetDefaults';
+import ClockPicker from '../components/ClockPicker';
 
 const evaluateExpr = (expr) => {
     try {
@@ -12,6 +13,13 @@ const evaluateExpr = (expr) => {
         }
     } catch (e) { /* ignore */ }
     return null;
+};
+
+const formatNumberWithCommas = (x) => {
+    if (x === null || x === undefined) return '0';
+    const parts = String(x).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.join('.');
 };
 
 const formatFriendlyDateTime = (dateTimeStr) => {
@@ -30,6 +38,8 @@ const formatFriendlyDateTime = (dateTimeStr) => {
 };
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const formatDateDisplay = (year, month, day) => `${day}, ${months[month]} ${year}`;
+const formatDateForStorage = (year, month, day) => `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 const cardTypes = ['total_balance', 'income', 'expenses', 'recent_transactions', 'accounts_summary', 'budget_summary', 'monthly_income', 'monthly_expenses'];
 
 export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
@@ -39,6 +49,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
     const [categories, setCategories] = useState([]);
     const [activeMonth, setActiveMonth] = useState(() => new Date().getMonth());
     const [activeYear, setActiveYear] = useState(() => new Date().getFullYear());
+    const [activeDay, setActiveDay] = useState(() => new Date().getDate());
     const [activePeriod, setActivePeriod] = useState('Daily');
     const [showArchived, setShowArchived] = useState(false);
     const [selectedItemIds, setSelectedItemIds] = useState([]);
@@ -47,6 +58,14 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
     const [itemsCurrentPage, setItemsCurrentPage] = useState(1);
     const itemsRowsPerPage = 5;
     const [btnHover, setBtnHover] = useState(false);
+
+    const [menuOpenPlanId, setMenuOpenPlanId] = useState(null);
+
+    const [datePickerOpen, setDatePickerOpen] = useState(false);
+    const [pickerYear, setPickerYear] = useState(() => new Date().getFullYear());
+    const [pickerMonth, setPickerMonth] = useState(() => new Date().getMonth());
+    const [pickerDay, setPickerDay] = useState(() => new Date().getDate());
+    const [pickerView, setPickerView] = useState('day');
 
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [newPlanName, setNewPlanName] = useState('');
@@ -425,7 +444,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                             <h2 style={{ fontSize: '1.25rem', color: 'var(--red)', fontWeight: 700, margin: 0 }}>Budget Planning</h2>
                             <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', margin: '0.25rem 0 0' }}>Create and manage financial planning sheets for trips, events, or specific savings targets.</p>
                         </div>
-                        <button type="button" className="desktop-create-btn" onMouseEnter={() => setBtnHover(true)} onMouseLeave={() => setBtnHover(false)} onClick={() => { setNewPlanName(''); setNewPlanBudget(stats?.totalSaved || '0'); setNewPlanDay(new Date().getDate()); setCreateModalOpen(true); }}
+                            <button type="button" className="desktop-create-btn" onMouseEnter={() => setBtnHover(true)} onMouseLeave={() => setBtnHover(false)} onClick={() => { setNewPlanName(''); setNewPlanBudget(stats?.totalSaved || '0'); setNewPlanDay(new Date().getDate()); setCreateModalOpen(true); }}
                             style={{ borderRadius: '12px', border: '2px solid var(--red)', color: btnHover ? '#ffffff' : 'var(--red)', background: btnHover ? 'var(--red)' : 'transparent', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s' }}>+ CREATE PLAN</button>
                     </div>
                     {plans.length === 0 ? (
@@ -445,13 +464,32 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                             )}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
                                 {plans.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage).map(plan => (
-                                    <div key={plan.id} onClick={() => { setSelectedPlanId(plan.id); setCurrentPage(1); }}
-                                        style={{ border: '1.5px solid var(--gray-300)', borderRadius: '16px', padding: '1.5rem', background: 'var(--white)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                                    <div key={plan.id} onClick={() => { setSelectedPlanId(plan.id); setCurrentPage(1); }} style={{ border: '1.5px solid var(--gray-300)', borderRadius: '16px', padding: '1.5rem', background: 'var(--white)', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                                         onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--red)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--gray-300)'}>
-                                        <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--gray-900)' }}>{plan.name}</span>
-                                        <button type="button" onClick={(e) => handleDeletePlan(plan.id, e)}
-                                            style={{ background: 'none', border: 'none', color: 'var(--gray-400)', cursor: 'pointer', fontSize: '1rem', fontWeight: 700 }}
-                                            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--red)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--gray-400)'}>X</button>
+                                        <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--gray-900)', pointerEvents: 'none' }}>{plan.name}</span>
+                                        <Dropdown
+                                            trigger={['click']}
+                                            open={menuOpenPlanId === plan.id}
+                                            onOpenChange={(open) => setMenuOpenPlanId(open ? plan.id : null)}
+                                            menu={{
+                                                items: [
+                                                    {
+                                                        key: 'delete',
+                                                        label: (
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--red)' }}>
+                                                                <DeleteOutlined /> Delete
+                                                            </div>
+                                                        ),
+                                                        onClick: () => handleDeletePlan(plan.id),
+                                                    },
+                                                ],
+                                            }}
+                                        >
+                                            <button type="button"
+                                                style={{ background: 'none', border: 'none', color: 'var(--gray-400)', cursor: 'pointer', fontSize: '1.2rem', fontWeight: 700 }}
+                                                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--red)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--gray-400)'}
+                                                onClick={(e) => e.stopPropagation()}>⋮</button>
+                                        </Dropdown>
                                     </div>
                                 ))}
                             </div>
@@ -469,8 +507,10 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-500)" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             </button>
                         </div>
-                        <div className="desktop-create-btn">
-                            <button type="button" onClick={openAddItemModal} style={{ borderRadius: '12px', border: '2px solid var(--red)', color: '#ffffff', background: 'var(--red)', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.85rem', cursor: 'pointer' }}>+ ADD TRANSACTION / ITEM</button>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div className="desktop-create-btn">
+                                <button type="button" onClick={openAddItemModal} style={{ borderRadius: '12px', border: '2px solid var(--red)', color: '#ffffff', background: 'var(--red)', fontWeight: 700, padding: '0.5rem 1.5rem', fontSize: '0.85rem', cursor: 'pointer' }}>+ ADD TRANSACTION / ITEM</button>
+                            </div>
                         </div>
                     </div>
 
@@ -508,9 +548,27 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
 
                     <div style={{ borderTop: '1.5px solid var(--gray-200)', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem', justifyContent: 'center' }}>
-                            <button onClick={() => setActiveYear(y => y - 1)} style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}>&lsaquo;</button>
-                            <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--gray-800)' }}>{activeYear}</span>
-                            <button onClick={() => setActiveYear(y => y + 1)} style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}>&rsaquo;</button>
+                            <button onClick={() => {
+                                const newDate = new Date(activeYear, activeMonth, 1);
+                                newDate.setMonth(newDate.getMonth() - 1);
+                                setActiveYear(newDate.getFullYear());
+                                setActiveMonth(newDate.getMonth());
+                            }} style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}>&lsaquo;</button>
+                            <span 
+                                style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--gray-800)', cursor: 'pointer' }}
+                                onClick={() => {
+                                    setPickerYear(activeYear);
+                                    setPickerMonth(activeMonth);
+                                    setPickerDay(activeDay);
+                                    setDatePickerOpen(true);
+                                }}
+                            >{activeDay}, {months[activeMonth]} {activeYear}</span>
+                            <button onClick={() => {
+                                const newDate = new Date(activeYear, activeMonth, 1);
+                                newDate.setMonth(newDate.getMonth() + 1);
+                                setActiveYear(newDate.getFullYear());
+                                setActiveMonth(newDate.getMonth());
+                            }} style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}>&rsaquo;</button>
                         </div>
                         <div style={{ display: 'flex', overflowX: 'auto', gap: '0.25rem', borderBottom: '2px solid var(--gray-200)', paddingBottom: '0.5rem', marginBottom: '1.25rem' }}>
                             {months.map((m, i) => (
@@ -587,7 +645,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </>
             )}
 
-            <Modal classNames={{ wrapper: 'create-plan-modal', header: 'create-plan-header', body: 'create-plan-body' }} title="Create Budget Plan" open={createModalOpen} onCancel={() => setCreateModalOpen(false)} footer={null}>
+            <Modal mask={false} classNames={{ wrapper: 'create-plan-modal', header: 'create-plan-header', body: 'create-plan-body' }} title="Create Budget Plan" open={createModalOpen} onCancel={() => setCreateModalOpen(false)} footer={null}>
                 <form className="create-plan-form" onSubmit={handleCreatePlan} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div className="create-plan-fields" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>
@@ -599,6 +657,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                             <input type="number" step="0.01" value={newPlanBudget} onChange={e => setNewPlanBudget(e.target.value)} className="form-control" placeholder="₱ 0.00" required />
                         </div>
                     </div>
+
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
                         <button type="button" className="btn btn-outline" onClick={() => setCreateModalOpen(false)}>Cancel</button>
                         <button type="submit" className="btn btn-primary" style={{ background: 'var(--red)', borderColor: 'var(--red)' }}>Create Plan</button>
@@ -606,7 +665,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </form>
             </Modal>
 
-            <Modal classNames={{ wrapper: 'tx-select-wrap' }} title="Edit Plan Budget" open={editBudgetOpen} onCancel={() => setEditBudgetOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
+            <Modal mask={false} classNames={{ wrapper: 'tx-select-wrap' }} title="Edit Plan Budget" open={editBudgetOpen} onCancel={() => setEditBudgetOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
                 <form onSubmit={handleUpdatePlanBudget} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <label style={{ fontWeight: 700, color: 'var(--gray-700)', display: 'block' }}>Estimated Budget :</label>
                     <input type="number" step="0.01" value={editBudgetValue} onChange={e => setEditBudgetValue(e.target.value)} className="form-control" required />
@@ -617,7 +676,7 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </form>
             </Modal>
 
-            <Modal classNames={{ wrapper: 'tx-select-wrap' }} title="Edit Plan Name" open={editNameOpen} onCancel={() => setEditNameOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
+            <Modal mask={false} classNames={{ wrapper: 'tx-select-wrap' }} title="Edit Plan Name" open={editNameOpen} onCancel={() => setEditNameOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
                 <form onSubmit={handleEditPlanName} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <label style={{ fontWeight: 700, color: 'var(--gray-700)', display: 'block' }}>Plan Name :</label>
                     <input type="text" value={editNameValue} onChange={e => setEditNameValue(e.target.value)} className="form-control" required />
@@ -628,17 +687,16 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                 </form>
             </Modal>
 
-            <Modal classNames={{ wrapper: 'tx-modal-wrap', body: 'tx-modal-body' }} open={itemModalOpen} onCancel={() => setItemModalOpen(false)} footer={null} closable={false} styles={{ body: { padding: '1.25rem' } }}>
+            <Modal mask={false} classNames={{ wrapper: 'tx-modal-wrap', body: 'tx-modal-body' }} open={itemModalOpen} onCancel={() => setItemModalOpen(false)} footer={null} closable={false} styles={{ body: { padding: '1.25rem' } }}>
                 <form onSubmit={handleSaveItem}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-                        <button type="button" onClick={() => setItemModalOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}>X CANCEL</button>
-                        <button type="submit" style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}>V SAVE</button>
+                        <button type="button" onClick={() => setItemModalOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}>CANCEL</button>
+                        <button type="submit" style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}>SAVE</button>
                     </div>
                     <div className="item-type-group" style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', display: 'flex', overflow: 'hidden', marginBottom: '1.25rem' }}>
                         {['Income', 'Expense'].map(t => (
                             <div key={t} onClick={() => { setItemType(t); const m = categories.filter(c => (c.type || '').toLowerCase().includes(t.toLowerCase())); setItemCategory(m[0]?.name || 'General'); }}
                                 style={{ flex: 1, padding: '0.75rem', textAlign: 'center', cursor: 'pointer', background: itemType === t ? 'var(--red-light)' : 'transparent', color: itemType === t ? 'var(--red)' : 'var(--gray-500)', fontWeight: 700, fontSize: '0.9rem', borderRight: t !== 'Expense' ? '1.5px solid var(--gray-300)' : 'none', userSelect: 'none' }}>
-                                <span style={{ width: '18px', height: '18px', borderRadius: '50%', background: itemType === t ? 'var(--red)' : 'transparent', color: '#ffffff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', marginRight: '0.25rem' }}>{itemType === t ? 'V' : ''}</span>
                                 {t.toUpperCase()}
                             </div>
                         ))}
@@ -651,9 +709,9 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                         <textarea value={itemNotes} onChange={e => setItemNotes(e.target.value)} placeholder="Add transaction notes" style={{ width: '100%', height: '60px', border: 'none', outline: 'none', background: 'transparent', resize: 'none', fontSize: '0.9rem', fontFamily: 'inherit' }} />
                     </div>
                     <div style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', padding: '0.75rem 1rem', background: 'var(--white)', marginBottom: '1rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>{itemCalcExpression}</div>
-                            <button type="button" onClick={() => { setItemCalcExpression(prev => prev.length <= 1 ? '0' : prev.slice(0, -1)); setItemCalcResult(null); }} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--gray-500)' }}>⌫</button>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--gray-900)', wordBreak: 'break-all' }}>{formatNumberWithCommas(itemCalcExpression)}</div>
+                            <button type="button" onClick={() => { setItemCalcExpression(prev => prev.length <= 1 ? '0' : prev.slice(0, -1)); setItemCalcResult(null); }} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--gray-500)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.25rem' }}>⌫</button>
                         </div>
                         {itemCalcResult !== null && (
                             <div style={{
@@ -665,11 +723,11 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                                 marginTop: '0.5rem',
                                 textAlign: 'right'
                             }}>
-                                = {itemCalcResult}
+                                = {formatNumberWithCommas(itemCalcResult)}
                             </div>
                         )}
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginBottom: '1rem', width: '100%' }}>
                         <button type="button" onClick={() => handleKeypadPress('+')} style={calcKeyStyle('op')}>+</button>
                         <button type="button" onClick={() => handleKeypadPress('7')} style={calcKeyStyle('num')}>7</button>
                         <button type="button" onClick={() => handleKeypadPress('8')} style={calcKeyStyle('num')}>8</button>
@@ -682,19 +740,43 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                         <button type="button" onClick={() => handleKeypadPress('1')} style={calcKeyStyle('num')}>1</button>
                         <button type="button" onClick={() => handleKeypadPress('2')} style={calcKeyStyle('num')}>2</button>
                         <button type="button" onClick={() => handleKeypadPress('3')} style={calcKeyStyle('num')}>3</button>
-                        <button type="button" onClick={() => handleKeypadPress('/')} style={calcKeyStyle('op')}>/</button>
+                        <button type="button" onClick={() => handleKeypadPress('/')} style={calcKeyStyle('op')}>÷</button>
                         <button type="button" onClick={() => handleKeypadPress('0')} style={calcKeyStyle('num')}>0</button>
                         <button type="button" onClick={() => handleKeypadPress('.')} style={calcKeyStyle('num')}>.</button>
                         <button type="button" onClick={() => handleKeypadPress('=')} style={calcKeyStyle('equals')}>=</button>
                     </div>
-                    <div style={{ display: 'flex', borderTop: '1px solid var(--gray-300)', padding: '0.75rem 0 0', marginTop: '0.5rem', justifyContent: 'space-between' }}>
-                        <input type="date" value={itemDate} onChange={e => setItemDate(e.target.value)} style={{ border: 'none', background: 'transparent', fontFamily: 'inherit', fontSize: '0.95rem', fontWeight: 700, color: 'var(--red)', cursor: 'pointer' }} />
-                        <input type="time" value={itemTime} onChange={e => setItemTime(e.target.value)} style={{ border: 'none', background: 'transparent', fontFamily: 'inherit', fontSize: '0.95rem', fontWeight: 700, color: 'var(--red)', cursor: 'pointer' }} />
+                    <div style={{ display: 'flex', width: '100%', borderTop: '1px solid var(--gray-300)', padding: '0.75rem 0 0', marginTop: '0.5rem', justifyContent: 'space-between' }}>
+                        <div style={{ position: 'relative' }}>
+                            <div
+                                onClick={() => {
+                                    const d = itemDate ? new Date(itemDate + 'T12:00:00') : new Date();
+                                    setPickerYear(d.getFullYear());
+                                    setPickerMonth(d.getMonth());
+                                    setPickerDay(d.getDate());
+                                    setPickerView('day');
+                                    setDatePickerOpen(true);
+                                }}
+                                style={{
+                                    border: 'none',
+                                    background: 'transparent',
+                                    fontFamily: 'inherit',
+                                    fontSize: '0.95rem',
+                                    fontWeight: 700,
+                                    color: 'var(--red)',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {itemDate ? (() => { const d = new Date(itemDate + 'T12:00:00'); return formatDateDisplay(d.getFullYear(), d.getMonth(), d.getDate()); })() : 'Select Date'}
+                            </div>
+                        </div>
+                        <div style={{ position: 'relative' }}>
+                            <ClockPicker value={itemTime} onChange={setItemTime} />
+                        </div>
                     </div>
                 </form>
             </Modal>
 
-            <Modal classNames={{ wrapper: 'tx-select-wrap' }} title="Select a category" open={selectingCategory} onCancel={() => setSelectingCategory(false)} footer={null} styles={{ body: { padding: '1rem' } }}>
+            <Modal mask={false} classNames={{ wrapper: 'tx-select-wrap' }} title="Select a category" open={selectingCategory} onCancel={() => setSelectingCategory(false)} footer={null} styles={{ body: { padding: '1rem' } }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '400px', overflowY: 'auto' }}>
                     {categories.filter(c => (c.type || '').toLowerCase().includes(itemType.toLowerCase())).map(cat => (
                         <div key={cat.id} onClick={() => { setItemCategory(cat.name); setSelectingCategory(false); }}
@@ -704,12 +786,36 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                     {categories.filter(c => (c.type || '').toLowerCase().includes(itemType.toLowerCase())).length === 0 && <p style={{ color: 'var(--gray-500)' }}>No {itemType} categories yet.</p>}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.25rem' }}>
-                    <button type="button" onClick={() => { setNewCatName(''); setCreateCatModalOpen(true); }}
+                    <button type="button" onClick={() => { 
+                        setNewCatName(''); 
+                        // Hide selection modal temporarily
+                        const selectModal = document.querySelector('.tx-select-wrap.ant-modal-wrap');
+                        if (selectModal) selectModal.style.display = 'none';
+                        setCreateCatModalOpen(true);
+                        // Ensure creation modal appears above everything - use multiple approaches
+                        setTimeout(() => {
+                            const createModal = document.querySelector('.add-category-modal.ant-modal-wrap');
+                            if (createModal) {
+                                createModal.style.zIndex = '2147483647';
+                                createModal.style.position = 'fixed';
+                            }
+                            // Also try to find and set the mask z-index
+                            const createMask = document.querySelector('.add-category-modal.ant-modal-wrap + .ant-modal-mask, .ant-modal-mask:last-child');
+                            if (createMask) {
+                                createMask.style.zIndex = '2147483646';
+                            }
+                        }, 50);
+                    }}
                         style={{ borderRadius: '12px', border: '2px solid var(--red)', color: 'var(--red)', background: 'transparent', fontWeight: 700, width: '100%', padding: '0.75rem', cursor: 'pointer' }}>+ ADD NEW CATEGORY</button>
                 </div>
             </Modal>
 
-            <Modal classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }} title="Add Category" open={createCatModalOpen} onCancel={() => setCreateCatModalOpen(false)} footer={null} styles={{ body: { padding: '1.5rem' } }}>
+            <Modal mask={false} classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }} title="Add Category" open={createCatModalOpen} onCancel={() => {
+                // Restore selection modal when closing
+                const selectModal = document.querySelector('.tx-select-wrap.ant-modal-wrap');
+                if (selectModal) selectModal.style.display = '';
+                setCreateCatModalOpen(false);
+            }} footer={null} zIndex={2147483647} styles={{ body: { padding: '1.5rem' } }}>
                 <form onSubmit={handleCreateCatSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div style={{ border: '1.5px solid var(--gray-300)', borderRadius: '12px', display: 'flex', overflow: 'hidden' }}>
                         <div style={{ flex: 1, padding: '1rem', textAlign: 'center', background: 'var(--red-light)', color: 'var(--red)', fontWeight: 700, textTransform: 'uppercase' }}>{itemType.toUpperCase()}</div>
@@ -723,6 +829,195 @@ export default function BudgetPlanningPage({ user, stats, onStatsUpdate }) {
                         <button type="submit" className="btn btn-primary" style={{ background: 'var(--red)', borderColor: 'var(--red)' }}>Save</button>
                     </div>
                 </form>
+            </Modal>
+
+            <Modal
+                mask={false}
+                title="Select Date"
+                open={datePickerOpen}
+                onCancel={() => setDatePickerOpen(false)}
+                footer={null}
+                styles={{ body: { padding: '1rem' } }}
+                classNames={{ wrapper: 'add-category-modal', header: 'add-category-header', body: 'add-category-body' }}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (pickerView === 'day') {
+                                    const newDate = new Date(pickerYear, pickerMonth - 1, 1);
+                                    setPickerYear(newDate.getFullYear());
+                                    setPickerMonth(newDate.getMonth());
+                                } else if (pickerView === 'month') {
+                                    setPickerYear(pickerYear - 1);
+                                } else if (pickerView === 'year') {
+                                    setPickerYear(pickerYear - 12);
+                                }
+                            }}
+                            style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}
+                        >
+                            &lsaquo;
+                        </button>
+                        <span 
+                            style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--gray-800)', cursor: 'pointer' }}
+                            onClick={() => {
+                                if (pickerView === 'day') setPickerView('month');
+                                else if (pickerView === 'month') setPickerView('year');
+                            }}
+                        >
+                            {pickerView === 'day' ? `${months[pickerMonth]} ${pickerYear}` : pickerView === 'month' ? pickerYear : `${Math.floor(pickerYear / 10) * 10}s`}
+                        </span>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (pickerView === 'day') {
+                                    const newDate = new Date(pickerYear, pickerMonth + 1, 1);
+                                    setPickerYear(newDate.getFullYear());
+                                    setPickerMonth(newDate.getMonth());
+                                } else if (pickerView === 'month') {
+                                    setPickerYear(pickerYear + 1);
+                                } else if (pickerView === 'year') {
+                                    setPickerYear(pickerYear + 12);
+                                }
+                            }}
+                            style={{ background: 'none', border: 'none', color: 'var(--red)', fontSize: '1.25rem', fontWeight: 'bold', cursor: 'pointer' }}
+                        >
+                            &rsaquo;
+                        </button>
+                    </div>
+                    
+                    {pickerView === 'day' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '0.25rem', textAlign: 'center' }}>
+                            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                                <div key={day} style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--gray-500)', padding: '0.25rem' }}>{day}</div>
+                            ))}
+                            {Array.from({ length: new Date(pickerYear, pickerMonth, 0).getDay() }, (_, i) => (
+                                <div key={`empty-${i}`} />
+                            ))}
+                            {Array.from({ length: new Date(pickerYear, pickerMonth + 1, 0).getDate() }, (_, i) => i + 1).map(day => {
+                                const isSelected = day === pickerDay;
+                                const isToday = day === new Date().getDate() && pickerMonth === new Date().getMonth() && pickerYear === new Date().getFullYear();
+                                return (
+                                    <button
+                                        key={day}
+                                        type="button"
+                                        onClick={() => setPickerDay(day)}
+                                        style={{
+                                            padding: '0.5rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : isToday ? 'var(--red-light)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {day}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    {pickerView === 'month' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                            {months.map((month, index) => {
+                                const isSelected = index === pickerMonth;
+                                return (
+                                    <button
+                                        key={month}
+                                        type="button"
+                                        onClick={() => {
+                                            setPickerMonth(index);
+                                            setPickerView('day');
+                                        }}
+                                        style={{
+                                            padding: '1rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {month}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    {pickerView === 'year' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                            {Array.from({ length: 12 }, (_, i) => {
+                                const year = Math.floor(pickerYear / 10) * 10 + i;
+                                const isSelected = year === pickerYear;
+                                return (
+                                    <button
+                                        key={year}
+                                        type="button"
+                                        onClick={() => {
+                                            setPickerYear(year);
+                                            setPickerView('month');
+                                        }}
+                                        style={{
+                                            padding: '1rem',
+                                            borderRadius: '8px',
+                                            border: isSelected ? '2px solid var(--red)' : '1px solid var(--gray-300)',
+                                            background: isSelected ? 'var(--red)' : 'var(--white)',
+                                            color: isSelected ? '#ffffff' : 'var(--gray-700)',
+                                            fontWeight: 700,
+                                            fontSize: '0.9rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {year}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+                    
+                    <div style={{ padding: '0.75rem', background: 'var(--gray-100)', borderRadius: '8px', textAlign: 'center', fontWeight: 700, color: 'var(--red)' }}>
+                        {pickerDay}, {months[pickerMonth]} {pickerYear}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+                        <button 
+                            type="button" 
+                            className="btn btn-outline" 
+                            onClick={() => {
+                                setDatePickerOpen(false);
+                                setPickerView('day');
+                            }}
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="button" 
+                            className="btn btn-primary" 
+                            style={{ background: 'var(--red)', borderColor: 'var(--red)' }}
+                            onClick={() => {
+                                setActiveYear(pickerYear);
+                                setActiveMonth(pickerMonth);
+                                setActiveDay(pickerDay);
+                                if (itemModalOpen) {
+                                    setItemDate(formatDateForStorage(pickerYear, pickerMonth, pickerDay));
+                                }
+                                setDatePickerOpen(false);
+                                setPickerView('day');
+                            }}
+                        >
+                            Confirm
+                        </button>
+                    </div>
+                </div>
             </Modal>
         </div>
     );

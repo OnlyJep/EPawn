@@ -8,6 +8,39 @@ import {
     deleteCategory
 } from '../../services/epawnApi';
 
+const CAT_ICONS = [
+    { name: 'Piggy', src: '/img/caticons/Piggy.png' },
+    { name: 'Lot', src: '/img/caticons/Lot.png' },
+    { name: 'House', src: '/img/caticons/house.png' },
+    { name: 'Baby', src: '/img/caticons/baby.png' },
+    { name: 'Mastercard', src: '/img/caticons/Mastercard.png' },
+    { name: 'Card', src: '/img/caticons/card.png' },
+    { name: 'Money', src: '/img/caticons/money.png' },
+    { name: 'Loan', src: '/img/caticons/Loan.png' },
+    { name: 'Food', src: '/img/caticons/Food.svg' },
+    { name: 'Transport', src: '/img/caticons/Transport.svg' },
+    { name: 'Shopping', src: '/img/caticons/Shopping.svg' },
+    { name: 'Health', src: '/img/caticons/Health.svg' },
+    { name: 'Education', src: '/img/caticons/Education.svg' },
+    { name: 'Entertainment', src: '/img/caticons/Entertainment.svg' },
+    { name: 'Bills', src: '/img/caticons/Bills.svg' },
+    { name: 'Savings', src: '/img/caticons/Savings.svg' },
+    { name: 'Investment', src: '/img/caticons/Investment.svg' },
+    { name: 'Salary', src: '/img/caticons/Salary.svg' },
+    { name: 'Rent', src: '/img/caticons/Rent.svg' },
+    { name: 'Insurance', src: '/img/caticons/Insurance.svg' },
+    { name: 'Grocery', src: '/img/caticons/Grocery.svg' },
+    { name: 'Travel', src: '/img/caticons/Travel.svg' },
+    { name: 'Dining', src: '/img/caticons/Dining.svg' },
+    { name: 'Gift', src: '/img/caticons/Gift.svg' },
+    { name: 'Utilities', src: '/img/caticons/Utilities.svg' },
+    { name: 'Coffee', src: '/img/caticons/Coffee.svg' },
+    { name: 'Clothing', src: '/img/caticons/Clothing.svg' },
+    { name: 'Phone', src: '/img/caticons/Phone.svg' },
+    { name: 'Internet', src: '/img/caticons/Internet.svg' },
+    { name: 'Freelance', src: '/img/caticons/Freelance.svg' },
+];
+
 export default function CategoriesPage({
     onStatsUpdate,
     onRefreshSheets
@@ -20,6 +53,8 @@ export default function CategoriesPage({
     // Form states
     const [categoryName, setCategoryName] = useState('');
     const [type, setType] = useState('Expense');
+    const [newCatIcon, setNewCatIcon] = useState('/img/caticons/Piggy.png');
+    const [catIconPage, setCatIconPage] = useState(0);
     const [btnHover, setBtnHover] = useState(false);
     const [activeFilter, setActiveFilter] = useState('All');
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
@@ -49,6 +84,8 @@ export default function CategoriesPage({
         setEditingRow(null);
         setCategoryName('');
         setType('Expense');
+        setNewCatIcon('/img/caticons/Piggy.png');
+        setCatIconPage(0);
         setModalOpen(true);
     };
 
@@ -56,6 +93,7 @@ export default function CategoriesPage({
         setEditingRow(row);
         setCategoryName(row.name || '');
         setType(row.type === 'income' ? 'Income' : 'Expense');
+        setNewCatIcon(row.icon || '/img/caticons/Piggy.png');
         setModalOpen(true);
     };
 
@@ -68,7 +106,8 @@ export default function CategoriesPage({
 
         const payload = {
             name: categoryName,
-            type: type.toLowerCase()
+            type: type.toLowerCase(),
+            icon: newCatIcon
         };
 
         try {
@@ -358,6 +397,7 @@ export default function CategoriesPage({
                         const isExpense = (row.type || '').toLowerCase().includes('expense');
                         const name = row.name || 'Unnamed Category';
                         const catType = row.type === 'income' ? 'Income' : 'Expense';
+                        const iconSrc = row.icon || '/img/caticons/Piggy.png';
 
                         return (
                             <div key={row.id} style={{
@@ -370,22 +410,37 @@ export default function CategoriesPage({
                                 background: 'var(--white)',
                                 boxShadow: '0 2px 4px rgba(0,0,0,0.01)'
                             }}>
-                                <div>
-                                    <div style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--gray-900)', marginBottom: '0.35rem' }}>
-                                        {name}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                    <div style={{
+                                        width: '48px',
+                                        height: '48px',
+                                        borderRadius: '50%',
+                                        border: '1.5px solid var(--gray-300)',
+                                        padding: '8px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        background: 'var(--gray-100)'
+                                    }}>
+                                        <img src={iconSrc} alt={name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                                     </div>
-                                    <span style={{
-                                        fontSize: '0.7rem',
-                                        padding: '0.2rem 0.6rem',
-                                        borderRadius: '6px',
-                                        fontWeight: 700,
-                                        background: isExpense ? 'var(--red-light)' : 'var(--gray-100)',
-                                        color: isExpense ? 'var(--red)' : 'var(--gray-700)',
+                                    <div>
+                                        <div style={{ fontWeight: 800, fontSize: '1.05rem', color: 'var(--gray-900)', marginBottom: '0.35rem' }}>
+                                            {name}
+                                        </div>
+                                        <span style={{
+                                            fontSize: '0.7rem',
+                                            padding: '0.2rem 0.6rem',
+                                            borderRadius: '6px',
+                                            fontWeight: 700,
+                                            background: isExpense ? 'var(--red-light)' : 'var(--gray-100)',
+                                            color: isExpense ? 'var(--red)' : 'var(--gray-700)',
                                         textTransform: 'uppercase',
                                         letterSpacing: '0.02em'
                                     }}>
                                         {catType}
                                     </span>
+                                    </div>
                                 </div>
 
                                 {/* 3-dot Actions Dropdown */}
@@ -571,6 +626,63 @@ export default function CategoriesPage({
                             onFocus={e => e.target.style.borderColor = 'var(--red)'}
                             onBlur={e => e.target.style.borderColor = 'var(--gray-300)'}
                         />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            {CAT_ICONS.slice(catIconPage * 5, (catIconPage + 1) * 5).map(ico => (
+                                <div key={ico.name}
+                                    onClick={() => setNewCatIcon(ico.src)}
+                                    style={{
+                                        width: '44px', height: '44px', borderRadius: '50%',
+                                        border: newCatIcon === ico.src ? '3px solid var(--red)' : '1px solid var(--gray-300)',
+                                        padding: '4px', cursor: 'pointer', display: 'flex',
+                                        alignItems: 'center', justifyContent: 'center',
+                                        background: 'var(--gray-100)'
+                                    }}
+                                >
+                                    <img src={ico.src} alt={ico.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                </div>
+                            ))}
+                        </div>
+                        {CAT_ICONS.length > 5 && (
+                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setCatIconPage(Math.max(0, catIconPage - 1))}
+                                    disabled={catIconPage === 0}
+                                    style={{
+                                        padding: '0.25rem 0.75rem',
+                                        borderRadius: '6px',
+                                        border: '1px solid var(--gray-300)',
+                                        background: catIconPage === 0 ? 'var(--gray-100)' : 'var(--white)',
+                                        cursor: catIconPage === 0 ? 'not-allowed' : 'pointer',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 700
+                                    }}
+                                >
+                                    Prev
+                                </button>
+                                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--gray-500)' }}>
+                                    {catIconPage + 1} / {Math.ceil(CAT_ICONS.length / 5)}
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={() => setCatIconPage(Math.min(Math.ceil(CAT_ICONS.length / 5) - 1, catIconPage + 1))}
+                                    disabled={catIconPage === Math.ceil(CAT_ICONS.length / 5) - 1}
+                                    style={{
+                                        padding: '0.25rem 0.75rem',
+                                        borderRadius: '6px',
+                                        border: '1px solid var(--gray-300)',
+                                        background: catIconPage === Math.ceil(CAT_ICONS.length / 5) - 1 ? 'var(--gray-100)' : 'var(--white)',
+                                        cursor: catIconPage === Math.ceil(CAT_ICONS.length / 5) - 1 ? 'not-allowed' : 'pointer',
+                                        fontSize: '0.8rem',
+                                        fontWeight: 700
+                                    }}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
                         <button type="button" className="btn btn-outline" onClick={() => setModalOpen(false)}>

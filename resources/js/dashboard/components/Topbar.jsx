@@ -29,6 +29,9 @@ export default function Topbar({ user, defaultAvatar, onOpenSettings, routes, cs
     }, []);
 
     const displayName = user?.fullname || user?.display_name || user?.username;
+    const avatarSrc = user?.profile?.avatar
+        ? `/storage/${user.profile.avatar}`
+        : defaultAvatar || '/img/defpfp.webp';
 
     const handleLogout = async () => {
         setLoggingOut(true);
@@ -53,7 +56,7 @@ export default function Topbar({ user, defaultAvatar, onOpenSettings, routes, cs
                     className="topbar__profile-btn"
                     onClick={() => setOpen((value) => !value)}
                 >
-                    <img src={defaultAvatar} alt="Profile" className="topbar__avatar" />
+                    <img src={avatarSrc} alt="Profile" className="topbar__avatar" />
                     <span className="topbar__username">@{user?.username}</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M6 9l6 6 6-6" />
@@ -62,7 +65,7 @@ export default function Topbar({ user, defaultAvatar, onOpenSettings, routes, cs
                 {open && (
                     <div className="topbar__dropdown">
                         <div className="topbar__dropdown-header">
-                            <img src={defaultAvatar} alt="Profile" />
+                            <img src={avatarSrc} alt="Profile" />
                             <div>
                                 <strong>{displayName}</strong>
                                 <span>{user?.email}</span>
