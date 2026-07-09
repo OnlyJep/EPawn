@@ -21,6 +21,7 @@ export default function DashboardApp(props) {
     const [user, setUser] = useState(props.user);
     const [stats, setStats] = useState(props.stats);
     const [isMobile, setIsMobile] = useState(false);
+    const [txModalOpen, setTxModalOpen] = useState(false);
 
     useEffect(() => {
         localStorage.setItem('dashboard-active-nav', activeNav);
@@ -73,6 +74,7 @@ export default function DashboardApp(props) {
                         {activeNav === 'budget' && (
                             <BudgetPage
                                 onStatsUpdate={setStats}
+                                onTxModalOpenChange={setTxModalOpen}
                             />
                         )}
                         {activeNav === 'accounts' && (
@@ -104,7 +106,7 @@ export default function DashboardApp(props) {
                     old={props.old}
                     onUserUpdated={setUser}
                 />
-                {isMobile && (
+                {isMobile && !txModalOpen && (
                     <BottomNav
                         activeNav={activeNav}
                         onNavChange={setActiveNav}

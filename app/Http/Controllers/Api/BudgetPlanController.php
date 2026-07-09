@@ -9,6 +9,7 @@ use App\Models\BudgetPlan;
 use App\Models\BudgetPlanItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class BudgetPlanController extends Controller
 {
@@ -26,43 +27,58 @@ class BudgetPlanController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'budget' => 'required|numeric|min:0',
-            'year' => 'required|integer',
-            'month' => 'required|integer|min:1|max:12',
-            'day' => 'sometimes|integer|min:1|max:31',
-            'box_color' => 'nullable|string|max:20',
-            'text_color' => 'nullable|string|max:20',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'budget' => 'required|numeric|min:0',
+                'year' => 'required|integer',
+                'month' => 'required|integer|min:1|max:12',
+                'day' => 'sometimes|integer|min:1|max:31',
+                'box_color' => 'nullable|string|max:20',
+                'text_color' => 'nullable|string|max:20',
+            ]);
 
-        $totalBalance = Account::where('user_id', $request->user()->id)->sum('balance');
-        if ($validated['budget'] > $totalBalance) {
+            $totalBalance = Account::where('user_id', $request->user()->id)->sum('balance');
+            if ($validated['budget'] > $totalBalance) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Budget plan amount (₱' . number_format($validated['budget'], 2) . ') exceeds your total balance (₱' . number_format($totalBalance, 2) . ').',
+                    'errors' => ['budget' => ['Budget exceeds total balance.']],
+                ], 422);
+            }
+
+            $planData = [
+                'user_id' => $request->user()->id,
+                'name' => $validated['name'],
+                'budget' => $validated['budget'],
+                'year' => $validated['year'],
+                'month' => $validated['month'],
+                'day' => $validated['day'] ?? 1,
+            ];
+
+            // Only add color fields if they exist in the database schema
+            if (Schema::hasColumn('budget_plans', 'box_color')) {
+                $planData['box_color'] = $validated['box_color'] ?? null;
+            }
+            if (Schema::hasColumn('budget_plans', 'text_color')) {
+                $planData['text_color'] = $validated['text_color'] ?? null;
+            }
+
+            $plan = BudgetPlan::create($planData);
+
+            ActivityLog::log($request->user()->id, 'create_budget_plan', ['plan_id' => $plan->id, 'name' => $plan->name], $request);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Budget plan created.',
+                'plan' => $plan->load('items'),
+            ], 201);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Budget plan amount (₱' . number_format($validated['budget'], 2) . ') exceeds your total balance (₱' . number_format($totalBalance, 2) . ').',
-                'errors' => ['budget' => ['Budget exceeds total balance.']],
-            ], 422);
+                'message' => 'Error creating budget plan: ' . $e->getMessage(),
+            ], 500);
         }
-
-        $plan = BudgetPlan::create([
-            'user_id' => $request->user()->id,
-            'name' => $validated['name'],
-            'budget' => $validated['budget'],
-            'year' => $validated['year'],
-            'month' => $validated['month'],
-            'day' => $validated['day'] ?? 1,
-            'box_color' => $validated['box_color'] ?? null,
-            'text_color' => $validated['text_color'] ?? null,
-        ]);
-
-        ActivityLog::log($request->user()->id, 'create_budget_plan', ['plan_id' => $plan->id, 'name' => $plan->name], $request);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Budget plan created.',
-            'plan' => $plan->load('items'),
-        ], 201);
     }
 
     public function show(Request $request, BudgetPlan $plan)
@@ -79,40 +95,74 @@ class BudgetPlanController extends Controller
 
     public function update(Request $request, BudgetPlan $plan)
     {
-        if ($plan->user_id !== $request->user()->id) {
-            return response()->json(['success' => false, 'message' => 'Forbidden.'], 403);
-        }
-
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'budget' => 'sometimes|numeric|min:0',
-            'year' => 'sometimes|integer',
-            'month' => 'sometimes|integer|min:1|max:12',
-            'day' => 'sometimes|integer|min:1|max:31',
-            'box_color' => 'nullable|string|max:20',
-            'text_color' => 'nullable|string|max:20',
-        ]);
-
-        if (isset($validated['budget'])) {
-            $totalBalance = Account::where('user_id', $request->user()->id)->sum('balance');
-            if ($validated['budget'] > $totalBalance) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Budget plan amount (₱' . number_format($validated['budget'], 2) . ') exceeds your total balance (₱' . number_format($totalBalance, 2) . ').',
-                    'errors' => ['budget' => ['Budget exceeds total balance.']],
-                ], 422);
+        try {
+            if ($plan->user_id !== $request->user()->id) {
+                return response()->json(['success' => false, 'message' => 'Forbidden.'], 403);
             }
+
+            $validated = $request->validate([
+                'name' => 'sometimes|string|max:255',
+                'budget' => 'sometimes|numeric|min:0',
+                'year' => 'sometimes|integer',
+                'month' => 'sometimes|integer|min:1|max:12',
+                'day' => 'sometimes|integer|min:1|max:31',
+                'box_color' => 'nullable|string|max:20',
+                'text_color' => 'nullable|string|max:20',
+            ]);
+
+            if (isset($validated['budget'])) {
+                $totalBalance = Account::where('user_id', $request->user()->id)->sum('balance');
+                if ($validated['budget'] > $totalBalance) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Budget plan amount (₱' . number_format($validated['budget'], 2) . ') exceeds your total balance (₱' . number_format($totalBalance, 2) . ').',
+                        'errors' => ['budget' => ['Budget exceeds total balance.']],
+                    ], 422);
+                }
+            }
+
+            $updateData = [];
+
+            // Only include fields that are present in validated data
+            if (isset($validated['name'])) {
+                $updateData['name'] = $validated['name'];
+            }
+            if (isset($validated['budget'])) {
+                $updateData['budget'] = $validated['budget'];
+            }
+            if (isset($validated['year'])) {
+                $updateData['year'] = $validated['year'];
+            }
+            if (isset($validated['month'])) {
+                $updateData['month'] = $validated['month'];
+            }
+            if (isset($validated['day'])) {
+                $updateData['day'] = $validated['day'];
+            }
+
+            // Only add color fields if they exist in the database schema
+            if (Schema::hasColumn('budget_plans', 'box_color') && isset($validated['box_color'])) {
+                $updateData['box_color'] = $validated['box_color'];
+            }
+            if (Schema::hasColumn('budget_plans', 'text_color') && isset($validated['text_color'])) {
+                $updateData['text_color'] = $validated['text_color'];
+            }
+
+            $plan->update($updateData);
+
+            ActivityLog::log($request->user()->id, 'update_budget_plan', ['plan_id' => $plan->id], $request);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Budget plan updated.',
+                'plan' => $plan->fresh()->load('items'),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating budget plan: ' . $e->getMessage(),
+            ], 500);
         }
-
-        $plan->update($validated);
-
-        ActivityLog::log($request->user()->id, 'update_budget_plan', ['plan_id' => $plan->id], $request);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Budget plan updated.',
-            'plan' => $plan->fresh()->load('items'),
-        ]);
     }
 
     public function destroy(Request $request, BudgetPlan $plan)

@@ -85,16 +85,23 @@ const CAT_ICONS = [
 
 export default function BudgetPage({
     onStatsUpdate,
-    onRefreshSheets
+    onRefreshSheets,
+    onTxModalOpenChange
 }) {
-    const [rows, setRows] = useState([]);
+    const [txModalOpen, setTxModalOpen] = useState(false);
+
+    const handleTxModalOpen = (open) => {
+        setTxModalOpen(open);
+        if (onTxModalOpenChange) {
+            onTxModalOpenChange(open);
+        }
+    };
     const [categories, setCategories] = useState([]);
     const [accounts, setAccounts] = useState([]);
     const [spendingMap, setSpendingMap] = useState({});
     const [loading, setLoading] = useState(false);
-    
+
     const [modalOpen, setModalOpen] = useState(false);
-    const [txModalOpen, setTxModalOpen] = useState(false);
     const [editingRow, setEditingRow] = useState(null);
 
     const [category, setCategory] = useState('');
@@ -369,7 +376,7 @@ export default function BudgetPage({
         
         setTxCalcExpression('0');
         setTxType('Expense');
-        setTxModalOpen(true);
+        handleTxModalOpen(true);
     };
 
     const handleTxSubmit = async (e) => {
@@ -435,7 +442,7 @@ export default function BudgetPage({
         try {
             await createTransaction(payload);
             message.success('Transaction logged successfully.');
-            setTxModalOpen(false);
+            handleTxModalOpen(false);
             loadData();
             if (onRefreshSheets) onRefreshSheets();
         } catch (error) {
@@ -534,7 +541,7 @@ export default function BudgetPage({
         setTxToAccount('');
         setTxCalcExpression('0');
         setTxType(categoryType);
-        setTxModalOpen(true);
+        handleTxModalOpen(true);
     };
 
     return (
@@ -872,7 +879,7 @@ export default function BudgetPage({
                 mask={false}
                 classNames={{ wrapper: 'tx-modal-wrap', body: 'tx-modal-body' }}
                 open={txModalOpen}
-                onCancel={() => setTxModalOpen(false)}
+                onCancel={() => handleTxModalOpen(false)}
                 footer={null}
                 closable={false}
                 styles={{ body: { padding: '1.25rem' } }}
@@ -881,7 +888,7 @@ export default function BudgetPage({
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
                         <button 
                             type="button" 
-                            onClick={() => setTxModalOpen(false)}
+                            onClick={() => handleTxModalOpen(false)}
                             style={{ background: 'none', border: 'none', color: 'var(--red)', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}
                         >
                             CANCEL

@@ -631,17 +631,67 @@
         background: var(--white) !important;
     }
 
-    .tx-modal-wrap.ant-modal-wrap .tx-modal-body.ant-modal-body {
-        flex: 1;
+    .tx-modal-wrap.ant-modal-wrap .tx-modal-body {
+        height: 100%;
+        padding: 0.75rem !important;
         overflow-y: auto;
-        padding: 1rem;
-        background: var(--white) !important;
+        display: flex;
+        flex-direction: column;
     }
 
-    .tx-modal-wrap .tx-type-group > div {
+    .tx-modal-wrap.ant-modal-wrap form {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Make form elements more compact */
+    .tx-modal-wrap.ant-modal-wrap form > div {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .tx-modal-wrap.ant-modal-wrap .tx-type-group {
+        margin-bottom: 0.5rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    .tx-modal-wrap.ant-modal-wrap .tx-type-group > div {
         padding: 0.5rem !important;
-        font-size: 0.78rem !important;
-        gap: 0.2rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Compact calculator buttons */
+    .tx-modal-wrap.ant-modal-wrap button[type="button"] {
+        padding: 0.5rem !important;
+        font-size: 1rem !important;
+    }
+
+    /* Make calculator grid fit better */
+    .tx-modal-wrap.ant-modal-wrap form > div[style*="display: grid"] {
+        gap: 0.25rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Compact display area */
+    .tx-modal-wrap.ant-modal-wrap form > div[style*="border: 1.5px solid"] {
+        padding: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .tx-modal-wrap.ant-modal-wrap form > div[style*="border: 1.5px solid"] > div {
+        font-size: 1.25rem !important;
+    }
+
+    /* Compact date/time section */
+    .tx-modal-wrap.ant-modal-wrap form > div:last-child {
+        padding-top: 0.5rem !important;
+        margin-top: 0.25rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* Ensure submit/cancel buttons are visible */
+    .tx-modal-wrap.ant-modal-wrap form > div:first-child {
+        margin-bottom: 0.5rem !important;
     }
 }
 
