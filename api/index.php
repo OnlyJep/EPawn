@@ -12,7 +12,14 @@ if (getenv('VERCEL')) {
     putenv('LOG_CHANNEL=stderr');
     putenv('SESSION_DRIVER=cookie');
     putenv('CACHE_DRIVER=array');
-    putenv('MAIL_MAILER=log');
+    putenv('MAIL_MAILER=smtp');
+    putenv('MAIL_HOST=smtp.gmail.com');
+    putenv('MAIL_PORT=587');
+    putenv('MAIL_USERNAME=noreply.epawn@gmail.com');
+    putenv('MAIL_PASSWORD=efzg cipu smgj mile');
+    putenv('MAIL_ENCRYPTION=tls');
+    putenv('MAIL_FROM_ADDRESS=noreply.epawn@gmail.com');
+    putenv('MAIL_FROM_NAME=Epawn');
 
     if (!getenv('APP_KEY')) {
         $keyFile = __DIR__ . '/../.vercel-app-key';
