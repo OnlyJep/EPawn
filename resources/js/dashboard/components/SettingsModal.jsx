@@ -211,8 +211,13 @@ export default function SettingsModal({ open, onClose, user, defaultAvatar, erro
         setAvatarPreview(null);
     };
 
+    const rawAvatar = user?.profile?.avatar;
     const currentAvatar = avatarPreview
-        || (user?.profile?.avatar ? `/storage/${user.profile.avatar}` : null)
+        || (rawAvatar
+            ? (rawAvatar.startsWith('data:') || rawAvatar.startsWith('http://') || rawAvatar.startsWith('https://')
+                ? rawAvatar
+                : `/storage/${rawAvatar}`)
+            : null)
         || defaultAvatar
         || '/img/defpfp.webp';
 

@@ -62,7 +62,15 @@ class SettingsController extends Controller
                     $path = $request->file('avatar')->store('avatars', 'public');
                     $profile->update(['avatar' => $path]);
                 } catch (\Exception $e) {
-                    \Illuminate\Support\Facades\Log::warning("Avatar upload failed (read-only filesystem?): " . $e->getMessage());
+                    \Illuminate\Support\Facades\Log::warning("Avatar file store failed, falling back to base64: " . $e->getMessage());
+                    try {
+                        $file = $request->file('avatar');
+                        $contents = base64_encode(file_get_contents($file->getRealPath()));
+                        $mime = $file->getMimeType() ?: 'image/jpeg';
+                        $profile->update(['avatar' => 'data:'.$mime.';base64,'.$contents]);
+                    } catch (\Exception $e2) {
+                        \Illuminate\Support\Facades\Log::warning("Avatar base64 fallback also failed: " . $e2->getMessage());
+                    }
                 }
             }
 

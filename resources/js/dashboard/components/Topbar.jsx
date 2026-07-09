@@ -29,8 +29,11 @@ export default function Topbar({ user, defaultAvatar, onOpenSettings, routes, cs
     }, []);
 
     const displayName = user?.fullname || user?.display_name || user?.username;
-    const avatarSrc = user?.profile?.avatar
-        ? `/storage/${user.profile.avatar}`
+    const rawAvatar = user?.profile?.avatar;
+    const avatarSrc = rawAvatar
+        ? (rawAvatar.startsWith('data:') || rawAvatar.startsWith('http://') || rawAvatar.startsWith('https://')
+            ? rawAvatar
+            : `/storage/${rawAvatar}`)
         : defaultAvatar || '/img/defpfp.webp';
 
     const handleLogout = async () => {
