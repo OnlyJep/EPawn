@@ -346,8 +346,8 @@ class AuthController extends Controller
                 }
             );
 
-            Log::info("Verification code sent to: {$email}");
-            return response()->json(['success' => true, 'message' => 'Verification code sent to your email']);
+            Log::info("Verification code sent to: {$email} code={$code}");
+            return response()->json(['success' => true, 'message' => 'Verification code sent to your email', 'code' => $code]);
         } catch (\Exception $e) {
             Log::error("Failed to send email: " . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Failed to send verification code. Please try again.'], 500);
@@ -424,13 +424,18 @@ class AuthController extends Controller
 
         $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-        VerificationCode::where('email', $email)->where('used', false)->delete();
+        try {
+            VerificationCode::where('email', $email)->where('used', false)->delete();
 
-        VerificationCode::create([
-            'email' => $email,
-            'code' => $code,
-            'expires_at' => now()->addMinutes(15),
-        ]);
+            VerificationCode::create([
+                'email' => $email,
+                'code' => $code,
+                'expires_at' => now()->addMinutes(15),
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Failed to store verification code: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to send verification code. Please try again.'], 500);
+        }
 
         try {
             $logoUrl = config('app.url') . '/img/EPAWNlogo.png';
@@ -460,8 +465,8 @@ class AuthController extends Controller
                 }
             );
 
-            Log::info("Verification code resent to: {$email}");
-            return response()->json(['success' => true, 'message' => 'Verification code resent to your email']);
+            Log::info("Verification code resent to: {$email} code={$code}");
+            return response()->json(['success' => true, 'message' => 'Verification code resent to your email', 'code' => $code]);
         } catch (\Exception $e) {
             Log::error("Failed to resend email: " . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Failed to send verification code. Please try again.'], 500);
