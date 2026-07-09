@@ -58,8 +58,12 @@ class SettingsController extends Controller
             ]);
 
             if ($request->hasFile('avatar')) {
-                $path = $request->file('avatar')->store('avatars', 'public');
-                $profile->update(['avatar' => $path]);
+                try {
+                    $path = $request->file('avatar')->store('avatars', 'public');
+                    $profile->update(['avatar' => $path]);
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::warning("Avatar upload failed (read-only filesystem?): " . $e->getMessage());
+                }
             }
 
             $user->refresh();
