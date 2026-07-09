@@ -21,31 +21,14 @@ if (getenv('VERCEL')) {
     }
 }
 
-// Debug check: return SERVER vars before booting Laravel
-$requestUri = $_SERVER['REQUEST_URI'] ?? '(none)';
-$scriptName = $_SERVER['SCRIPT_NAME'] ?? '(none)';
-$pathInfo = $_SERVER['PATH_INFO'] ?? '(none)';
-$method = $_SERVER['REQUEST_METHOD'] ?? '(none)';
-$queryString = $_SERVER['QUERY_STRING'] ?? '(none)';
-
-// If we hit /debug-server or /api/debug-server, return server info as JSON
-if (preg_match('#/debug-server#', $requestUri)) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'REQUEST_URI' => $requestUri,
-        'SCRIPT_NAME' => $scriptName,
-        'PATH_INFO'   => $pathInfo,
-        'METHOD'      => $method,
-        'QUERY_STRING' => $queryString,
-        'VERCEL'      => getenv('VERCEL'),
-        'APP_KEY'     => getenv('APP_KEY') ? substr(getenv('APP_KEY'), 0, 10) . '...' : null,
-    ]);
-    exit;
-}
-
 if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
     require __DIR__.'/../storage/framework/maintenance.php';
 }
+
+// Fix: Vercel sets SCRIPT_NAME to /api/index.php, which makes Laravel strip /api
+// from the request URI (e.g. /api/dashboard → /dashboard). Override so Laravel
+// preserves the full path for correct API route matching.
+$_SERVER['SCRIPT_NAME'] = '/index.php';
 
 require __DIR__.'/../vendor/autoload.php';
 
