@@ -1,3 +1,4 @@
+-- MySQL-ONLY! Do NOT run on PostgreSQL. Use migrate_postgres.sql instead.
 -- Run these SQL statements in phpMyAdmin for epawn.unaux.com
 
 -- 1. Add email_verified_at column to users table
