@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.7.0",
+      "memory": 512,
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    { "src": "/css/(.*)", "dest": "/public/css/$1" },
+    { "src": "/js/(.*)", "dest": "/public/js/$1" },
+    { "src": "/img/(.*)", "dest": "/public/img/$1" },
+    { "src": "/fonts/(.*)", "dest": "/public/fonts/$1" },
+    { "src": "/storage/(.*)", "dest": "/public/storage/$1" },
+    { "src": "/vendor/(.*)", "dest": "/public/vendor/$1" },
+    { "src": "/favicon.ico", "dest": "/public/favicon.ico" },
+    { "src": "/robots.txt", "dest": "/public/robots.txt" },
+    { "src": "/.well-known/(.*)", "dest": "/public/.well-known/$1" },
+    { "src": "/(.*)", "dest": "/api/index.php" }
+  ],
+  "buildCommand": "chmod +x vercel.sh && ./vercel.sh"
+}
