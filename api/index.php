@@ -12,6 +12,7 @@ if (getenv('VERCEL')) {
     putenv('LOG_CHANNEL=stderr');
     putenv('SESSION_DRIVER=cookie');
     putenv('CACHE_DRIVER=array');
+    putenv('MAIL_MAILER=log');
 
     if (!getenv('APP_KEY')) {
         $keyFile = __DIR__ . '/../.vercel-app-key';
