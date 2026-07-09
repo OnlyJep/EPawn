@@ -173,7 +173,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Logged in successfully.',
-                'user' => $admin->fresh(),
+                'user' => $admin->fresh()->load('profile'),
                 'token' => $token,
                 'redirect' => url('/dashboard'),
             ]);
@@ -194,6 +194,8 @@ class AuthController extends Controller
 
         $user->tokens()->delete();
         $token = $user->createToken('api-token')->plainTextToken;
+
+        $user->load('profile');
 
         return response()->json([
             'success' => true,

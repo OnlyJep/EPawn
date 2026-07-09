@@ -38,36 +38,44 @@ class SettingsController extends Controller
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $user->update([
-            'username' => $request->username,
-            'email' => $request->email,
-        ]);
+        try {
+            $user->update([
+                'username' => $request->username,
+                'email' => $request->email,
+            ]);
 
-        $fullname = $request->last_name
-            ? "{$request->first_name} {$request->last_name}"
-            : $request->first_name;
+            $fullname = $request->last_name
+                ? "{$request->first_name} {$request->last_name}"
+                : $request->first_name;
 
-        $profile = Profile::firstOrCreate(['user_id' => $user->id]);
-        $profile->update([
-            'first_name' => $request->first_name,
-            'middle_initial' => $request->middle_initial,
-            'last_name' => $request->last_name,
-            'suffix' => $request->suffix ?: null,
-            'fullname' => $fullname,
-        ]);
+            $profile = Profile::firstOrCreate(['user_id' => $user->id]);
+            $profile->update([
+                'first_name' => $request->first_name,
+                'middle_initial' => $request->middle_initial,
+                'last_name' => $request->last_name,
+                'suffix' => $request->suffix ?: null,
+                'fullname' => $fullname,
+            ]);
 
-        if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $profile->update(['avatar' => $path]);
+            if ($request->hasFile('avatar')) {
+                $path = $request->file('avatar')->store('avatars', 'public');
+                $profile->update(['avatar' => $path]);
+            }
+
+            $user->refresh();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile updated successfully.',
+                'user' => $user->load('profile'),
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Illuminate\Support\Facades\Log::error("Profile update DB error: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Database error. Please contact support.'], 500);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Profile update error: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to update profile.'], 500);
         }
-
-        $user->refresh();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile updated successfully.',
-            'user' => $user->load('profile'),
-        ]);
     }
 
     public function updatePassword(Request $request)
