@@ -38,6 +38,9 @@ echo "=== Installing JS dependencies and compiling assets ==="
 npm install --legacy-peer-deps
 npm run production
 
+echo "=== Generating APP_KEY ==="
+php -r "file_put_contents('.vercel-app-key', 'base64:' . base64_encode(random_bytes(32)));"
+
 echo "=== Creating storage directories ==="
 mkdir -p storage/framework/cache/data
 mkdir -p storage/framework/sessions
