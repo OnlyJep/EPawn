@@ -96,6 +96,7 @@ export default function BudgetPage({
             onTxModalOpenChange(open);
         }
     };
+    const [rows, setRows] = useState([]);
     const [categories, setCategories] = useState([]);
     const [accounts, setAccounts] = useState([]);
     const [spendingMap, setSpendingMap] = useState({});
