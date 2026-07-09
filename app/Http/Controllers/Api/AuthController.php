@@ -393,6 +393,7 @@ class AuthController extends Controller
                 'fullname' => trim($request->first_name . ' ' . ($request->middle_initial ? $request->middle_initial . ' ' : '') . $request->last_name . ' ' . ($request->suffix ?: '')),
             ]);
 
+            Auth::login($user);
             ActivityLog::log($user->id, 'register', null, $request);
             $token = $user->createToken('api-token')->plainTextToken;
 
