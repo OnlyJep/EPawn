@@ -6,10 +6,22 @@ set -e
 
 echo "=== Installing PHP ==="
 # Download static PHP binary
-curl -sL https://github.com/nickg/php-static/releases/download/v8.2.0/php-8.2.0-linux-x86_64.tar.gz -o php.tar.gz
+curl -sL https://dl.static-php.dev/static-php-cli/bulk/php-8.2.32-cli-linux-x86_64.tar.gz -o php.tar.gz
 tar xzf php.tar.gz
+# Locate the PHP binary after extraction
+PHP_DIR=""
+for d in php-*/; do [ -d "$d" ] && PHP_DIR="$d" && break; done
+if [ -n "$PHP_DIR" ] && [ -f "${PHP_DIR}bin/php" ]; then
+  cp "${PHP_DIR}bin/php" ./php
+fi
+if [ ! -f ./php ]; then
+  FOUND=$(find . -maxdepth 4 -name "php" -type f 2>/dev/null | head -1)
+  [ -n "$FOUND" ] && cp "$FOUND" ./php
+fi
+chmod +x ./php
+rm -f php.tar.gz
+[ -n "$PHP_DIR" ] && rm -rf "$PHP_DIR"
 export PATH="$PWD:$PATH"
-chmod +x php
 
 echo "=== Installing Composer ==="
 # Install Composer
