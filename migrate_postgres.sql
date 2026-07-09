@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     fullname VARCHAR(255) NOT NULL DEFAULT '',
     google_id VARCHAR(255) NULL,
     archived_at TIMESTAMP NULL,
-    avatar VARCHAR(255) NULL,
+    avatar TEXT NULL,
     created_at TIMESTAMP NULL,
     updated_at TIMESTAMP NULL
 );
