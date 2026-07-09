@@ -48,5 +48,8 @@ mkdir -p storage/framework/views
 mkdir -p storage/logs
 mkdir -p bootstrap/cache
 
+echo "=== Running database migrations ==="
+php artisan migrate --force --no-interaction 2>/dev/null || echo "Migrations skipped (no DB connection)"
+
 # Cleanup
 rm -f php.tar.gz php composer-setup.php
