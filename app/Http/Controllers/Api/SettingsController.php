@@ -70,11 +70,11 @@ class SettingsController extends Controller
                 'user' => $user->load('profile'),
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
-            \Illuminate\Support\Facades\Log::error("Profile update DB error: " . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Database error. Please contact support.'], 500);
+            \Illuminate\Support\Facades\Log::error("Profile update DB error for user {$user->id}: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Database error: ' . $e->getMessage()], 500);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Profile update error: " . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Failed to update profile.'], 500);
+            \Illuminate\Support\Facades\Log::error("Profile update error for user {$user->id}: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 
